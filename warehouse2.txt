@@ -1,3 +1,8 @@
+git add .
+git commit -am "comment"
+git push heroku master
+-- > https://my-warehouse-app-heroku.herokuapp.com/
+
 warehouse:
 togli ripiano - scaffale -> reparto (elettrico, idraulico, macroelementi)
 reparti e sottoreparti: idraulica: raccorderia ottone, raccorderia ghisa, tubisteria, acqua, ecc (almeno trentina per sottoreparto)

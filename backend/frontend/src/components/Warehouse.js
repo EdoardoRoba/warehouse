@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import { axiosInstance } from "../config.js"
 import * as React from "react";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -292,28 +293,28 @@ function Warehouse(props) {
 
     // GET
     const getTools = async () => {
-        axios.get(beUrl + 'tool')
+        axiosInstance.get(beUrl + 'tool')
             .then(res => {
                 // console.log("Tools: ", res.data)
                 setTools(res.data)
             })
     };
     const getLibraryStructure = async () => {
-        axios.get(beUrl + 'structure')
+        axiosInstance.get(beUrl + 'structure')
             .then(res => {
                 // console.log("Library: ", res.data)
                 setLibrary(res.data)
             })
     };
     const getEmployees = async () => {
-        axios.get(beUrl + 'employee')
+        axiosInstance.get(beUrl + 'employee')
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
             })
     }
     const getDepartments = async () => {
-        axios.get(beUrl + 'structure')
+        axiosInstance.get(beUrl + 'structure')
             .then(res => {
                 var depts = res.data
                 var openDeps = {}
@@ -351,7 +352,7 @@ function Warehouse(props) {
 
     // POST
     let addBook = () => {
-        axios.post(beUrl + 'tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
+        axiosInstance.post(beUrl + 'tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
@@ -395,11 +396,11 @@ function Warehouse(props) {
                 }
             })
             if (bookId !== "") {
-                axios.put(beUrl + "tool/" + bookId, newField).then(response => {
+                axiosInstance.put(beUrl + "tool/" + bookId, newField).then(response => {
                     // console.log("Fatto!", response)
                     setConfermaUpdate(true)
                     getTools()
-                    axios.post(beUrl + 'history/' + label, { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) })
+                    axiosInstance.post(beUrl + 'history/' + label, { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) })
                         .then(response => {
                             console.log("History added!")
                         }).catch(error => {
@@ -422,7 +423,7 @@ function Warehouse(props) {
 
     let updateLibraryLayout = (r, c) => {
         const newField = { rows: parseInt(r), columns: parseInt(c) }
-        axios.put(beUrl + "structure/" + structureId, newField).then(response => {
+        axiosInstance.put(beUrl + "structure/" + structureId, newField).then(response => {
             getTools()
             getLibraryStructure()
             setOpenLibraryUpdate(false)
@@ -447,7 +448,7 @@ function Warehouse(props) {
             }
         })
         if (bookId !== "") {
-            axios.delete(beUrl + 'tool/' + bookId)
+            axiosInstance.delete(beUrl + 'tool/' + bookId)
                 .then(() => {
                     setConfermaDelete(true)
                     getTools()

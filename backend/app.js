@@ -3,15 +3,21 @@ const mongoose = require('mongoose')
 const Structure = require('./models/structure')
 const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
-const History = require('./models/History')
-const Employee = require('./models/Employee')
+const History = require('./models/history')
+const Employee = require('./models/employee')
 const bodyParser = require('body-parser')
 var nodemailer = require('nodemailer');
+const path = require('path');
 const app = express();
 const feUrl = "http://localhost:3000"
-const port = 8050
+const port = process.env.PORT || 8050
 
 var cors = require('cors')
+
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
+});
 
 app.use(bodyParser.json())
 const whitelist = [feUrl]
