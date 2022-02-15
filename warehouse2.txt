@@ -1,3 +1,7 @@
+to build:
+backend: uncomment the lines containing "__dirname" and cors, change "const feUrl"
+frontend: axiosInstance is ok. change baseURL
+
 git add .
 git commit -am "comment"
 git push heroku master

@@ -10,13 +10,21 @@ var nodemailer = require('nodemailer');
 const path = require('path');
 const app = express();
 const feUrl = "http://localhost:3000"
+// const feUrl = "https://my-warehouse-heroku.herokuapp.com/"
 const port = process.env.PORT || 8050
 
 var cors = require('cors')
 
-app.use(express.static(path.join(__dirname, "/frontend/build")));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
+// });
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", '*');
+    res.header("Access-Control-Allow-Credentials", true);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
 });
 
 app.use(bodyParser.json())
@@ -43,16 +51,16 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
 
 console.log("Hello World!")
 
-app.get('/', (req, res) => {
-    res.redirect('/default')
-    // res.send("Default API. Nothing is happening.")
-})
+// app.get('/', (req, res) => {
+//     res.redirect('/default')
+//     // res.send("Default API. Nothing is happening.")
+// })
 
-app.get('/default', (req, res) => {
-    Structure.find().then((result) => {
-        res.send(result);
-    }).catch((error) => { console.log("error: ", error) })
-})
+// app.get('/default', (req, res) => {
+//     Structure.find().then((result) => {
+//         res.send(result);
+//     }).catch((error) => { console.log("error: ", error) })
+// })
 
 //EMAIL
 app.post('/sendEmail', (req, res) => {

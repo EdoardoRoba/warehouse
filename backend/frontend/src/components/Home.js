@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import { axiosInstance } from "../config.js"
 import * as React from "react";
 import { db } from '../firebase-config'
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
@@ -219,14 +220,14 @@ function Home(props) {
 
     // GET
     const getBooks = async () => {
-        axios.get('http://localhost:8050/tool')
+        axiosInstance.get('tool')
             .then(res => {
                 console.log("Tools: ", res.data)
                 setBooks(res.data)
             })
     };
     const getLibraryStructure = async () => {
-        axios.get('http://localhost:8050/structure')
+        axiosInstance.get('structure')
             .then(res => {
                 console.log("Library: ", res.data)
                 setLibrary(res.data)
@@ -253,7 +254,7 @@ function Home(props) {
 
     // POST
     let addBook = () => {
-        axios.post('http://localhost:8050/tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, row: (parseInt(row) - 1).toString(), column: column, lastUser: '' })
+        axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, row: (parseInt(row) - 1).toString(), column: column, lastUser: '' })
             .then(response => {
                 setConfermaAdd(true)
                 getBooks()
@@ -271,7 +272,7 @@ function Home(props) {
             }
         })
         if (bookId !== "") {
-            axios.put("http://localhost:8050/tool/" + bookId, newField).then(response => {
+            axiosInstance.put("tool/" + bookId, newField).then(response => {
                 console.log("Fatto!", response)
                 setConfermaUpdate(true)
                 getBooks()
@@ -285,7 +286,7 @@ function Home(props) {
 
     let updateLibraryLayout = (r, c) => {
         const newField = { rows: parseInt(r), columns: parseInt(c) }
-        axios.put("http://localhost:8050/structure/" + structureId, newField).then(response => {
+        axiosInstance.put("structure/" + structureId, newField).then(response => {
             getBooks()
             getLibraryStructure()
             setOpenLibraryUpdate(false)
@@ -303,7 +304,7 @@ function Home(props) {
             }
         })
         if (bookId !== "") {
-            axios.delete('http://localhost:8050/tool/' + bookId)
+            axiosInstance.delete('tool/' + bookId)
                 .then(() => {
                     setConfermaDelete(true)
                     getBooks()

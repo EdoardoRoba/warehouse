@@ -293,28 +293,28 @@ function Warehouse(props) {
 
     // GET
     const getTools = async () => {
-        axiosInstance.get(beUrl + 'tool')
+        axiosInstance.get('tool')
             .then(res => {
                 // console.log("Tools: ", res.data)
                 setTools(res.data)
             })
     };
     const getLibraryStructure = async () => {
-        axiosInstance.get(beUrl + 'structure')
+        axiosInstance.get('structure')
             .then(res => {
                 // console.log("Library: ", res.data)
                 setLibrary(res.data)
             })
     };
     const getEmployees = async () => {
-        axiosInstance.get(beUrl + 'employee')
+        axiosInstance.get('employee')
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
             })
     }
     const getDepartments = async () => {
-        axiosInstance.get(beUrl + 'structure')
+        axiosInstance.get('structure')
             .then(res => {
                 var depts = res.data
                 var openDeps = {}
@@ -352,7 +352,7 @@ function Warehouse(props) {
 
     // POST
     let addBook = () => {
-        axiosInstance.post(beUrl + 'tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
+        axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
@@ -396,11 +396,11 @@ function Warehouse(props) {
                 }
             })
             if (bookId !== "") {
-                axiosInstance.put(beUrl + "tool/" + bookId, newField).then(response => {
+                axiosInstance.put("tool/" + bookId, newField).then(response => {
                     // console.log("Fatto!", response)
                     setConfermaUpdate(true)
                     getTools()
-                    axiosInstance.post(beUrl + 'history/' + label, { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) })
+                    axiosInstance.post('history/' + label, { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) })
                         .then(response => {
                             console.log("History added!")
                         }).catch(error => {
@@ -423,7 +423,7 @@ function Warehouse(props) {
 
     let updateLibraryLayout = (r, c) => {
         const newField = { rows: parseInt(r), columns: parseInt(c) }
-        axiosInstance.put(beUrl + "structure/" + structureId, newField).then(response => {
+        axiosInstance.put("structure/" + structureId, newField).then(response => {
             getTools()
             getLibraryStructure()
             setOpenLibraryUpdate(false)
@@ -448,7 +448,7 @@ function Warehouse(props) {
             }
         })
         if (bookId !== "") {
-            axiosInstance.delete(beUrl + 'tool/' + bookId)
+            axiosInstance.delete('tool/' + bookId)
                 .then(() => {
                     setConfermaDelete(true)
                     getTools()
