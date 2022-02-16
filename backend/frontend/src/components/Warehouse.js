@@ -163,7 +163,7 @@ function Warehouse(props) {
     }, [subDepartments])
 
     React.useEffect(() => {
-        // console.log("tools: ", tools)
+        console.log("tools: ", tools)
         getQuantity()
     }, [tools])
 

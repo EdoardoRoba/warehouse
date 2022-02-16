@@ -8,17 +8,13 @@ const Employee = require('./models/employee')
 const bodyParser = require('body-parser')
 var nodemailer = require('nodemailer');
 const path = require('path');
+var cors = require('cors')
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-heroku.herokuapp.com/"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 
-var cors = require('cors')
-
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '/frontend/build', 'index.html'));
-// });
+app.use(express.static(path.join(__dirname, "/frontend/build")));
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
@@ -63,7 +59,7 @@ console.log("Hello World!")
 // })
 
 //EMAIL
-app.post('/sendEmail', (req, res) => {
+app.post('/api/sendEmail', (req, res) => {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -90,7 +86,7 @@ app.post('/sendEmail', (req, res) => {
 
 // STRUCTURE OF THE WAREHOUSE:
 // POST
-app.post('/structure', (req, res) => {
+app.post('/api/structure', (req, res) => {
     const structure = new Structure({
         name: req.body.name,
         father: req.body.father
@@ -103,7 +99,7 @@ app.post('/structure', (req, res) => {
 })
 
 // GET
-app.get('/structure', (req, res) => {
+app.get('/api/structure', (req, res) => {
     // it gets all the element in that document
     Structure.find().then((result) => {
         res.send(result);
@@ -119,7 +115,7 @@ app.get('/structure', (req, res) => {
 // })
 
 // PUT
-app.put('/structure/:id', (req, res, next) => {
+app.put('/api/structure/:id', (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
     Structure.findByIdAndUpdate(
@@ -133,7 +129,7 @@ app.put('/structure/:id', (req, res, next) => {
 })
 
 //DELETE
-app.delete('/structure/:id', (req, res) => {
+app.delete('/api/structure/:id', (req, res) => {
     const id = req.params.id;
     Structure.deleteOne(
         { _id: id }
@@ -148,7 +144,7 @@ app.delete('/structure/:id', (req, res) => {
 
 // TOOLS
 // POST
-app.post('/tool', (req, res) => {
+app.post('/api/tool', (req, res) => {
     const tool = new Tool({
         label: req.body.label,
         quantity: req.body.quantity,
@@ -168,14 +164,14 @@ app.post('/tool', (req, res) => {
 })
 
 // GET
-app.get('/tool', (req, res) => {
+app.get('/api/tool', (req, res) => {
     // it gets all the element in that document
     Tool.find().then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
 })
 //GET SINGLE
-app.get('/tool/:id', (req, res) => {
+app.get('/api/tool/:id', (req, res) => {
     // it gets all the element in that document
     Tool.findById(req.params.id).then((result) => {
         res.send(result);
@@ -183,7 +179,7 @@ app.get('/tool/:id', (req, res) => {
 })
 
 // PUT
-app.put('/tool/:id', (req, res, next) => {
+app.put('/api/tool/:id', (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
     const quantity = req.body.quantity
@@ -228,7 +224,7 @@ app.put('/tool/:id', (req, res, next) => {
 })
 
 //DELETE
-app.delete('/tool/:id', (req, res) => {
+app.delete('/api/tool/:id', (req, res) => {
     const id = req.params.id;
     Tool.deleteOne(
         { _id: id }
@@ -242,7 +238,7 @@ app.delete('/tool/:id', (req, res) => {
 
 // HISTORY
 // POST
-app.post('/history/:tool', (req, res) => {
+app.post('/api/history/:tool', (req, res) => {
     const history = new History({
         user: req.body.user,
         tool: req.params.tool,
@@ -258,7 +254,7 @@ app.post('/history/:tool', (req, res) => {
 })
 
 // GET
-app.get('/history', (req, res) => {
+app.get('/api/history', (req, res) => {
     // it gets all the element in that document
     History.find().then((result) => {
         res.send(result);
@@ -269,7 +265,7 @@ app.get('/history', (req, res) => {
 
 // EMPLOYEE
 // POST
-app.post('/employee', (req, res) => {
+app.post('/api/employee', (req, res) => {
     const employee = new Employee({
         name: req.body.name,
         lastName: req.body.lastName,
@@ -285,9 +281,22 @@ app.post('/employee', (req, res) => {
 })
 
 // GET
-app.get('/employee', (req, res) => {
+app.get('/api/employee', (req, res) => {
     // it gets all the element in that document
     Employee.find().then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
 })
+
+
+
+
+
+
+
+
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});
