@@ -24,19 +24,19 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json())
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 // Connect to server
 const dbUri = 'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'

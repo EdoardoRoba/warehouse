@@ -155,7 +155,7 @@ function Warehouse(props) {
     }, [layout])
 
     React.useEffect(() => {
-        // console.log("departments: ", departments) openPapers: [openPapers, openDep] })
+        console.log("departments: ", departments)
     }, [departments])
 
     React.useEffect(() => {
@@ -163,7 +163,7 @@ function Warehouse(props) {
     }, [subDepartments])
 
     React.useEffect(() => {
-        console.log("tools: ", tools)
+        // console.log("tools: ", tools)
         getQuantity()
     }, [tools])
 
