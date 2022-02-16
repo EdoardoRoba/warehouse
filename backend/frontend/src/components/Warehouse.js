@@ -19,9 +19,7 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
-import Switch from '@mui/material/Switch';
-import Fade from '@mui/material/Fade';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Autocomplete from '@mui/material/Autocomplete';
 import './Classes.css'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -68,6 +66,8 @@ function Warehouse(props) {
     const [subDepartments, setSubDepartments] = React.useState([]);
     const [checked, setChecked] = React.useState(false);
     const [openPapers, setOpenPapers] = React.useState({});
+    const [sdSelected, setSdSelected] = React.useState("");
+    const [toolsInSd, setToolsInSd] = React.useState([]);
     // const handleOpen = () => setOpen(true);
 
     const structureId = "6205a1c27f6cda42c2064a0f"
@@ -155,7 +155,7 @@ function Warehouse(props) {
     }, [layout])
 
     React.useEffect(() => {
-        console.log("departments: ", departments)
+        // console.log("departments: ", departments)
     }, [departments])
 
     React.useEffect(() => {
@@ -235,10 +235,6 @@ function Warehouse(props) {
         setInheritedQuantity(event)
     }
 
-    const handleChangeChecked = () => {
-        setChecked((prev) => !prev);
-    };
-
     const createLibrary = () => {
         var structure = []
         var structureGrid = []
@@ -278,16 +274,15 @@ function Warehouse(props) {
         getLibraryStructure()
     };
 
-    const showShelf = (row, column) => {
-        // I take the tools in this shelf
-        const bInShelf = tools.filter(book =>
-            book.row == row.toString() && book.column == alphabet[column].toString()
-        )
-        layout[column][row].color = "green"
-        setLayout(layout)
-        setToolsInShelf(bInShelf)
-        setShelfRowSelected(row.toString())
-        setShelfColumnSelected(alphabet[column])
+    const showSubDepartment = (sd) => {
+        setSdSelected(sd.name)
+        var toolsInSdVar = []
+        for (var tool of tools) {
+            if (tool.subDepartment === sd.name) {
+                toolsInSdVar.push(tool)
+            }
+        }
+        setToolsInSd(toolsInSdVar)
         setOpen(true)
     }
 
@@ -493,13 +488,17 @@ function Warehouse(props) {
                         {...(addBookFlag ? { timeout: 1000 } : {})}
                     >
                         <div style={{ marginTop: '2rem' }}>
-                            <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
-                            <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
-                            <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
-                            <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                            <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
-                            <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} />
-                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addBook}>Conferma</Button>
+                            <div>
+                                <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
+                                <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
+                                <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
+                                <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
+                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} />
+                            </div>
+                            <div style={{ marginTop: '2rem' }}>
+                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addBook}>Conferma</Button>
+                            </div>
                         </div>
                     </Grow>
                 </Box>)
@@ -512,12 +511,16 @@ function Warehouse(props) {
                         {...(getBookFlag ? { timeout: 1000 } : {})}
                     >
                         <div style={{ marginTop: '2rem' }}>
-                            <input placeholder="attrezzo" onChange={(event) => {
-                                setTimeout(() => {
-                                    setLabel(event.target.value)
-                                }, 1000)
-                            }} />
-                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={() => { getBook(label) }}>Conferma</Button>
+                            <div>
+                                <input placeholder="attrezzo" onChange={(event) => {
+                                    setTimeout(() => {
+                                        setLabel(event.target.value)
+                                    }, 1000)
+                                }} />
+                            </div>
+                            <div style={{ marginTop: '2rem' }}>
+                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue' }} onClick={() => { getBook(label) }}>Conferma</Button>
+                            </div>
                         </div>
                     </Grow>
                 </Box>)
@@ -579,8 +582,12 @@ function Warehouse(props) {
                         {...(deleteBookFlag ? { timeout: 1000 } : {})}
                     >
                         <div style={{ marginTop: '2rem' }}>
-                            <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
-                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
+                            <div>
+                                <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
+                            </div>
+                            <div style={{ marginTop: '2rem' }}>
+                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
+                            </div>
                         </div>
                     </Grow>
                 </Box>)
@@ -650,7 +657,7 @@ function Warehouse(props) {
                                     subDepartments.map((sd) => {
                                         if (sd.father === d.name) {
                                             return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                                                <Typography>
+                                                <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
                                                     {sd.name.toUpperCase()}
                                                 </Typography>
                                             </div>
@@ -669,20 +676,29 @@ function Warehouse(props) {
             {/* Modal to show tools in the selected shelf */}
             <Modal
                 open={open}
+                style={{ padding: '5rem' }}
                 onClose={() => { handleClose(layout) }}
                 aria-labelledby="modal-modal-label"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
                     <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                        Libri nel ripiano: {shelfColumnSelected + " - " + (parseInt(shelfRowSelected) + 1).toString()}
+                        Cerca un attrezzo nel reparto: {sdSelected.toUpperCase()}
                     </Typography>
-                    {
+                    {/* {
                         (toolsInShelf.length === 0) ? <span style={{ color: 'grey' }}>Nello ripiano selezionato non sono presenti attrezzi.</span> :
                             toolsInShelf.map((bis) => {
                                 return <li style={{ marginBottom: '0.5rem' }}>{bis.label} - {bis.quantity}</li>
                             })
-                    }
+                    } */}
+                    <Autocomplete
+                        disablePortal
+                        id="combo-box-demo"
+                        options={toolsInSd}
+                        sx={{ width: 300 }}
+                        renderInput={(params) => <TextField {...params} label="Attrezzi" />}
+                        onChange={(event) => { setColumnLayout(event.target.value) }}
+                    />
                 </Box>
             </Modal>
 

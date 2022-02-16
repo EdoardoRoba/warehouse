@@ -10,11 +10,13 @@ var nodemailer = require('nodemailer');
 const path = require('path');
 var cors = require('cors')
 const app = express();
-// const feUrl = "http://localhost:3000"
-const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+const feUrl = "http://localhost:3000"
+// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 
-app.use(express.static(path.join(__dirname, "/frontend/build")));
+// COMMENT WHEN RUNNING LOCALLY
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
@@ -24,19 +26,6 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json())
-// const whitelist = [feUrl]
-// // enable CORS policy
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (!origin || whitelist.indexOf(origin) !== -1) {
-//             callback(null, true)
-//         } else {
-//             callback(new Error("Not allowed by CORS"))
-//         }
-//     },
-//     credentials: true,
-// }
-// app.use(cors(corsOptions))
 
 // Connect to server
 const dbUri = 'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
@@ -296,7 +285,7 @@ app.get('/api/employee', (req, res) => {
 
 
 
-
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-});
+// COMMENT WHEN RUNNING LOCALLY
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+// });
