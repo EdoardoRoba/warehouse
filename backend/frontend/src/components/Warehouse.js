@@ -20,6 +20,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import './Classes.css'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -68,6 +71,7 @@ function Warehouse(props) {
     const [openPapers, setOpenPapers] = React.useState({});
     const [sdSelected, setSdSelected] = React.useState("");
     const [toolsInSd, setToolsInSd] = React.useState([]);
+    const [toolInSd, setToolInSd] = React.useState(null);
     // const handleOpen = () => setOpen(true);
 
     const structureId = "6205a1c27f6cda42c2064a0f"
@@ -191,6 +195,10 @@ function Warehouse(props) {
     }, [toolsInShelf])
 
     React.useEffect(() => {
+        // console.log("toolInSd: ", toolInSd)
+    }, [toolInSd])
+
+    React.useEffect(() => {
         // console.log("library: ", library)
     }, [library])
 
@@ -259,13 +267,8 @@ function Warehouse(props) {
 
     const handleClose = (l) => {
         setOpen(false)
-        setToolsInShelf([])
-        l.map((col) => {
-            col.map((row) => {
-                row.color = "#964b00c7"
-            })
-        })
-        setLayout(l)
+        setToolsInSd([])
+        setToolInSd(null)
     };
 
     const handleCloseLibraryUpdate = (l) => {
@@ -284,6 +287,10 @@ function Warehouse(props) {
         }
         setToolsInSd(toolsInSdVar)
         setOpen(true)
+    }
+
+    const showToolInSd = (e, tool) => {
+        setToolInSd(tool)
     }
 
     // GET
@@ -697,8 +704,55 @@ function Warehouse(props) {
                         options={toolsInSd}
                         sx={{ width: 300 }}
                         renderInput={(params) => <TextField {...params} label="Attrezzi" />}
-                        onChange={(event) => { setColumnLayout(event.target.value) }}
+                        onChange={(event, value) => { showToolInSd(event, value) }}
                     />
+                    {toolInSd === null ? "" : <Card style={{ marginTop: '1rem' }} sx={{ minWidth: 275 }}>
+                        <CardContent>
+                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                Attrezzo
+                            </Typography>
+                            <Typography variant="h5" component="div">
+                                {toolInSd.label.toUpperCase()}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                reparto
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.department}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                sotto-reparto
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.subDepartment}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                quantità
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.quantity}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                quantità minima necessaria
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.lowerBound}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                prezzo d'acquisto (per unità)
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.price}
+                            </Typography>
+                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                ultimo utente
+                            </Typography>
+                            <Typography variant="h7" component="div">
+                                {toolInSd.lastUser}
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                    }
                 </Box>
             </Modal>
 
