@@ -37,10 +37,11 @@ function Warehouse(props) {
     const [tools, setTools] = React.useState([])
     const [employees, setEmployees] = React.useState([])
     const [inheritedQuantity, setInheritedQuantity] = React.useState(-1)
+    const [inheritedLowerBound, setInheritedLowerBound] = React.useState(-1)
     const [label, setLabel] = React.useState("")
     const [quantity, setQuantity] = React.useState("")
     const [user, setUser] = React.useState("")
-    const [lowerBound, setLowerBound] = React.useState("")
+    const [lowerBound, setLowerBound] = React.useState(0)
     const [price, setPrice] = React.useState("")
     const [department, setDepartment] = React.useState("")
     const [subDepartment, setSubDepartment] = React.useState("")
@@ -243,6 +244,10 @@ function Warehouse(props) {
         setInheritedQuantity(event)
     }
 
+    const handleChangeInheritedLowerBound = (event) => {
+        setInheritedLowerBound(event)
+    }
+
     const createLibrary = () => {
         var structure = []
         var structureGrid = []
@@ -374,19 +379,25 @@ function Warehouse(props) {
             for (let t of tools) {
                 if (t.label.toUpperCase() === label.toUpperCase()) {
                     setInheritedQuantity(t.quantity)
+                    setInheritedLowerBound(t.lowerBound)
                     count = count + 1
                 }
             }
             if (count === 0) {
                 setNotFound(true)
                 setInheritedQuantity(0)
+                setInheritedLowerBound(0)
             }
         }
     }
+
     // PUT
-    let updateBook = (label, q, user) => {
+    let updateBook = (label, q, user, lb) => {
         var employeeIsPresent = false
         var oldQuantity
+        if (lb === 0) {
+            lb = inheritedLowerBound
+        }
         for (let t of tools) {
             if (t.label.toUpperCase() === label.toUpperCase()) {
                 oldQuantity = t.quantity
@@ -400,7 +411,7 @@ function Warehouse(props) {
         if (employeeIsPresent) {
             setNonExistingEmployee("")
             var bookId = ""
-            const newField = { label: label, quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase() } //, row: r - 1, column: c
+            const newField = { label: label, quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
             tools.map((b) => {
                 if (b.label.toUpperCase() === label.toUpperCase()) {
                     bookId = b._id
@@ -484,16 +495,16 @@ function Warehouse(props) {
 
             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                    Aggiungi attrezzo
+                    Aggiungi prodotto
                 </Button>
                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
-                    Trova attrezzo
+                    Trova prodotto
                 </Button>
                 <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
-                    Aggiorna attrezzo
+                    Aggiorna prodotto
                 </Button>
                 <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
-                    Elimina attrezzo
+                    Elimina prodotto
                 </Button>
             </div>
             {
@@ -505,7 +516,7 @@ function Warehouse(props) {
                     >
                         <div style={{ marginTop: '2rem' }}>
                             <div>
-                                <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
+                                <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
                                 <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
                                 <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
                                 <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
@@ -533,11 +544,19 @@ function Warehouse(props) {
                                 options={tools}
                                 style={{ marginLeft: 'auto', marginRight: "auto" }}
                                 sx={{ width: 300 }}
-                                renderInput={(params) => <TextField {...params} label="Attrezzi" />}
+                                renderInput={(params) => <TextField {...params} label="prodotti" />}
                                 onChange={(event, value) => { showToolFound(event, value) }}
                             />
                             {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
                                 <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            prodotto
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.label}
+                                        </Typography>
+                                    </div>
                                     <div style={{ marginRight: '3rem' }}>
                                         <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             reparto
@@ -603,7 +622,7 @@ function Warehouse(props) {
                     >
                         <div style={{ marginTop: '2rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <input style={{ marginRight: '2rem' }} placeholder="attrezzo" onChange={(event) => {
+                                <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
                                     clearTimeout(timerUpd)
                                     setTimeout(() => {
                                         setLabel(event.target.value)
@@ -622,6 +641,19 @@ function Warehouse(props) {
                                     value={inheritedQuantity}
                                     onChange={(event) => { handleChangeInheritedQuantity(event) }}
                                 />}
+                                {inheritedLowerBound === -1 ? <TextField
+                                    disabled
+                                    id="outlined-disabled"
+                                    label="quantità minima attuale richiesta"
+                                    value={0}
+                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                /> : <TextField
+                                    disabled
+                                    id="outlined-disabled"
+                                    label="quantità minima attuale richiesta"
+                                    value={inheritedLowerBound}
+                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                />}
 
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
@@ -635,9 +667,30 @@ function Warehouse(props) {
                                     }}
                                     onChange={(event) => { setQuantity(event.target.value) }}
                                 />
+                                {
+                                    inheritedLowerBound === -1 ? <TextField
+                                        id="outlined-number"
+                                        label="quantità minima"
+                                        type="number"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        value={0}
+                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                    /> : <TextField
+                                        id="outlined-number"
+                                        label="quantità minima"
+                                        type="number"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                    />
+                                }
+
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(label, quantity, user) }}>Conferma</Button>
+                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(label, quantity, user, lowerBound) }}>Conferma</Button>
                             </div>
                         </div>
                     </Grow>
@@ -652,7 +705,7 @@ function Warehouse(props) {
                     >
                         <div style={{ marginTop: '2rem' }}>
                             <div>
-                                <input placeholder="attrezzo" onChange={(event) => { setLabel(event.target.value) }} />
+                                <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
                             </div>
                             <div style={{ marginTop: '2rem' }}>
                                 <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
@@ -664,16 +717,16 @@ function Warehouse(props) {
 
             <div>
                 {
-                    (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">Attrezzo aggiunto correttamente!</Alert>
+                    (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiunto correttamente!</Alert>
                 }
                 {
-                    (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">Attrezzo aggiornato correttamente!</Alert>
+                    (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiornato correttamente!</Alert>
                 }
                 {
-                    (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">Attrezzo eliminato correttamente!</Alert>
+                    (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto eliminato correttamente!</Alert>
                 }
                 {
-                    (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Attrezzo {notFound} non trovato! Controlla che il attrezzo sia scritto correttamente.</Alert>
+                    (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">prodotto {notFound} non trovato! Controlla che il prodotto sia scritto correttamente.</Alert>
                 }
                 {
                     (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Controlla la connessione o i dati inseriti.</Alert>
@@ -752,10 +805,10 @@ function Warehouse(props) {
             >
                 <Box sx={style}>
                     <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                        Cerca un attrezzo nel reparto: {sdSelected.toUpperCase()}
+                        Cerca un prodotto nel reparto: {sdSelected.toUpperCase()}
                     </Typography>
                     {/* {
-                        (toolsInShelf.length === 0) ? <span style={{ color: 'grey' }}>Nello ripiano selezionato non sono presenti attrezzi.</span> :
+                        (toolsInShelf.length === 0) ? <span style={{ color: 'grey' }}>Nello ripiano selezionato non sono presenti prodotti.</span> :
                             toolsInShelf.map((bis) => {
                                 return <li style={{ marginBottom: '0.5rem' }}>{bis.label} - {bis.quantity}</li>
                             })
@@ -765,13 +818,13 @@ function Warehouse(props) {
                         id="combo-box-demo"
                         options={toolsInSd}
                         sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="Attrezzi" />}
+                        renderInput={(params) => <TextField {...params} label="prodotti" />}
                         onChange={(event, value) => { showToolInSd(event, value) }}
                     />
                     {toolInSd === null ? "" : <Card style={{ marginTop: '1rem' }} sx={{ minWidth: 275 }}>
                         <CardContent>
                             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                Attrezzo
+                                prodotto
                             </Typography>
                             <Typography variant="h5" component="div">
                                 {toolInSd.label.toUpperCase()}
