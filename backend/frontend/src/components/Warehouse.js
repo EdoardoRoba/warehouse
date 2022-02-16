@@ -412,6 +412,7 @@ function Warehouse(props) {
             setNonExistingEmployee("")
             var bookId = ""
             const newField = { label: label, quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
+            setInheritedLowerBound(parseInt(lb))
             tools.map((b) => {
                 if (b.label.toUpperCase() === label.toUpperCase()) {
                     bookId = b._id
@@ -684,7 +685,11 @@ function Warehouse(props) {
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
-                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                        value={inheritedLowerBound}
+                                        onChange={(event) => {
+                                            setLowerBound(event.target.value)
+                                            setInheritedLowerBound(event.target.value)
+                                        }}
                                     />
                                 }
 
