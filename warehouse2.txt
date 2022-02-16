@@ -30,7 +30,8 @@ calendario appuntamenti - che si collega alla scheda del cliente
 HEROKU!!!!!!!!!!!!!
 jenkins password: ffd4c201629043ad86606e756d0f39a9
 jenkins admin: edoardoroba1317, 30-Marzo-1996, Edoardo Roba, gmail
-http://localhost:8000/
+http://localhost:8000/ (o 8080)
+java -jar C:\Users\edoar\Downloads\jenkins.war
 
 
 
