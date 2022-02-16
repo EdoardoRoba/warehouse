@@ -72,7 +72,7 @@ function Warehouse(props) {
     const [sdSelected, setSdSelected] = React.useState("");
     const [toolsInSd, setToolsInSd] = React.useState([]);
     const [toolInSd, setToolInSd] = React.useState(null);
-    // const handleOpen = () => setOpen(true);
+    const [toolFound, setToolFound] = React.useState(null);
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -178,7 +178,7 @@ function Warehouse(props) {
     React.useEffect(() => {
         // console.log("label: ", label)
         // setTimerUpd(setTimeout(() => {
-        getQuantity(label)
+        getQuantity()
         // clearTimeout(timerUpd)
         // }, 1000))
     }, [label])
@@ -293,6 +293,10 @@ function Warehouse(props) {
         setToolInSd(tool)
     }
 
+    const showToolFound = (e, tool) => {
+        setToolFound(tool)
+    }
+
     // GET
     const getTools = async () => {
         axiosInstance.get('tool')
@@ -365,12 +369,17 @@ function Warehouse(props) {
     }
 
     let getQuantity = () => {
-        for (let t of tools) {
-            if (t.label.toUpperCase() === label.toUpperCase()) {
-                setInheritedQuantity(t.quantity)
-            } else if (label !== "") {
+        var count = 0
+        if (updateBookFlag) {
+            for (let t of tools) {
+                if (t.label.toUpperCase() === label.toUpperCase()) {
+                    setInheritedQuantity(t.quantity)
+                    count = count + 1
+                }
+            }
+            if (count === 0) {
+                setNotFound(true)
                 setInheritedQuantity(0)
-                // setNotFound(true)
             }
         }
     }
@@ -514,21 +523,74 @@ function Warehouse(props) {
                 (!getBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                     <Grow
                         in={getBookFlag}
-                        style={{ transformOrigin: '0 0 0' }}
+                        style={{ transformOrigin: '0 0 0', width: "80%" }}
                         {...(getBookFlag ? { timeout: 1000 } : {})}
                     >
                         <div style={{ marginTop: '2rem' }}>
-                            <div>
-                                <input placeholder="attrezzo" onChange={(event) => {
-                                    setTimeout(() => {
-                                        setLabel(event.target.value)
-                                    }, 1000)
-                                }} />
-                            </div>
-                            <div style={{ marginTop: '2rem' }}>
-                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue' }} onClick={() => { getBook(label) }}>Conferma</Button>
-                            </div>
+                            <Autocomplete
+                                disablePortal
+                                id="combo-box-demo"
+                                options={tools}
+                                style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                sx={{ width: 300 }}
+                                renderInput={(params) => <TextField {...params} label="Attrezzi" />}
+                                onChange={(event, value) => { showToolFound(event, value) }}
+                            />
+                            {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
+                                <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            reparto
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.department}
+                                        </Typography>
+                                    </div>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            sotto-reparto
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.subDepartment}
+                                        </Typography>
+                                    </div>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            quantità
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.quantity}
+                                        </Typography>
+                                    </div>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            quantità minima necessaria
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.lowerBound}
+                                        </Typography>
+                                    </div>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            prezzo d'acquisto (per unità)
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.price}
+                                        </Typography>
+                                    </div>
+                                    <div style={{ marginRight: '3rem' }}>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            ultimo utente
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolFound.lastUser}
+                                        </Typography>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                            }
                         </div>
+
                     </Grow>
                 </Box>)
             }
@@ -641,7 +703,7 @@ function Warehouse(props) {
                 }
             </div> */}
             <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
-            <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem' }}>
+            <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
                 {
                     departments.map((d) => {
                         return <Accordion
