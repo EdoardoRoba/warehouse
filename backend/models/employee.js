@@ -3,7 +3,7 @@ const Schema = mongoose.Schema // defines the schema of the data
 
 // schema
 const employeeSchema = new Schema({
-    name: {
+    label: {
         type: String,
         required: true
     },
@@ -17,7 +17,7 @@ const employeeSchema = new Schema({
     },
     fiscalCode: {
         type: String,
-        required: true
+        required: false
     }
 }, { timestamps: true });
 

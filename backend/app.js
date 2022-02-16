@@ -14,6 +14,7 @@ const app = express();
 const feUrl = "http://localhost:3000"
 // const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
+const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
 // app.use(express.static(path.join(__dirname, "/frontend/build")));
@@ -49,21 +50,32 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
     app.listen(port)
 }).catch((error) => { console.log(error) })
 
-// SCHEDULED EMAIL
-cron.schedule('* * * * * *', () => {
-    console.log("runs in every second")
+// SCHEDULED
+cron.schedule('00 21 * * 5', () => {
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'idroaltech.bot@gmail.com',
+            pass: 'owgjqqmbvuzkprtw'
+        }
+    });
+
+    var mailOptions = {
+        from: 'idroaltech.bot@gmail.com',
+        to: 'roba.edoardo@gmail.com',
+        subject: 'NOTIFICA from website',
+        text: 'Prova email schedulata'
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send('Email sent: ' + info.response)
+        }
+    });
 });
 
-// app.get('/', (req, res) => {
-//     res.redirect('/default')
-//     // res.send("Default API. Nothing is happening.")
-// })
-
-// app.get('/default', (req, res) => {
-//     Structure.find().then((result) => {
-//         res.send(result);
-//     }).catch((error) => { console.log("error: ", error) })
-// })
 
 //EMAIL
 app.post('/api/sendEmail', (req, res) => {
@@ -71,7 +83,7 @@ app.post('/api/sendEmail', (req, res) => {
         service: 'gmail',
         auth: {
             user: 'idroaltech.bot@gmail.com',
-            pass: 'uhgsasuiilzrncwb'
+            pass: 'owgjqqmbvuzkprtw'
         }
     });
 
@@ -193,12 +205,12 @@ app.put('/api/tool/:id', (req, res, next) => {
     const label = req.body.label
     Tool.findById(id).then((result) => {
         if (parseInt(quantity) < result.lowerBound) {
-            EmailTemplate.find().then((resultEmail) => {
+            EmailTemplate.findById(idEmailAlert).then((resultEmail) => {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
                         user: 'idroaltech.bot@gmail.com',
-                        pass: 'uhgsasuiilzrncwb'
+                        pass: 'owgjqqmbvuzkprtw'
                     }
                 });
 
@@ -206,7 +218,7 @@ app.put('/api/tool/:id', (req, res, next) => {
                     from: 'idroaltech.bot@gmail.com',
                     to: 'roba.edoardo@gmail.com', // info@idroaltech.it',
                     subject: 'NOTIFICA QUANTITA\' LIMITE - ' + label.toUpperCase(),
-                    html: resultEmail[0].template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment)
+                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment)
                 };
 
                 transporter.sendMail(mailOptions, function (error, info) {
@@ -274,7 +286,7 @@ app.get('/api/history', (req, res) => {
 // POST
 app.post('/api/employee', (req, res) => {
     const employee = new Employee({
-        name: req.body.name,
+        label: req.body.label,
         lastName: req.body.lastName,
         birth: req.body.birth,
         fiscalCode: req.body.fiscalCode

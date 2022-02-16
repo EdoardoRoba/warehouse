@@ -6,6 +6,10 @@ const emailTemplateSchema = new Schema({
     template: {
         type: String,
         required: true
+    },
+    use: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 

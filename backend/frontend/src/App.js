@@ -5,13 +5,14 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import Warehouse from './components/Warehouse';
 import History from './components/History';
 import Customers from './components/Customers';
+import Employees from './components/Employees';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
-const pages = [{ label: 'Magazzino', id: 'warehouse' }, { label: 'Storico', id: 'history' }, { label: 'Clienti', id: 'customers' }];
+const pages = [{ label: 'Magazzino', id: 'warehouse' }, { label: 'Storico', id: 'history' }, { label: 'Clienti', id: 'customers' }, { label: 'Dipendenti', id: 'employees' }];
 
 function App() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -45,6 +46,7 @@ function App() {
           <Route exact path='/warehouse' element={< Warehouse />}></Route>
           <Route exact path='/history' element={< History />}></Route>
           <Route exact path='/customers' element={< Customers />}></Route>
+          <Route exact path='/employees' element={< Employees />}></Route>
         </Routes>
       </div>
     </Router >

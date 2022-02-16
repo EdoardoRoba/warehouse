@@ -21,8 +21,9 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import './Classes.css'
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -68,12 +69,14 @@ function Warehouse(props) {
     const [nonExistingEmployee, setNonExistingEmployee] = React.useState("");
     const [departments, setDepartments] = React.useState([]);
     const [subDepartments, setSubDepartments] = React.useState([]);
-    const [checked, setChecked] = React.useState(false);
     const [openPapers, setOpenPapers] = React.useState({});
     const [sdSelected, setSdSelected] = React.useState("");
     const [toolsInSd, setToolsInSd] = React.useState([]);
     const [toolInSd, setToolInSd] = React.useState(null);
     const [toolFound, setToolFound] = React.useState(null);
+    const [isSubDep, setIsSubDep] = React.useState(false);
+    const [addingDepartment, setAddingDepartment] = React.useState("");
+    const [addingSubDepartment, setAddingSubDepartment] = React.useState("");
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -102,7 +105,7 @@ function Warehouse(props) {
     // whenever the page reloads (renders), the hook "useEffect" is called
     React.useEffect(() => {
         getTools()
-        getLibraryStructure()
+        // getLibraryStructure()
         getEmployees()
         getDepartments()
     }, [])
@@ -168,7 +171,7 @@ function Warehouse(props) {
     }, [subDepartments])
 
     React.useEffect(() => {
-        // console.log("tools: ", tools)
+        console.log("tools: ", tools)
         getQuantity()
     }, [tools])
 
@@ -216,6 +219,13 @@ function Warehouse(props) {
         setUpdateBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
+        setLabel("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
     };
 
     const handleChangeGetBook = () => {
@@ -223,6 +233,13 @@ function Warehouse(props) {
         setUpdateBookFlag(false);
         setDeleteBookFlag(false);
         setAddBookFlag(false);
+        setLabel("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
     };
 
     const handleChangeUpdateBook = () => {
@@ -230,6 +247,13 @@ function Warehouse(props) {
         setAddBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
+        setLabel("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
         // setInheritedQuantity(0)
     };
 
@@ -238,6 +262,13 @@ function Warehouse(props) {
         setAddBookFlag(false);
         setUpdateBookFlag(false);
         setGetBookFlag(false);
+        setLabel("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
     };
 
     const handleChangeInheritedQuantity = (event) => {
@@ -246,6 +277,10 @@ function Warehouse(props) {
 
     const handleChangeInheritedLowerBound = (event) => {
         setInheritedLowerBound(event)
+    }
+
+    const handleChangeSwitch = () => {
+        setIsSubDep((prev) => !prev)
     }
 
     const createLibrary = () => {
@@ -276,10 +311,13 @@ function Warehouse(props) {
         setToolInSd(null)
     };
 
-    const handleCloseLibraryUpdate = (l) => {
+    const handleCloseLibraryUpdate = () => {
         setOpenLibraryUpdate(false)
         getTools()
-        getLibraryStructure()
+        // getLibraryStructure()
+        getDepartments()
+        setAddingDepartment("")
+        setAddingSubDepartment("")
     };
 
     const showSubDepartment = (sd) => {
@@ -310,13 +348,13 @@ function Warehouse(props) {
                 setTools(res.data)
             })
     };
-    const getLibraryStructure = async () => {
-        axiosInstance.get('structure')
-            .then(res => {
-                // console.log("Library: ", res.data)
-                setLibrary(res.data)
-            })
-    };
+    // const getLibraryStructure = async () => {
+    //     axiosInstance.get('structure')
+    //         .then(res => {
+    //             // console.log("Library: ", res.data)
+    //             setLibrary(res.data)
+    //         })
+    // };
     const getEmployees = async () => {
         axiosInstance.get('employee')
             .then(res => {
@@ -329,12 +367,12 @@ function Warehouse(props) {
             .then(res => {
                 var depts = res.data
                 var openDeps = {}
-                var subds = depts.filter((d) => d.father !== undefined)
+                var subds = depts.filter((d) => (d.father !== undefined && d.father !== ""))
                 for (var deps of subds) {
                     openDeps[deps.name] = false
                 }
                 setSubDepartments(subds)
-                var ds = depts.filter((d) => d.father === undefined)
+                var ds = depts.filter((d) => d.father === undefined || d.father === "")
                 setDepartments(ds)
                 for (var depd of ds) {
                     openDeps[depd.name] = false
@@ -444,16 +482,21 @@ function Warehouse(props) {
 
     }
 
-    let updateLibraryLayout = (r, c) => {
-        const newField = { rows: parseInt(r), columns: parseInt(c) }
-        axiosInstance.put("structure/" + structureId, newField).then(response => {
-            getTools()
-            getLibraryStructure()
-            setOpenLibraryUpdate(false)
-        }).catch((error) => {
-            console.log("error: ", error)
+    let addDepartment = () => {
+        var name = ""
+        var father = ""
+        if (addingSubDepartment !== "") {
+            name = addingSubDepartment
+            father = addingDepartment
+        } else {
+            name = addingDepartment
+        }
+        axiosInstance.post('structure', { name: name, father: father }).then(response => {
+            handleCloseLibraryUpdate()
+        }).catch(error => {
+            // console.log("error")
+            setShowError(true)
         });
-
     }
 
     let updateOpenPapers = (dep) => {
@@ -879,17 +922,35 @@ function Warehouse(props) {
             {/* Modal to update library structure */}
             <Modal
                 open={openLibraryUpdate}
-                onClose={() => { handleCloseLibraryUpdate(layout) }}
+                onClose={() => { handleCloseLibraryUpdate() }}
                 aria-labelledby="modal-modal-label"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                        Seleziona la nuova struttura del tuo magazzino:
+                    <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                        Aggiungi un reparto o sottoreparto:
                     </Typography>
-                    <input placeholder="numero di scaffali" onChange={(event) => { setColumnLayout(event.target.value) }} />
-                    <input placeholder="numero di ripiani" onChange={(event) => { setRowLayout(event.target.value) }} />
-                    <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateLibraryLayout(rowLayout, columnLayout) }}>Conferma</Button>
+                    <FormControlLabel
+                        control={
+                            <Switch checked={isSubDep} onChange={handleChangeSwitch} name="subdep" />
+                        }
+                        style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}
+                        label="Seleziona se è un sottoreparto"
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                        {
+                            isSubDep ? "" : <input style={{ marginTop: '2rem' }} placeholder="reparto" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                        }
+                        {
+                            !isSubDep ? "" : <div>
+                                <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
+                            </div>
+                        }
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                        <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addDepartment() }}>Conferma</Button>
+                    </div>
                 </Box>
             </Modal>
 

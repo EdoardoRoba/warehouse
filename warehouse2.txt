@@ -8,6 +8,10 @@ git push heroku master
 -- > https://my-warehouse-app-heroku.herokuapp.com/
 ----------
 
+password idroaltech.bot: owgjqqmbvuzkprtw
+
+
+
 warehouse:
 togli ripiano - scaffale -> reparto (elettrico, idraulico, macroelementi)
 reparti e sottoreparti: idraulica: raccorderia ottone, raccorderia ghisa, tubisteria, acqua, ecc (almeno trentina per sottoreparto)
