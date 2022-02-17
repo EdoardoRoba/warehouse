@@ -3,7 +3,7 @@ const Schema = mongoose.Schema // defines the schema of the data
 
 // schema
 const structureSchema = new Schema({
-    name: {
+    label: {
         type: String,
         required: true
     },

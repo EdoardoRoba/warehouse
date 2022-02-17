@@ -7,7 +7,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import Grow from '@mui/material/Grow';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
@@ -16,6 +16,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -24,14 +25,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import './Classes.css'
-
-const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}));
 
 function Warehouse(props) {
     const [timerUpd, setTimerUpd] = React.useState(setTimeout(() => { }, 1000))
@@ -69,6 +65,7 @@ function Warehouse(props) {
     const [nonExistingEmployee, setNonExistingEmployee] = React.useState("");
     const [departments, setDepartments] = React.useState([]);
     const [subDepartments, setSubDepartments] = React.useState([]);
+    const [subDepartmentsForMenu, setSubDepartmentsForMenu] = React.useState([]);
     const [openPapers, setOpenPapers] = React.useState({});
     const [sdSelected, setSdSelected] = React.useState("");
     const [toolsInSd, setToolsInSd] = React.useState([]);
@@ -77,6 +74,7 @@ function Warehouse(props) {
     const [isSubDep, setIsSubDep] = React.useState(false);
     const [addingDepartment, setAddingDepartment] = React.useState("");
     const [addingSubDepartment, setAddingSubDepartment] = React.useState("");
+    const [disabledSDMenu, setDisabledSDMenu] = React.useState(true);
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -93,14 +91,6 @@ function Warehouse(props) {
         boxShadow: 24,
         p: 4,
     };
-
-    const Item = styled(Paper)(({ theme }) => ({
-        ...theme.typography.body2,
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-        height: 60,
-        lineHeight: '60px',
-    }));
 
     // whenever the page reloads (renders), the hook "useEffect" is called
     React.useEffect(() => {
@@ -153,9 +143,9 @@ function Warehouse(props) {
     }, [nonExistingEmployee]);
 
     React.useEffect(() => {
-        if (library !== null) {
-            createLibrary()
-        }
+        // if (library !== null) {
+        //     createLibrary()
+        // }
     }, [library])
 
     React.useEffect(() => {
@@ -171,7 +161,15 @@ function Warehouse(props) {
     }, [subDepartments])
 
     React.useEffect(() => {
-        console.log("tools: ", tools)
+        // console.log("subDepartment: ", subDepartment)
+    }, [subDepartment])
+
+    React.useEffect(() => {
+        // console.log("department: ", department)
+    }, [department])
+
+    React.useEffect(() => {
+        // console.log("tools: ", tools)
         getQuantity()
     }, [tools])
 
@@ -214,6 +212,10 @@ function Warehouse(props) {
         // console.log("rowsLibrary: ", rowsLibrary)
     }, [rowsLibrary])
 
+    React.useEffect(() => {
+        // console.log("subDepartmentsForMenu: ", subDepartmentsForMenu)
+    }, [subDepartmentsForMenu])
+
     const handleChangeAddBook = () => {
         setAddBookFlag((prev) => !prev);
         setUpdateBookFlag(false);
@@ -226,6 +228,8 @@ function Warehouse(props) {
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
     };
 
     const handleChangeGetBook = () => {
@@ -240,6 +244,8 @@ function Warehouse(props) {
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
     };
 
     const handleChangeUpdateBook = () => {
@@ -254,7 +260,8 @@ function Warehouse(props) {
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
-        // setInheritedQuantity(0)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
     };
 
     const handleChangeDeleteBook = () => {
@@ -269,6 +276,8 @@ function Warehouse(props) {
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
     };
 
     const handleChangeInheritedQuantity = (event) => {
@@ -283,27 +292,27 @@ function Warehouse(props) {
         setIsSubDep((prev) => !prev)
     }
 
-    const createLibrary = () => {
-        var structure = []
-        var structureGrid = []
-        var rows = []
-        var cols = []
-        if (library.length > 0) {
-            for (var c = 0; c < library[0].columns; c++) {
-                rows = []
-                structureGrid[c] = []
-                structure[c] = []
-                for (var r = 0; r < library[0].rows; r++) {
-                    structure[c].push({ row: r, column: c, selected: false, key: r.toString() + alphabet[c].toString(), color: '#964b00c7' })
-                    rows.push(r)
-                }
-                cols.push(c)
-            }
-        }
-        setLayout(structure)
-        setRowsLibrary(rows)
-        setColumnsLibrary(cols)
-    }
+    // const createLibrary = () => {
+    //     var structure = []
+    //     var structureGrid = []
+    //     var rows = []
+    //     var cols = []
+    //     if (library.length > 0) {
+    //         for (var c = 0; c < library[0].columns; c++) {
+    //             rows = []
+    //             structureGrid[c] = []
+    //             structure[c] = []
+    //             for (var r = 0; r < library[0].rows; r++) {
+    //                 structure[c].push({ row: r, column: c, selected: false, key: r.toString() + alphabet[c].toString(), color: '#964b00c7' })
+    //                 rows.push(r)
+    //             }
+    //             cols.push(c)
+    //         }
+    //     }
+    //     setLayout(structure)
+    //     setRowsLibrary(rows)
+    //     setColumnsLibrary(cols)
+    // }
 
     const handleClose = (l) => {
         setOpen(false)
@@ -321,10 +330,10 @@ function Warehouse(props) {
     };
 
     const showSubDepartment = (sd) => {
-        setSdSelected(sd.name)
+        setSdSelected(sd.label)
         var toolsInSdVar = []
         for (var tool of tools) {
-            if (tool.subDepartment === sd.name) {
+            if (tool.subDepartment === sd.label) {
                 toolsInSdVar.push(tool)
             }
         }
@@ -369,38 +378,20 @@ function Warehouse(props) {
                 var openDeps = {}
                 var subds = depts.filter((d) => (d.father !== undefined && d.father !== ""))
                 for (var deps of subds) {
-                    openDeps[deps.name] = false
+                    openDeps[deps.label] = false
                 }
                 setSubDepartments(subds)
                 var ds = depts.filter((d) => d.father === undefined || d.father === "")
                 setDepartments(ds)
                 for (var depd of ds) {
-                    openDeps[depd.name] = false
+                    openDeps[depd.label] = false
                 }
                 setOpenPapers(openDeps)
             })
     }
-    const getBook = async (label) => {
-        let count = 0
-        tools.map((b) => {
-            if (b.label.toUpperCase() === label.toUpperCase()) {
-                count = count + 1
-                layout[alphabet.indexOf(b.column)][parseInt(b.row)].color = "green"
-                getTools()
-                const timer = setTimeout(() => {
-                    layout[alphabet.indexOf(b.column)][parseInt(b.row)].color = "#964b00c7"
-                    getTools()
-                }, 7000);
-                return () => clearTimeout(timer);
-            }
-        })
-        if (count === 0) {
-            setNotFound(label)
-        }
-    };
 
     // POST
-    let addBook = () => {
+    let addTool = () => {
         axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
             .then(response => {
                 setConfermaAdd(true)
@@ -426,6 +417,19 @@ function Warehouse(props) {
                 setInheritedQuantity(0)
                 setInheritedLowerBound(0)
             }
+        }
+    }
+
+    let handleChangeDepMenu = (e, value) => {
+        setDepartment(value)
+        // console.log(value)
+        if (value !== null) {
+            let sdMenu = subDepartments.filter((sd) => {
+                return sd.father === value.label
+            })
+            setSubDepartmentsForMenu(sdMenu)
+            setDisabledSDMenu(false)
+            setDepartment(value.label)
         }
     }
 
@@ -491,7 +495,7 @@ function Warehouse(props) {
         } else {
             name = addingDepartment
         }
-        axiosInstance.post('structure', { name: name, father: father }).then(response => {
+        axiosInstance.post('structure', { label: name.toLowerCase(), father: father.toLowerCase() }).then(response => {
             handleCloseLibraryUpdate()
         }).catch(error => {
             // console.log("error")
@@ -518,6 +522,9 @@ function Warehouse(props) {
                 .then(() => {
                     setConfermaDelete(true)
                     getTools()
+                }).catch(error => {
+                    console.log(error)
+                    setShowError(true)
                 });
         } else {
             setConfermaDelete(false)
@@ -564,11 +571,39 @@ function Warehouse(props) {
                                 <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
                                 <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
                                 <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                                <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
-                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} />
+                                {/* <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
+                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} /> */}
+                                <div style={{ display: 'flex', marginTop: '1rem' }}>
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={departments}
+                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                        sx={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} label="reparti" />}
+                                        onChange={(event, value) => {
+                                            handleChangeDepMenu(event, value)
+                                        }}
+                                    />
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        disabled={disabledSDMenu}
+                                        options={subDepartmentsForMenu}
+                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                        sx={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
+                                        onChange={(event, value) => {
+                                            if (value !== null) {
+                                                setSubDepartment(value.label)
+                                            }
+                                        }}
+                                    />
+                                </div>
+
                             </div>
                             <div style={{ marginTop: '2rem' }}>
-                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addBook}>Conferma</Button>
+                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addTool}>Conferma</Button>
                             </div>
                         </div>
                     </Grow>
@@ -785,38 +820,20 @@ function Warehouse(props) {
             </div>
 
             {/* WAREHOUSE */}
-            {/* <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Scaffali:</h2>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                {
-                    columnsLibrary.map((c) => {
-                        return <div style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}><span>{alphabet[c]}</span>
-                            <Grid container>
-                                {
-                                    rowsLibrary.map((r) => {
-                                        return <Grid item xs={12}>
-                                            <Item onClick={() => { showShelf(r, c) }} className="hovered" style={{ backgroundColor: layout[c][r].color }}>{(r + 1).toString()}</Item>
-                                        </Grid>
-                                    })
-                                }
-                            </Grid>
-                        </div>
-                    })
-                }
-            </div> */}
             <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
             <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
                 {
                     departments.map((d) => {
                         return <Accordion
-                            expanded={openPapers[d.name] || false}
-                            onChange={() => { updateOpenPapers(d.name) }}
+                            expanded={openPapers[d.label] || false}
+                            onChange={() => { updateOpenPapers(d.label) }}
                         >
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1bh-content"
                             >
                                 <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
-                                    {d.name.toUpperCase()}
+                                    {d.label.toUpperCase()}
                                 </Typography>
                                 {/* <Typography sx={{ color: "text.secondary" }}>
                                     I am an accordion
@@ -825,10 +842,10 @@ function Warehouse(props) {
                             <AccordionDetails>
                                 {
                                     subDepartments.map((sd) => {
-                                        if (sd.father === d.name) {
+                                        if (sd.father === d.label) {
                                             return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                                 <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
-                                                    {sd.name.toUpperCase()}
+                                                    {sd.label.toUpperCase()}
                                                 </Typography>
                                             </div>
                                         }

@@ -24,7 +24,7 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    res.header("Access-Control-Allow-Headers", 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
     next();
 });
 
@@ -108,7 +108,7 @@ app.post('/api/sendEmail', (req, res) => {
 // POST
 app.post('/api/structure', (req, res) => {
     const structure = new Structure({
-        name: req.body.name,
+        label: req.body.label,
         father: req.body.father
     })
     structure.save().then((result) => {
@@ -246,8 +246,8 @@ app.put('/api/tool/:id', (req, res, next) => {
 //DELETE
 app.delete('/api/tool/:id', (req, res) => {
     const id = req.params.id;
-    Tool.deleteOne(
-        { _id: id }
+    Tool.findByIdAndRemove(
+        id
     ).then((result) => {
         res.send(result)
     }).catch((error) => {
@@ -308,6 +308,17 @@ app.get('/api/employee', (req, res) => {
     }).catch((error) => { console.log("error: ", error) })
 })
 
+//DELETE
+app.delete('/api/employee/:id', (req, res) => {
+    const id = req.params.id;
+    Employee.findByIdAndRemove(
+        id
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
 
 
 

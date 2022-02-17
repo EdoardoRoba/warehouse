@@ -132,7 +132,7 @@ function Employees(props) {
     }
 
     let addEmployeeRecord = () => {
-        axiosInstance.post('employee', { label: label, lastName: lastName, birth: birth, fiscalCode: fiscalCode })
+        axiosInstance.post('employee', { label: label.toLowerCase(), lastName: lastName.toLowerCase() }) //, birth: birth, fiscalCode: fiscalCode
             .then(response => {
                 setConfermaAdd(true)
                 getEmployees()
@@ -145,7 +145,7 @@ function Employees(props) {
     let deleteEmployeeRecord = () => {
         var emplId = ""
         employees.map((b) => {
-            if (b.label.toUpperCase() === label.toUpperCase()) {
+            if (b.lastName.toUpperCase() === lastName.toUpperCase()) {
                 emplId = b._id
             }
         })
@@ -154,6 +154,9 @@ function Employees(props) {
                 .then(() => {
                     setConfermaDelete(true)
                     getEmployees()
+                }).catch(error => {
+                    // console.log("error")
+                    setShowError(true)
                 });
         } else {
             setConfermaDelete(false)
@@ -172,9 +175,9 @@ function Employees(props) {
                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetEmployeeRecord}>
                     Trova record dipendente
                 </Button>
-                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateEmployeeRecord}>
+                {/* <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateEmployeeRecord}>
                     Aggiorna record dipendente
-                </Button>
+                </Button> */}
                 <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteEmployeeRecord}>
                     Elimina record dipendente
                 </Button>
@@ -190,8 +193,8 @@ function Employees(props) {
                             <div>
                                 <input placeholder="nome" onChange={(event) => { setLabel(event.target.value) }} />
                                 <input placeholder="cognome" onChange={(event) => { setLastName(event.target.value) }} />
-                                <input placeholder="data di nascita (dd/mm/YYYY)" onChange={(event) => { setBirth(event.target.value) }} />
-                                <input placeholder="codice fiscale" onChange={(event) => { setFiscalCode(event.target.value) }} />
+                                {/* <input placeholder="data di nascita (dd/mm/YYYY)" onChange={(event) => { setBirth(event.target.value) }} />
+                                <input placeholder="codice fiscale" onChange={(event) => { setFiscalCode(event.target.value) }} /> */}
                             </div>
                             <div style={{ marginTop: '2rem' }}>
                                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addEmployeeRecord}>Conferma</Button>
@@ -204,7 +207,7 @@ function Employees(props) {
                 (!getEmployeeRecordFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                     <Grow
                         in={getEmployeeRecordFlag}
-                        style={{ transformOrigin: '0 0 0', width: "80%" }}
+                        style={{ transformOrigin: '0 0 0', width: "50%" }}
                         {...(getEmployeeRecordFlag ? { timeout: 1000 } : {})}
                     >
                         <div style={{ marginTop: '2rem' }}>
@@ -224,7 +227,7 @@ function Employees(props) {
                                             nome
                                         </Typography>
                                         <Typography variant="h7" component="div">
-                                            {employeeFound.label}
+                                            {employeeFound.label.toUpperCase()}
                                         </Typography>
                                     </div>
                                     <div style={{ marginRight: '3rem' }}>
@@ -232,10 +235,10 @@ function Employees(props) {
                                             cognome
                                         </Typography>
                                         <Typography variant="h7" component="div">
-                                            {employeeFound.lastName}
+                                            {employeeFound.lastName.toUpperCase()}
                                         </Typography>
                                     </div>
-                                    <div style={{ marginRight: '3rem' }}>
+                                    {/* <div style={{ marginRight: '3rem' }}>
                                         <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                             data di nascita
                                         </Typography>
@@ -250,7 +253,7 @@ function Employees(props) {
                                         <Typography variant="h7" component="div">
                                             {employeeFound.fiscalCode}
                                         </Typography>
-                                    </div>
+                                    </div> */}
                                 </CardContent>
                             </Card>
                             }
@@ -355,7 +358,7 @@ function Employees(props) {
                     >
                         <div style={{ marginTop: '2rem' }}>
                             <div>
-                                <input placeholder="dipendente" onChange={(event) => { setLabel(event.target.value) }} />
+                                <input placeholder="dipendente" onChange={(event) => { setLastName(event.target.value) }} />
                             </div>
                             <div style={{ marginTop: '2rem' }}>
                                 <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteEmployeeRecord() }}>Conferma</Button>

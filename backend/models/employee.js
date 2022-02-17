@@ -13,7 +13,7 @@ const employeeSchema = new Schema({
     },
     birth: {
         type: String,
-        required: true
+        required: false
     },
     fiscalCode: {
         type: String,
