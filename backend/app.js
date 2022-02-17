@@ -18,6 +18,7 @@ const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
 // app.use(express.static(path.join(__dirname, "/frontend/build")));
+// app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
