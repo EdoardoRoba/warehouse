@@ -50,12 +50,12 @@ function Login(props) {
         return () => clearTimeout(timer);
     }, [showError]);
 
-    React.useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoggedIn(false)
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, [loggedIn]);
+    // React.useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         setLoggedIn(false)
+    //     }, 5000);
+    //     return () => clearTimeout(timer);
+    // }, [loggedIn]);
 
     React.useEffect(() => {
         // console.log(token)
@@ -93,6 +93,7 @@ function Login(props) {
             setShowError(true)
             console.log(error)
         });
+        window.location.reload(true);
     }
 
     return (
@@ -148,10 +149,12 @@ function Login(props) {
                     (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Utente o password non corretti.</Alert>
                 }
                 {
-                    (!loggedIn) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">Utente loggato correttamente!</Alert>
+                    (!loggedIn) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '2rem' }} severity="success">Utente loggato correttamente!</Alert>
                 }
             </div>
-            {/* <Button onClick={userIsAuthenticated} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}>Conferma</Button> */}
+            {
+                !loggedIn ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button onClick={userIsAuthenticated} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Continua</Link></Button></div>
+            }
         </div>
     );
 }
