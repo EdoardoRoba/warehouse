@@ -5,11 +5,14 @@ const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
 const History = require('./models/history')
 const Employee = require('./models/employee')
+const Profile = require('./models/Profile')
 const bodyParser = require('body-parser')
+require('dotenv').config();
 var nodemailer = require('nodemailer');
 const path = require('path');
 var cron = require('node-cron');
 var cors = require('cors')
+const jwt = require("jsonwebtoken")
 const app = express();
 const feUrl = "http://localhost:3000"
 // const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
@@ -45,7 +48,8 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 // Connect to server
-const dbUri = 'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
+const dbUri = process.env.MONGO_URL //'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
+// console.log("dbUri: " + dbUri)
 mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     console.log("Connected")
     app.listen(port)
@@ -322,6 +326,50 @@ app.delete('/api/employee/:id', (req, res) => {
 
 
 
+// PROFILE
+// POST
+app.post('/api/profile', (req, res) => {
+
+    const username = req.body.username
+    const password = req.body.password
+
+    Profile.find().then((result) => {
+        var profile = result.filter((res) => res.password === password)
+        if (profile.length > 0) {
+            const id = res.id
+            const token = jwt.sign({ id }, "jwtSecret", {
+                expiresIn: 3600
+            })
+            // console.log(token)
+            res.json({ auth: true, token: token })
+        } else {
+            res.status(404).send({ auth: false, message: "user does not exist." })
+            console.log("user does not exist.")
+        }
+    }).catch((error) => { console.log("error: ", error) })
+
+})
+
+const verifyJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"]
+    if (!token) {
+        res.status(406).send("The user is not authenticated.")
+    } else {
+        jwt.verify(token, "jwtSecret", (err, decoded) => {
+            if (err) {
+                res.status(406).send("The user is not authenticated.")
+                // res.json({ auth: false, message: "You failed to authenticate." })
+            } else {
+                req.userId = decoded.id;
+                next();
+            }
+        })
+    }
+}
+
+app.get('/api/authenticated', verifyJWT, (req, res) => {
+    res.send("You are authenticated!")
+})
 
 
 

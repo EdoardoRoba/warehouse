@@ -30,6 +30,7 @@ import MenuItem from '@mui/material/MenuItem';
 import './Classes.css'
 
 function Warehouse(props) {
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
     const [timerUpd, setTimerUpd] = React.useState(setTimeout(() => { }, 1000))
     const [tools, setTools] = React.useState([])
     const [employees, setEmployees] = React.useState([])
@@ -95,9 +96,9 @@ function Warehouse(props) {
     // whenever the page reloads (renders), the hook "useEffect" is called
     React.useEffect(() => {
         getTools()
-        // getLibraryStructure()
         getEmployees()
         getDepartments()
+        userIsAuthenticated()
     }, [])
 
     React.useEffect(() => {
@@ -215,6 +216,20 @@ function Warehouse(props) {
     React.useEffect(() => {
         // console.log("subDepartmentsForMenu: ", subDepartmentsForMenu)
     }, [subDepartmentsForMenu])
+
+    const userIsAuthenticated = () => {
+        axiosInstance.get("authenticated", {
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(response => {
+            console.log(response.data)
+            setUserIsAuthenticatedFlag(true)
+        }).catch(error => {
+            console.log(error)
+            setUserIsAuthenticatedFlag(false)
+        });
+    }
 
     const handleChangeAddBook = () => {
         setAddBookFlag((prev) => !prev);
@@ -535,442 +550,446 @@ function Warehouse(props) {
 
     return (
         <div style={{ width: '100vw' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
-                <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
-                    <IconButton onClick={() => { setOpenLibraryUpdate(true) }}>
-                        <SystemUpdateAltIcon />
-                    </IconButton>
-                </Tooltip>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                    Aggiungi prodotto
-                </Button>
-                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
-                    Trova prodotto
-                </Button>
-                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
-                    Aggiorna prodotto
-                </Button>
-                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
-                    Elimina prodotto
-                </Button>
-            </div>
             {
-                (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                    <Grow
-                        in={addBookFlag}
-                        style={{ transformOrigin: '0 0 0' }}
-                        {...(addBookFlag ? { timeout: 1000 } : {})}
-                    >
-                        <div style={{ marginTop: '2rem' }}>
-                            <div>
-                                <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
-                                <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
-                                <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
-                                <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                                {/* <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
-                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} /> */}
-                                <div style={{ display: 'flex', marginTop: '1rem' }}>
-                                    <Autocomplete
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        options={departments}
-                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                        sx={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} label="reparti" />}
-                                        onChange={(event, value) => {
-                                            handleChangeDepMenu(event, value)
-                                        }}
-                                    />
-                                    <Autocomplete
-                                        disablePortal
-                                        id="combo-box-demo"
-                                        disabled={disabledSDMenu}
-                                        options={subDepartmentsForMenu}
-                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                        sx={{ width: 300 }}
-                                        renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
-                                        onChange={(event, value) => {
-                                            if (value !== null) {
-                                                setSubDepartment(value.label)
-                                            }
-                                        }}
-                                    />
-                                </div>
-
-                            </div>
-                            <div style={{ marginTop: '2rem' }}>
-                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addTool}>Conferma</Button>
-                            </div>
+                !userIsAuthenticatedFlag ? <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert> :
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                            <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
+                            <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
+                                <IconButton onClick={() => { setOpenLibraryUpdate(true) }}>
+                                    <SystemUpdateAltIcon />
+                                </IconButton>
+                            </Tooltip>
                         </div>
-                    </Grow>
-                </Box>)
-            }
-            {
-                (!getBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                    <Grow
-                        in={getBookFlag}
-                        style={{ transformOrigin: '0 0 0', width: "80%" }}
-                        {...(getBookFlag ? { timeout: 1000 } : {})}
-                    >
-                        <div style={{ marginTop: '2rem' }}>
-                            <Autocomplete
-                                disablePortal
-                                id="combo-box-demo"
-                                options={tools}
-                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                sx={{ width: 300 }}
-                                renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                onChange={(event, value) => { showToolFound(event, value) }}
-                            />
-                            {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
-                                <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            prodotto
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.label}
-                                        </Typography>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
+                                Aggiungi prodotto
+                            </Button>
+                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
+                                Trova prodotto
+                            </Button>
+                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
+                                Aggiorna prodotto
+                            </Button>
+                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
+                                Elimina prodotto
+                            </Button>
+                        </div>
+                        {
+                            (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={addBookFlag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(addBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <div>
+                                            <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                            <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
+                                            <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
+                                            <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                            {/* <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
+                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} /> */}
+                                            <div style={{ display: 'flex', marginTop: '1rem' }}>
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={departments}
+                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="reparti" />}
+                                                    onChange={(event, value) => {
+                                                        handleChangeDepMenu(event, value)
+                                                    }}
+                                                />
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    disabled={disabledSDMenu}
+                                                    options={subDepartmentsForMenu}
+                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
+                                                    onChange={(event, value) => {
+                                                        if (value !== null) {
+                                                            setSubDepartment(value.label)
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+
+                                        </div>
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addTool}>Conferma</Button>
+                                        </div>
                                     </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            reparto
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.department}
-                                        </Typography>
+                                </Grow>
+                            </Box>)
+                        }
+                        {
+                            (!getBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={getBookFlag}
+                                    style={{ transformOrigin: '0 0 0', width: "80%" }}
+                                    {...(getBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="combo-box-demo"
+                                            options={tools}
+                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                            sx={{ width: 300 }}
+                                            renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                            onChange={(event, value) => { showToolFound(event, value) }}
+                                        />
+                                        {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
+                                            <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        prodotto
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.label}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        reparto
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.department}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        sotto-reparto
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.subDepartment}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        quantità
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.quantity}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        quantità minima necessaria
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.lowerBound}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        prezzo d'acquisto (per unità)
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.price}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        ultimo utente
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.lastUser}
+                                                    </Typography>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                        }
                                     </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            sotto-reparto
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.subDepartment}
-                                        </Typography>
+
+                                </Grow>
+                            </Box>)
+                        }
+                        {
+                            (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={updateBookFlag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(updateBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                                clearTimeout(timerUpd)
+                                                setTimeout(() => {
+                                                    setLabel(event.target.value)
+                                                }, 1000)
+                                            }} />
+                                            {inheritedQuantity === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità attuale presente"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità attuale presente"
+                                                value={inheritedQuantity}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            />}
+                                            {inheritedLowerBound === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={inheritedLowerBound}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            />}
+
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} />
+                                            <TextField
+                                                id="outlined-number"
+                                                label="quantità"
+                                                type="number"
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                onChange={(event) => { setQuantity(event.target.value) }}
+                                            />
+                                            {
+                                                inheritedLowerBound === -1 ? <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={0}
+                                                    onChange={(event) => { setLowerBound(event.target.value) }}
+                                                /> : <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => {
+                                                        setLowerBound(event.target.value)
+                                                        setInheritedLowerBound(event.target.value)
+                                                    }}
+                                                />
+                                            }
+
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(label, quantity, user, lowerBound) }}>Conferma</Button>
+                                        </div>
                                     </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            quantità
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.quantity}
-                                        </Typography>
+                                </Grow>
+                            </Box>)
+                        }
+                        {
+                            (!deleteBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={deleteBookFlag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(deleteBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <div>
+                                            <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                        </div>
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
+                                        </div>
                                     </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            quantità minima necessaria
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.lowerBound}
-                                        </Typography>
-                                    </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            prezzo d'acquisto (per unità)
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.price}
-                                        </Typography>
-                                    </div>
-                                    <div style={{ marginRight: '3rem' }}>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            ultimo utente
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolFound.lastUser}
-                                        </Typography>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                </Grow>
+                            </Box>)
+                        }
+
+                        <div>
+                            {
+                                (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiunto correttamente!</Alert>
+                            }
+                            {
+                                (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiornato correttamente!</Alert>
+                            }
+                            {
+                                (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto eliminato correttamente!</Alert>
+                            }
+                            {
+                                (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">prodotto {notFound} non trovato! Controlla che il prodotto sia scritto correttamente.</Alert>
+                            }
+                            {
+                                (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Controlla la connessione o i dati inseriti.</Alert>
+                            }
+                            {
+                                (nonExistingEmployee === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Utente inserito non presente.</Alert>
                             }
                         </div>
 
-                    </Grow>
-                </Box>)
-            }
-            {
-                (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                    <Grow
-                        in={updateBookFlag}
-                        style={{ transformOrigin: '0 0 0' }}
-                        {...(updateBookFlag ? { timeout: 1000 } : {})}
-                    >
-                        <div style={{ marginTop: '2rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
-                                    clearTimeout(timerUpd)
-                                    setTimeout(() => {
-                                        setLabel(event.target.value)
-                                    }, 1000)
-                                }} />
-                                {inheritedQuantity === -1 ? <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="quantità attuale presente"
-                                    value={0}
-                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                /> : <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="quantità attuale presente"
-                                    value={inheritedQuantity}
-                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                />}
-                                {inheritedLowerBound === -1 ? <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="quantità minima attuale richiesta"
-                                    value={0}
-                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                /> : <TextField
-                                    disabled
-                                    id="outlined-disabled"
-                                    label="quantità minima attuale richiesta"
-                                    value={inheritedLowerBound}
-                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                />}
-
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} />
-                                <TextField
-                                    id="outlined-number"
-                                    label="quantità"
-                                    type="number"
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    onChange={(event) => { setQuantity(event.target.value) }}
-                                />
-                                {
-                                    inheritedLowerBound === -1 ? <TextField
-                                        id="outlined-number"
-                                        label="quantità minima"
-                                        type="number"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        value={0}
-                                        onChange={(event) => { setLowerBound(event.target.value) }}
-                                    /> : <TextField
-                                        id="outlined-number"
-                                        label="quantità minima"
-                                        type="number"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        value={inheritedLowerBound}
-                                        onChange={(event) => {
-                                            setLowerBound(event.target.value)
-                                            setInheritedLowerBound(event.target.value)
-                                        }}
-                                    />
-                                }
-
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(label, quantity, user, lowerBound) }}>Conferma</Button>
-                            </div>
-                        </div>
-                    </Grow>
-                </Box>)
-            }
-            {
-                (!deleteBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                    <Grow
-                        in={deleteBookFlag}
-                        style={{ transformOrigin: '0 0 0' }}
-                        {...(deleteBookFlag ? { timeout: 1000 } : {})}
-                    >
-                        <div style={{ marginTop: '2rem' }}>
-                            <div>
-                                <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
-                            </div>
-                            <div style={{ marginTop: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
-                            </div>
-                        </div>
-                    </Grow>
-                </Box>)
-            }
-
-            <div>
-                {
-                    (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiunto correttamente!</Alert>
-                }
-                {
-                    (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiornato correttamente!</Alert>
-                }
-                {
-                    (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto eliminato correttamente!</Alert>
-                }
-                {
-                    (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">prodotto {notFound} non trovato! Controlla che il prodotto sia scritto correttamente.</Alert>
-                }
-                {
-                    (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Controlla la connessione o i dati inseriti.</Alert>
-                }
-                {
-                    (nonExistingEmployee === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Utente inserito non presente.</Alert>
-                }
-            </div>
-
-            {/* WAREHOUSE */}
-            <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
-            <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
-                {
-                    departments.map((d) => {
-                        return <Accordion
-                            expanded={openPapers[d.label] || false}
-                            onChange={() => { updateOpenPapers(d.label) }}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                            >
-                                <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
-                                    {d.label.toUpperCase()}
-                                </Typography>
-                                {/* <Typography sx={{ color: "text.secondary" }}>
+                        {/* WAREHOUSE */}
+                        <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
+                        <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
+                            {
+                                departments.map((d) => {
+                                    return <Accordion
+                                        expanded={openPapers[d.label] || false}
+                                        onChange={() => { updateOpenPapers(d.label) }}
+                                    >
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1bh-content"
+                                        >
+                                            <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
+                                                {d.label.toUpperCase()}
+                                            </Typography>
+                                            {/* <Typography sx={{ color: "text.secondary" }}>
                                     I am an accordion
                                 </Typography> */}
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {
-                                    subDepartments.map((sd) => {
-                                        if (sd.father === d.label) {
-                                            return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                                                <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
-                                                    {sd.label.toUpperCase()}
-                                                </Typography>
-                                            </div>
-                                        }
-                                    })
-                                }
-                            </AccordionDetails>
-                        </Accordion>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            {
+                                                subDepartments.map((sd) => {
+                                                    if (sd.father === d.label) {
+                                                        return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                            <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
+                                                                {sd.label.toUpperCase()}
+                                                            </Typography>
+                                                        </div>
+                                                    }
+                                                })
+                                            }
+                                        </AccordionDetails>
+                                    </Accordion>
 
-                    })
-                }
-            </div>
+                                })
+                            }
+                        </div>
 
 
 
-            {/* Modal to show tools in the selected shelf */}
-            <Modal
-                open={open}
-                style={{ padding: '5rem' }}
-                onClose={() => { handleClose(layout) }}
-                aria-labelledby="modal-modal-label"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                        Cerca un prodotto nel reparto: {sdSelected.toUpperCase()}
-                    </Typography>
-                    {/* {
+                        {/* Modal to show tools in the selected shelf */}
+                        <Modal
+                            open={open}
+                            style={{ padding: '5rem' }}
+                            onClose={() => { handleClose(layout) }}
+                            aria-labelledby="modal-modal-label"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                    Cerca un prodotto nel reparto: {sdSelected.toUpperCase()}
+                                </Typography>
+                                {/* {
                         (toolsInShelf.length === 0) ? <span style={{ color: 'grey' }}>Nello ripiano selezionato non sono presenti prodotti.</span> :
                             toolsInShelf.map((bis) => {
                                 return <li style={{ marginBottom: '0.5rem' }}>{bis.label} - {bis.quantity}</li>
                             })
                     } */}
-                    <Autocomplete
-                        disablePortal
-                        id="combo-box-demo"
-                        options={toolsInSd}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => <TextField {...params} label="prodotti" />}
-                        onChange={(event, value) => { showToolInSd(event, value) }}
-                    />
-                    {toolInSd === null ? "" : <Card style={{ marginTop: '1rem' }} sx={{ minWidth: 275 }}>
-                        <CardContent>
-                            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                prodotto
-                            </Typography>
-                            <Typography variant="h5" component="div">
-                                {toolInSd.label.toUpperCase()}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                reparto
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.department}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                sotto-reparto
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.subDepartment}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                quantità
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.quantity}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                quantità minima necessaria
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.lowerBound}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                prezzo d'acquisto (per unità)
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.price}
-                            </Typography>
-                            <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                ultimo utente
-                            </Typography>
-                            <Typography variant="h7" component="div">
-                                {toolInSd.lastUser}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                    }
-                </Box>
-            </Modal>
+                                <Autocomplete
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={toolsInSd}
+                                    sx={{ width: 300 }}
+                                    renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                    onChange={(event, value) => { showToolInSd(event, value) }}
+                                />
+                                {toolInSd === null ? "" : <Card style={{ marginTop: '1rem' }} sx={{ minWidth: 275 }}>
+                                    <CardContent>
+                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            prodotto
+                                        </Typography>
+                                        <Typography variant="h5" component="div">
+                                            {toolInSd.label.toUpperCase()}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            reparto
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.department}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            sotto-reparto
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.subDepartment}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            quantità
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.quantity}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            quantità minima necessaria
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.lowerBound}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            prezzo d'acquisto (per unità)
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.price}
+                                        </Typography>
+                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                            ultimo utente
+                                        </Typography>
+                                        <Typography variant="h7" component="div">
+                                            {toolInSd.lastUser}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                                }
+                            </Box>
+                        </Modal>
 
-            {/* Modal to update library structure */}
-            <Modal
-                open={openLibraryUpdate}
-                onClose={() => { handleCloseLibraryUpdate() }}
-                aria-labelledby="modal-modal-label"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                        Aggiungi un reparto o sottoreparto:
-                    </Typography>
-                    <FormControlLabel
-                        control={
-                            <Switch checked={isSubDep} onChange={handleChangeSwitch} name="subdep" />
-                        }
-                        style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}
-                        label="Seleziona se è un sottoreparto"
-                    />
-                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                        {
-                            isSubDep ? "" : <input style={{ marginTop: '2rem' }} placeholder="reparto" onChange={(event) => { setAddingDepartment(event.target.value) }} />
-                        }
-                        {
-                            !isSubDep ? "" : <div>
-                                <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
-                                <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
-                            </div>
-                        }
+                        {/* Modal to update library structure */}
+                        <Modal
+                            open={openLibraryUpdate}
+                            onClose={() => { handleCloseLibraryUpdate() }}
+                            aria-labelledby="modal-modal-label"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                    Aggiungi un reparto o sottoreparto:
+                                </Typography>
+                                <FormControlLabel
+                                    control={
+                                        <Switch checked={isSubDep} onChange={handleChangeSwitch} name="subdep" />
+                                    }
+                                    style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}
+                                    label="Seleziona se è un sottoreparto"
+                                />
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    {
+                                        isSubDep ? "" : <input style={{ marginTop: '2rem' }} placeholder="reparto" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                    }
+                                    {
+                                        !isSubDep ? "" : <div>
+                                            <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                            <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
+                                        </div>
+                                    }
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addDepartment() }}>Conferma</Button>
+                                </div>
+                            </Box>
+                        </Modal>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                        <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addDepartment() }}>Conferma</Button>
-                    </div>
-                </Box>
-            </Modal>
-
+            }
         </div >
     );
 }

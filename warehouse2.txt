@@ -9,6 +9,7 @@ git push heroku master
 ----------
 
 password idroaltech.bot: owgjqqmbvuzkprtw
+password portale: idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
 
 
 

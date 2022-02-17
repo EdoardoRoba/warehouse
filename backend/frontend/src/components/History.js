@@ -23,10 +23,34 @@ import './Classes.css'
 
 function History(props) {
 
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+
+    React.useEffect(() => {
+        userIsAuthenticated()
+    }, [])
+
+    const userIsAuthenticated = () => {
+        axiosInstance.get("authenticated", {
+            headers: {
+                "x-access-token": localStorage.getItem("token")
+            }
+        }).then(response => {
+            console.log(response.data)
+            setUserIsAuthenticatedFlag(true)
+        }).catch(error => {
+            console.log(error)
+            setUserIsAuthenticatedFlag(false)
+        });
+    }
 
     return (
         <div>
-            <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Storico</h1>
+            {
+                !userIsAuthenticatedFlag ? <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert> :
+                    <div>
+                        <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Storico</h1>
+                    </div >
+            }
         </div >
     );
 }
