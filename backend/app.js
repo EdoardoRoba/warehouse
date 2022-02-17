@@ -14,14 +14,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -33,19 +33,19 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json())
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 // Connect to server
 const dbUri = process.env.MONGO_URL //'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
@@ -376,6 +376,6 @@ app.get('/api/authenticated', verifyJWT, (req, res) => {
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});
