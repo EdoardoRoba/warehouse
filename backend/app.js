@@ -5,7 +5,7 @@ const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
 const History = require('./models/history')
 const Employee = require('./models/employee')
-const Profile = require('./models/Profile')
+const Profile = require('./models/profile')
 const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -334,7 +334,7 @@ app.post('/api/profile', (req, res) => {
     const password = req.body.password
 
     Profile.find().then((result) => {
-        var profile = result.filter((res) => res.password === password)
+        var profile = result.filter((res) => res.password === password && res.username === username)
         if (profile.length > 0) {
             const id = res.id
             const token = jwt.sign({ id }, "jwtSecret", {
