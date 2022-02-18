@@ -26,6 +26,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import FileBase64 from 'react-file-base64';
 import './Classes.css'
 import axios from "axios";
 
@@ -33,16 +36,42 @@ function Customers(props) {
 
     const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [selectedFile, setSelectedFile] = React.useState();
+    const [selectedSopralluogo, setSelectedSopralluogo] = React.useState([{}]);
+    const [selectedInstallazione, setSelectedInstallazione] = React.useState([{}]);
+    const [selectedAssistenza, setSelectedAssistenza] = React.useState([{}]);
     const [isFilePicked, setIsFilePicked] = React.useState(false);
+    const [isSopralluogoPicked, setIsSopralluogoPicked] = React.useState(false);
+    const [isInstallazionePicked, setIsInstallazionePicked] = React.useState(false);
+    const [isAssistenzaPicked, setIsAssistenzaPicked] = React.useState(false);
     const [openAccordion, setOpenAccordion] = React.useState(false);
     const [openAccordionManual, setOpenAccordionManual] = React.useState(false);
     const [openAccordionScheda, setOpenAccordionScheda] = React.useState(false);
     const [excel, setExcel] = React.useState({});
     const [showError, setShowError] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
+    const [customers, setCustomers] = React.useState([]);
+    const [customerSelected, setCustomerSelected] = React.useState(null);
+    const [confermaUpdate, setConfermaUpdate] = React.useState(false);
+    const [customerSelectedId, setCustomerSelectedId] = React.useState(false);
+    const [openSopralluogo, setOpenSopralluogo] = React.useState(false);
+    const [openInstallazione, setOpenInstallazione] = React.useState(false);
+    const [openAssistenza, setOpenAssistenza] = React.useState(false);
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
 
     React.useEffect(() => {
         userIsAuthenticated()
+        getCustomers()
     }, [])
 
     React.useEffect(() => {
@@ -52,6 +81,17 @@ function Customers(props) {
     React.useEffect(() => {
         // console.log("excel: ", excel)
     }, [excel])
+
+    React.useEffect(() => {
+        // console.log("selectedSopralluogo: ", selectedSopralluogo[0].base64)
+    }, [selectedSopralluogo])
+
+    React.useEffect(() => {
+        if (customerSelected !== null) {
+            setCustomerSelectedId(customerSelected._id)
+        }
+        // console.log("customerSelected: ", customerSelected)
+    }, [customerSelected])
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -67,10 +107,30 @@ function Customers(props) {
         return () => clearTimeout(timer);
     }, [confermaAdd]);
 
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setConfermaUpdate(false)
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [confermaUpdate]);
+
     const changeHandler = (event) => {
         setSelectedFile(event.target.files[0]);
         setIsFilePicked(true);
     };
+
+    const changeHandlerPhotoSopralluogo = (event) => {
+        setSelectedSopralluogo(event.target.files[0]);
+        setIsSopralluogoPicked(true);
+    };
+
+    const getCustomers = () => {
+        axiosInstance.get('customer')
+            .then(res => {
+                // console.log("Tools: ", res.data)
+                setCustomers(res.data)
+            })
+    }
 
     const handleSubmission = (e) => {
         ExcelRenderer(selectedFile, (err, resp) => {
@@ -85,11 +145,75 @@ function Customers(props) {
                 }).then((response) => {
                     console.log("File uploaded!")
                     setConfermaAdd(true)
+                    getCustomers()
                 }).catch((e) => {
                     console.log("Error while uploading file: ", e)
                     setShowError(true)
                 })
             }
+        });
+    };
+
+    const handleSubmissionSopralluogo = (e) => {
+        var customer = {}
+        customer.foto_sopralluogo = customerSelected.foto_sopralluogo
+        customer.foto_sopralluogo.push(selectedSopralluogo[0].base64)
+        // console.log(customer.foto_sopralluogo)
+        axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
+            // console.log("Fatto!", response)
+            setConfermaUpdate(true)
+            getCustomers()
+            axiosInstance.get('customer/' + customerSelected._id).then((res) => {
+                setCustomerSelected(res.data)
+            }).catch((error) => {
+                // console.log("error: ", error)
+                setShowError(true)
+            });
+        }).catch((error) => {
+            // console.log("error: ", error)
+            setShowError(true)
+        });
+    };
+
+    const handleSubmissionInstallazione = (e) => {
+        var customer = {}
+        customer.foto_fine_installazione = customerSelected.foto_fine_installazione
+        customer.foto_fine_installazione.push(selectedInstallazione[0].base64)
+        // console.log(customer.foto_fine_installazione)
+        axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
+            // console.log("Fatto!", response)
+            setConfermaUpdate(true)
+            getCustomers()
+            axiosInstance.get('customer/' + customerSelected._id).then((res) => {
+                setCustomerSelected(res.data)
+            }).catch((error) => {
+                // console.log("error: ", error)
+                setShowError(true)
+            });
+        }).catch((error) => {
+            // console.log("error: ", error)
+            setShowError(true)
+        });
+    };
+
+    const handleSubmissionAssistenza = (e) => {
+        var customer = {}
+        customer.foto_assistenza = customerSelected.foto_assistenza
+        customer.foto_assistenza.push(selectedAssistenza[0].base64)
+        // console.log(customer.foto_assistenza)
+        axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
+            // console.log("Fatto!", response)
+            setConfermaUpdate(true)
+            getCustomers()
+            axiosInstance.get('customer/' + customerSelected._id).then((res) => {
+                setCustomerSelected(res.data)
+            }).catch((error) => {
+                // console.log("error: ", error)
+                setShowError(true)
+            });
+        }).catch((error) => {
+            // console.log("error: ", error)
+            setShowError(true)
         });
     };
 
@@ -137,7 +261,7 @@ function Customers(props) {
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1bh-content"
                             >
-                                <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
+                                <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
                                     Carica file Excel
                                 </Typography>
                                 {/* <Typography sx={{ color: "text.secondary" }}>
@@ -183,8 +307,8 @@ function Customers(props) {
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1bh-content"
                             >
-                                <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
-                                    Carica cliente
+                                <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
+                                    Carica singolo cliente
                                 </Typography>
                                 {/* <Typography sx={{ color: "text.secondary" }}>
                                     I am an accordion
@@ -214,17 +338,350 @@ function Customers(props) {
                                 <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
                                     Scheda cliente
                                 </Typography>
-                                {/* <Typography sx={{ color: "text.secondary" }}>
-                                    I am an accordion
-                                </Typography> */}
                             </AccordionSummary>
                             <AccordionDetails>
-                                <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '60%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                    manuale
+                                <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '80%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={customers}
+                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                        sx={{ width: 300 }}
+                                        getOptionLabel={option => option.nome_cognome}
+                                        renderInput={(params) => <TextField {...params} label="cliente" />}
+                                        onChange={(event, value) => { setCustomerSelected(value) }}
+                                    />
+                                    {customerSelected === null ? "" : <Card style={{ marginTop: '1rem' }}>
+                                        <CardContent>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        COMPANY
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.company}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        NOME E COGNOME
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.nome_cognome}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        TELEFONO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.telefono}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        INDIRIZZO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.indirizzo}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        COMUNE
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.comune}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        PROVINCIA
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.provincia}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        BONUS
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.bonus}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        TERMICO/ELETTRICO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.termico_elettrico}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        COMPUTO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.termico_elettrico}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        DATA SOPRALLUOGO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.data_sopralluogo}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        DATA INSTALLAZIONE
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.data_installazione}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        INSTALLATORE
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.installatore}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        TRASFERTA
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.trasferta}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        DI.CO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.di_co}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        CHECK LIST
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.check_list}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        FGAS
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.fgas}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        PROVA FUMI
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.prova_fumi}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        COLLAUDO
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.collaudo}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        ASSISTENZA
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.assistenza}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        NOTE
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.note}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        PAGAMENTI (PDF)
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.pagamenti_pdf}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        PAGAMENTI (TESTO)
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.pagamenti_testo}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            <div style={{ justifyContent: 'left', textAlign: 'left', marginTop: '5rem' }}>
+                                                <div style={{ marginRight: '3rem', marginBottom: '4rem' }}>
+                                                    <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        FOTO SOPRALLUOGO
+                                                    </Typography>
+                                                    <div>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <FileBase64
+                                                                multiple={true}
+                                                                onDone={(event) => {
+                                                                    setSelectedSopralluogo(event)
+                                                                    setIsSopralluogoPicked(true)
+                                                                }}
+                                                            />
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Button disabled={!isSopralluogoPicked} onClick={(event) => handleSubmissionSopralluogo(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                {/* onClick={handleSubmission} */}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <Button onClick={(event) => setOpenSopralluogo(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                    </div>
+                                                </div>
+                                                <div style={{ marginRight: '3rem', marginBottom: '4rem' }}>
+                                                    <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        FOTO FINE INSTALLAZIONE
+                                                    </Typography>
+                                                    <div>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <FileBase64
+                                                                multiple={true}
+                                                                onDone={(event) => {
+                                                                    setSelectedInstallazione(event)
+                                                                    setIsInstallazionePicked(true)
+                                                                }}
+                                                            />
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Button disabled={!isInstallazionePicked} onClick={(event) => handleSubmissionInstallazione(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                {/* onClick={handleSubmission} */}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <Button onClick={(event) => setOpenInstallazione(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                    </div>
+                                                </div>
+                                                <div style={{ marginRight: '3rem', marginBottom: '4rem' }}>
+                                                    <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        FOTO ASSISTENZA
+                                                    </Typography>
+                                                    <div>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <FileBase64
+                                                                multiple={true}
+                                                                onDone={(event) => {
+                                                                    setSelectedAssistenza(event)
+                                                                    setIsAssistenzaPicked(true)
+                                                                }}
+                                                            />
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Button disabled={!isAssistenzaPicked} onClick={(event) => handleSubmissionAssistenza(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                {/* onClick={handleSubmission} */}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <Button onClick={(event) => setOpenAssistenza(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                    }
+
+                                    {
+                                        (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">cliente aggiornato correttamente!</Alert>
+                                    }
                                 </div>
                             </AccordionDetails>
                         </Accordion>
                     </div>
+            }
+            {
+                customerSelected === null ? "" : <div>
+                    <Modal
+                        style={{ maxHeight: '60%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}
+                        open={openSopralluogo}
+                        onClose={() => { setOpenSopralluogo(false) }}
+                        aria-labelledby="modal-modal-label"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            {
+                                customerSelected.foto_sopralluogo.map((fotosl) => {
+                                    return <Typography style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotosl} alt="Logo" />
+                                    </Typography>
+                                })
+                            }
+
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={openInstallazione}
+                        onClose={() => { setOpenInstallazione(false) }}
+                        aria-labelledby="modal-modal-label"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            {
+                                customerSelected.foto_fine_installazione.map((fotoin) => {
+                                    return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoin} alt="Logo" />
+                                    </Typography>
+                                })
+                            }
+
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={openAssistenza}
+                        onClose={() => { setOpenAssistenza(false) }}
+                        aria-labelledby="modal-modal-label"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            {
+                                customerSelected.foto_assistenza.map((fotoas) => {
+                                    return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoas} alt="Logo" />
+                                    </Typography>
+                                })
+                            }
+
+                        </Box>
+                    </Modal>
+                </div>
             }
 
         </div >

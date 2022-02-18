@@ -44,7 +44,7 @@ const customerSchema = new Schema({
         required: false
     },
     foto_sopralluogo: {
-        type: String,
+        type: Array,
         required: false
     },
     data_installazione: {
@@ -52,7 +52,7 @@ const customerSchema = new Schema({
         required: false
     },
     foto_fine_installazione: {
-        type: String,
+        type: Array,
         required: false
     },
     installatore: {
@@ -88,7 +88,7 @@ const customerSchema = new Schema({
         required: false
     },
     foto_assistenza: {
-        type: String,
+        type: Array,
         required: false
     },
     note: {

@@ -10,7 +10,7 @@ const History = require('./models/history')
 const Employee = require('./models/employee')
 const Profile = require('./models/profile')
 const Customer = require('./models/customer')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
 const multer = require("multer");
@@ -36,7 +36,8 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
+
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
 const whitelist = [feUrl]
 // enable CORS policy
@@ -54,6 +55,8 @@ app.use(cors(corsOptions))
 
 
 
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb' }));
 app.use(upload())
 
 // Connect to server
@@ -406,7 +409,7 @@ app.post('/api/newCustomerFile', (req, res) => {
             i++
             customerMongo = new Customer(customer)
             customerMongo.save().then((result) => {
-                console.log("Aggiunto!")
+                console.log("File aggiunto!")
                 res.status(200).json({ message: 'File aggiunto!' })
             }).catch((error) => {
                 console.log("error:", error)
@@ -420,6 +423,40 @@ app.post('/api/newCustomerFile', (req, res) => {
     // }
 })
 
+
+
+// CUSTOMERS
+app.get('/api/customer', (req, res) => {
+    // it gets all the element in that document
+    Customer.find().then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/customer/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    // console.log(body)
+    Customer.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// GET SINGLE
+app.get('/api/customer/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    Customer.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
 
 
 
