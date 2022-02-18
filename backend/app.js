@@ -6,9 +6,11 @@ const EmailTemplate = require('./models/emailTemplate')
 const History = require('./models/history')
 const Employee = require('./models/employee')
 const Profile = require('./models/profile')
+// var imageModel = require('./models/imageModel');
 const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
+// const multer = require("multer");
 const path = require('path');
 var cron = require('node-cron');
 var cors = require('cors')
@@ -46,6 +48,13 @@ const corsOptions = {
     credentials: true,
 }
 app.use(cors(corsOptions))
+
+
+// for the image
+// app.use(bodyParser.urlencoded(
+//     { extended: true }
+// ))
+// app.set("view engine", "ejs");
 
 // Connect to server
 const dbUri = process.env.MONGO_URL //'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
