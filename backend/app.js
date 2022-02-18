@@ -1,16 +1,19 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const xlsx = require('xlsx')
+const upload = require('express-fileupload')
+var fs = require('fs')
 const Structure = require('./models/structure')
 const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
 const History = require('./models/history')
 const Employee = require('./models/employee')
 const Profile = require('./models/profile')
-// var imageModel = require('./models/imageModel');
+const Customer = require('./models/customer')
 const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
-// const multer = require("multer");
+const multer = require("multer");
 const path = require('path');
 var cron = require('node-cron');
 var cors = require('cors')
@@ -50,11 +53,8 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 
-// for the image
-// app.use(bodyParser.urlencoded(
-//     { extended: true }
-// ))
-// app.set("view engine", "ejs");
+
+app.use(upload())
 
 // Connect to server
 const dbUri = process.env.MONGO_URL //'mongodb+srv://admin:bYn3epDI1YwiENB6@cluster0.61jsm.mongodb.net/warehouse?retryWrites=true&w=majority'
@@ -382,6 +382,43 @@ app.get('/api/authenticated', verifyJWT, (req, res) => {
     res.send("You are authenticated!")
 })
 
+
+
+
+// FILE UPLOADER
+app.post('/api/newCustomerFile', (req, res) => {
+    // console.log(req.body)
+    if (req.body.rows) {
+        // console.log(req.body.rows)
+        var customer = {}
+        var columns = req.body.rows[0]
+        var rows = req.body.rows
+        var i = 1, len = req.body.rows.length
+        var j = 0, lenCol = columns.length
+        var customerMongo
+        while (i < len) {
+            customer = {}
+            j = 0
+            while (j < lenCol) {
+                customer[columns[j].toLowerCase()] = rows[i][j]
+                j++
+            }
+            i++
+            customerMongo = new Customer(customer)
+            customerMongo.save().then((result) => {
+                console.log("Aggiunto!")
+                res.status(200).json({ message: 'File aggiunto!' })
+            }).catch((error) => {
+                console.log("error:", error)
+                res.status(500).json({ message: 'Errore' })
+            })
+        }
+        // console.log(customer)
+    }
+    // else {
+    //     return res.status(500).json({ message: 'no file selected' })
+    // }
+})
 
 
 
