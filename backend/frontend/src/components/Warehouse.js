@@ -30,13 +30,14 @@ import MenuItem from '@mui/material/MenuItem';
 import './Classes.css'
 
 function Warehouse(props) {
-    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [timerUpd, setTimerUpd] = React.useState(setTimeout(() => { }, 1000))
     const [tools, setTools] = React.useState([])
     const [employees, setEmployees] = React.useState([])
     const [inheritedQuantity, setInheritedQuantity] = React.useState(-1)
     const [inheritedLowerBound, setInheritedLowerBound] = React.useState(-1)
     const [label, setLabel] = React.useState("")
+    const [code, setCode] = React.useState("")
     const [quantity, setQuantity] = React.useState("")
     const [user, setUser] = React.useState("")
     const [lowerBound, setLowerBound] = React.useState(0)
@@ -411,7 +412,7 @@ function Warehouse(props) {
 
     // POST
     let addTool = () => {
-        axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '' })
+        axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '', code: code })
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
@@ -596,6 +597,7 @@ function Warehouse(props) {
                                             <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
                                             <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
                                             <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                            <input placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
                                             {/* <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
                                 <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} /> */}
                                             <div style={{ display: 'flex', marginTop: '1rem' }}>
@@ -642,15 +644,27 @@ function Warehouse(props) {
                                     {...(getBookFlag ? { timeout: 1000 } : {})}
                                 >
                                     <div style={{ marginTop: '2rem' }}>
-                                        <Autocomplete
-                                            disablePortal
-                                            id="combo-box-demo"
-                                            options={tools}
-                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                            sx={{ width: 300 }}
-                                            renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                            onChange={(event, value) => { showToolFound(event, value) }}
-                                        />
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
+                                                onChange={(event, value) => { showToolFound(event, value) }}
+                                            />
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                sx={{ width: 300 }}
+                                                getOptionLabel={option => option.code}
+                                                renderInput={(params) => <TextField {...params} label="prodotti (per codice)" />}
+                                                onChange={(event, value) => { showToolFound(event, value) }}
+                                            />
+                                        </div>
                                         {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
                                             <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                 <div style={{ marginRight: '3rem' }}>
@@ -699,6 +713,14 @@ function Warehouse(props) {
                                                     </Typography>
                                                     <Typography variant="h7" component="div">
                                                         {toolFound.price}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                        codice prodotto
+                                                    </Typography>
+                                                    <Typography variant="h7" component="div">
+                                                        {toolFound.code}
                                                     </Typography>
                                                 </div>
                                                 <div style={{ marginRight: '3rem' }}>

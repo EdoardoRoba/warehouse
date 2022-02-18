@@ -23,7 +23,7 @@ import './Classes.css'
 
 function History(props) {
 
-    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
 
     React.useEffect(() => {
         userIsAuthenticated()

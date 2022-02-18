@@ -27,12 +27,12 @@ import './Classes.css'
 
 function Employees(props) {
 
-    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [addEmployeeRecordFlag, setAddEmployeeRecordFlag] = React.useState(false);
     const [getEmployeeRecordFlag, setGetEmployeeRecordFlag] = React.useState(false);
     const [updateEmployeeRecordFlag, setUpdateEmployeeRecordFlag] = React.useState(false);
     const [deleteEmployeeRecordFlag, setDeleteEmployeeRecordFlag] = React.useState(false);
-    const [label, setLabel] = React.useState("")
+    const [name, setName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
     const [birth, setBirth] = React.useState("")
     const [fiscalCode, setFiscalCode] = React.useState("")
@@ -96,7 +96,7 @@ function Employees(props) {
         setUpdateEmployeeRecordFlag(false);
         setDeleteEmployeeRecordFlag(false);
         setGetEmployeeRecordFlag(false);
-        setLabel("")
+        setName("")
         setLastName("")
         setBirth("")
         setFiscalCode("")
@@ -108,7 +108,7 @@ function Employees(props) {
         setUpdateEmployeeRecordFlag(false);
         setDeleteEmployeeRecordFlag(false);
         setAddEmployeeRecordFlag(false);
-        setLabel("")
+        setName("")
         setLastName("")
         setBirth("")
         setFiscalCode("")
@@ -120,7 +120,7 @@ function Employees(props) {
         setAddEmployeeRecordFlag(false);
         setDeleteEmployeeRecordFlag(false);
         setGetEmployeeRecordFlag(false);
-        setLabel("")
+        setName("")
         setLastName("")
         setBirth("")
         setFiscalCode("")
@@ -132,7 +132,7 @@ function Employees(props) {
         setAddEmployeeRecordFlag(false);
         setUpdateEmployeeRecordFlag(false);
         setGetEmployeeRecordFlag(false);
-        setLabel("")
+        setName("")
         setLastName("")
         setBirth("")
         setFiscalCode("")
@@ -148,7 +148,7 @@ function Employees(props) {
     }
 
     let addEmployeeRecord = () => {
-        axiosInstance.post('employee', { label: label.toLowerCase(), lastName: lastName.toLowerCase() }) //, birth: birth, fiscalCode: fiscalCode
+        axiosInstance.post('employee', { name: name.toLowerCase(), lastName: lastName.toLowerCase(), label: name.toLowerCase() + " " + lastName.toLowerCase() }) //, birth: birth, fiscalCode: fiscalCode
             .then(response => {
                 setConfermaAdd(true)
                 getEmployees()
@@ -176,7 +176,7 @@ function Employees(props) {
                 });
         } else {
             setConfermaDelete(false)
-            setNotFound(label)
+            setNotFound(lastName)
         }
         getEmployees()
     }
@@ -213,7 +213,7 @@ function Employees(props) {
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div>
-                                            <input placeholder="nome" onChange={(event) => { setLabel(event.target.value) }} />
+                                            <input placeholder="nome" onChange={(event) => { setName(event.target.value) }} />
                                             <input placeholder="cognome" onChange={(event) => { setLastName(event.target.value) }} />
                                             {/* <input placeholder="data di nascita (dd/mm/YYYY)" onChange={(event) => { setBirth(event.target.value) }} />
                                 <input placeholder="codice fiscale" onChange={(event) => { setFiscalCode(event.target.value) }} /> */}
@@ -249,7 +249,7 @@ function Employees(props) {
                                                         nome
                                                     </Typography>
                                                     <Typography variant="h7" component="div">
-                                                        {employeeFound.label.toUpperCase()}
+                                                        {employeeFound.name.toUpperCase()}
                                                     </Typography>
                                                 </div>
                                                 <div style={{ marginRight: '3rem' }}>
@@ -284,93 +284,6 @@ function Employees(props) {
                                 </Grow>
                             </Box>)
                         }
-                        {/* {
-                            (!updateEmployeeRecordFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={updateEmployeeRecordFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(updateEmployeeRecordFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
-                                                clearTimeout(timerUpd)
-                                                setTimeout(() => {
-                                                    setLabel(event.target.value)
-                                                }, 1000)
-                                            }} />
-                                            {inheritedQuantity === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={inheritedQuantity}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            />}
-                                            {inheritedLowerBound === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedLowerBound}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            />}
-
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} />
-                                            <TextField
-                                                id="outlined-number"
-                                                label="quantità"
-                                                type="number"
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                onChange={(event) => { setQuantity(event.target.value) }}
-                                            />
-                                            {
-                                                inheritedLowerBound === -1 ? <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={0}
-                                                    onChange={(event) => { setLowerBound(event.target.value) }}
-                                                /> : <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={inheritedLowerBound}
-                                                    onChange={(event) => {
-                                                        setLowerBound(event.target.value)
-                                                        setInheritedLowerBound(event.target.value)
-                                                    }}
-                                                />
-                                            }
-
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateEmployeeRecord(label, quantity, user, lowerBound) }}>Conferma</Button>
-                                        </div>
-                                    </div>
-                                </Grow>
-                            </Box>)
-                        } */}
                         {
                             (!deleteEmployeeRecordFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                 <Grow

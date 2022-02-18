@@ -12,12 +12,17 @@ password idroaltech.bot: owgjqqmbvuzkprtw
 password portale: idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
 
 
+jenkins password: ffd4c201629043ad86606e756d0f39a9
+jenkins admin: edoardoroba1317, 30-Marzo-1996, Edoardo Roba, gmail
+http://localhost:8000/ (o 8080)
+java -jar C:\Users\edoar\Downloads\jenkins.war
 
+----------------------------------------------------------
 warehouse:
-codici attrezzo esterno (?)
+codici attrezzo
 storico
 email settimanale per cosa c'è in magazzino, lo storico della settimana
-download del catalogo
+download del catalogo + schermata
 
 
 gestione cliente - nome, cognome, ...
@@ -26,12 +31,6 @@ aggiungere note
 calendario appuntamenti - che si collega alla scheda del cliente
 
 
-
-HEROKU!!!!!!!!!!!!!
-jenkins password: ffd4c201629043ad86606e756d0f39a9
-jenkins admin: edoardoroba1317, 30-Marzo-1996, Edoardo Roba, gmail
-http://localhost:8000/ (o 8080)
-java -jar C:\Users\edoar\Downloads\jenkins.war
 
 
 

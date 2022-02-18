@@ -29,7 +29,7 @@ import './Classes.css'
 
 function Customers(props) {
 
-    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [selectedFile, setSelectedFile] = React.useState();
     const [isFilePicked, setIsFilePicked] = React.useState(false);
     const [openAccordion, setOpenAccordion] = React.useState(false);

@@ -30,6 +30,10 @@ const toolSchema = new Schema({
     lastUser: {
         type: String,
         required: false
+    },
+    code: {
+        type: String,
+        required: false
     }
 }, { timestamps: true });
 
