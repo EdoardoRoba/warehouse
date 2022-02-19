@@ -426,6 +426,35 @@ app.post('/api/newCustomerFile', (req, res) => {
 
 
 // CUSTOMERS
+// POST
+app.post('/api/customer', (req, res) => {
+    const customer = new Customer({
+        company: req.body.company,
+        nome_cognome: req.body.nome_cognome,
+        telefono: req.body.telefono,
+        indirizzo: req.body.indirizzo,
+        comune: req.body.comune,
+        provincia: req.body.provincia,
+        bonus: req.body.bonus,
+        termico_elettrico: req.body.termico_elettrico,
+        computo: req.body.computo,
+        data_sopralluogo: req.body.data_sopralluogo,
+        data_installazione: req.body.data_installazione,
+        installatore: req.body.installatore,
+        trasferta: req.body.trasferta,
+        assistenza: req.body.assistenza,
+        note: req.body.note,
+        pagamenti_testo: req.body.pagamenti_testo
+    })
+    // console.log("customer: ", customer)
+    customer.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
 app.get('/api/customer', (req, res) => {
     // it gets all the element in that document
     Customer.find().then((result) => {

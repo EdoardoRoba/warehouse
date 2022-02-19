@@ -56,6 +56,23 @@ function Customers(props) {
     const [openSopralluogo, setOpenSopralluogo] = React.useState(false);
     const [openInstallazione, setOpenInstallazione] = React.useState(false);
     const [openAssistenza, setOpenAssistenza] = React.useState(false);
+    const [company, setCompany] = React.useState(false);
+    const [nome_cognome, setNome_cognome] = React.useState(false);
+    const [telefono, setTelefono] = React.useState(false);
+    const [indirizzo, setIndirizzo] = React.useState(false);
+    const [comune, setComune] = React.useState(false);
+    const [provincia, setProvincia] = React.useState(false);
+    const [bonus, setBonus] = React.useState(false);
+    const [termico_elettrico, setTermico_elettrico] = React.useState(false);
+    const [computo, setComputo] = React.useState(false);
+    const [data_sopralluogo, setData_sopralluogo] = React.useState(false);
+    const [data_installazione, setData_installazione] = React.useState(false);
+    const [installatore, setInstallatore] = React.useState(false);
+    const [trasferta, setTrasferta] = React.useState(false);
+    const [collaudo, setCollaudo] = React.useState(false);
+    const [assistenza, setAssistenza] = React.useState(false);
+    const [note, setNote] = React.useState(false);
+    const [pagamenti_testo, setPagamenti_testo] = React.useState(false);
 
     const style = {
         position: 'absolute',
@@ -130,6 +147,17 @@ function Customers(props) {
                 // console.log("Tools: ", res.data)
                 setCustomers(res.data)
             })
+    }
+
+    let addCustomer = () => {
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, trasferta: trasferta, assistenza: assistenza, note: note, pagamenti_testo: pagamenti_testo })
+            .then(response => {
+                setConfermaAdd(true)
+                getCustomers()
+            }).catch(error => {
+                // console.log("error")
+                setShowError(true)
+            });
     }
 
     const handleSubmission = (e) => {
@@ -315,8 +343,38 @@ function Customers(props) {
                                 </Typography> */}
                             </AccordionSummary>
                             <AccordionDetails>
-                                <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '60%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                    manuale
+                                <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%' }}>
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toLowerCase()) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="termico/elettrico" onChange={(event) => { setTermico_elettrico(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="computo" onChange={(event) => { setComputo(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="installatore" onChange={(event) => { setInstallatore(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="trasferta" onChange={(event) => { setTrasferta(event.target.value) }} />
+                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="assistenza" onChange={(event) => { setAssistenza(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="note" onChange={(event) => { setNote(event.target.value.toLowerCase()) }} />
+                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addCustomer}>Conferma</Button>
+                                    </div>
                                 </div>
                             </AccordionDetails>
                         </Accordion>
