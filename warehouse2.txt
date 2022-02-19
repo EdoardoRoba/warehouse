@@ -20,10 +20,11 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 ----------------------------------------------------------
 warehouse:
-codici attrezzo
 storico
 email settimanale per cosa c'è in magazzino, lo storico della settimana
 download del catalogo + schermata
+add pulsante login + logout
+fix computo
 
 
 gestione cliente - nome, cognome, ...

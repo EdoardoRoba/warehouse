@@ -495,7 +495,7 @@ function Customers(props) {
                                                         COMPUTO
                                                     </Typography>
                                                     <Typography variant="h7" component="div">
-                                                        {customerSelected.termico_elettrico}
+                                                        {customerSelected.computo}
                                                     </Typography>
                                                 </div>
                                                 <div style={{ marginRight: '3rem' }}>
