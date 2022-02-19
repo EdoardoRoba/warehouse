@@ -10,6 +10,7 @@ const History = require('./models/history')
 const Employee = require('./models/employee')
 const Profile = require('./models/profile')
 const Customer = require('./models/customer')
+const Auth = require('./models/auth')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -92,6 +93,38 @@ cron.schedule('00 21 * * 5', () => {
         }
     });
 });
+
+
+//AUTHS
+// POST
+// app.post('/api/auth', (req, res) => {
+//     const auth = new Auth({
+//         code: "base",
+//         permissions: ["warehouse"]
+//     })
+//     auth.save().then((result) => {
+//         res.send(result)
+//     }).catch((error) => {
+//         console.log("error:", error)
+//     })
+// })
+
+// GET
+app.get('/api/auth', (req, res) => {
+    // it gets all the element in that document
+    Auth.find().then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// GET SINGLE
+app.get('/api/auth/:id', (req, res) => {
+    // it gets all the element in that document
+    Auth.findById(req.params.id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
 
 
 //EMAIL
@@ -354,8 +387,10 @@ app.post('/api/profile', (req, res) => {
             const token = jwt.sign({ id }, "jwtSecret", {
                 expiresIn: 3600
             })
+            Auth.findOne({ code: profile[0].code }).then((resAuth) => {
+                res.json({ auth: true, token: token, auths: resAuth.permissions, profile: profile[0].code })
+            }).catch((error) => { console.log("error: ", error) })
             // console.log(token)
-            res.json({ auth: true, token: token })
         } else {
             res.status(404).send({ auth: false, message: "user does not exist." })
             console.log("user does not exist.")
@@ -366,6 +401,8 @@ app.post('/api/profile', (req, res) => {
 
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]
+    const profile = req.headers["profile"]
+    const auths = req.headers["auths"].split(',')
     if (!token) {
         res.status(406).send("The user is not authenticated.")
     } else {
@@ -374,8 +411,14 @@ const verifyJWT = (req, res, next) => {
                 res.status(406).send("The user is not authenticated.")
                 // res.json({ auth: false, message: "You failed to authenticate." })
             } else {
-                req.userId = decoded.id;
-                next();
+                Auth.findOne({ code: profile }).then((resAuth) => {
+                    if (JSON.stringify(auths.sort()) === JSON.stringify(resAuth.permissions.sort())) {
+                        req.userId = decoded.id;
+                        next();
+                    } else {
+                        res.status(406).send({ message: "permissions changed" })
+                    }
+                }).catch((error) => { console.log("error: ", error) })
             }
         })
     }

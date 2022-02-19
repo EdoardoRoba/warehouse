@@ -2,21 +2,17 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema // defines the schema of the data
 
 // schema
-const profileSchema = new Schema({
-    username: {
+const authSchema = new Schema({
+    code: {
         type: String,
         required: true
     },
-    password: {
-        type: String,
-        required: false
-    },
-    code: {
-        type: String,
-        required: false
+    permissions: {
+        type: Array,
+        required: true
     }
 }, { timestamps: true });
 
 // model. The string defines the model name (very important)
-const Profile = mongoose.model('Profile', profileSchema)
-module.exports = Profile
+const Auth = mongoose.model('Auth', authSchema)
+module.exports = Auth

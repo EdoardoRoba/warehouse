@@ -223,17 +223,23 @@ function Warehouse(props) {
     }, [subDepartmentsForMenu])
 
     const userIsAuthenticated = () => {
-        axiosInstance.get("authenticated", {
-            headers: {
-                "x-access-token": localStorage.getItem("token")
-            }
-        }).then(response => {
-            console.log(response.data)
-            setUserIsAuthenticatedFlag(true)
-        }).catch(error => {
-            console.log(error)
+        if (localStorage.getItem("auths").includes("warehouse")) {
+            axiosInstance.get("authenticated", {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                    "profile": localStorage.getItem("profile"),
+                    "auths": localStorage.getItem("auths")
+                }
+            }).then(response => {
+                console.log(response.data)
+                setUserIsAuthenticatedFlag(true)
+            }).catch(error => {
+                console.log(error)
+                setUserIsAuthenticatedFlag(false)
+            });
+        } else {
             setUserIsAuthenticatedFlag(false)
-        });
+        }
     }
 
     const handleChangeAddBook = () => {

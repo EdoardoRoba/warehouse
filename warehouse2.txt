@@ -9,7 +9,8 @@ git push heroku master
 ----------
 
 password idroaltech.bot: owgjqqmbvuzkprtw
-password portale: idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
+password portale "admin": idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
+password portale "basic": base:base === YmFzZTpiYXNl
 
 
 jenkins password: ffd4c201629043ad86606e756d0f39a9

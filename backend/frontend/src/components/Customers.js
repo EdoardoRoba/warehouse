@@ -258,17 +258,27 @@ function Customers(props) {
     }
 
     const userIsAuthenticated = () => {
-        axiosInstance.get("authenticated", {
-            headers: {
-                "x-access-token": localStorage.getItem("token")
+        if (localStorage.getItem("auths").includes("customers")) {
+            if (localStorage.getItem("auths").includes("warehouse")) {
+                axiosInstance.get("authenticated", {
+                    headers: {
+                        "x-access-token": localStorage.getItem("token"),
+                        "profile": localStorage.getItem("profile"),
+                        "auths": localStorage.getItem("auths")
+                    }
+                }).then(response => {
+                    // console.log(response.data)
+                    setUserIsAuthenticatedFlag(true)
+                }).catch(error => {
+                    console.log(error)
+                    setUserIsAuthenticatedFlag(false)
+                });
+            } else {
+                setUserIsAuthenticatedFlag(false)
             }
-        }).then(response => {
-            // console.log(response.data)
-            setUserIsAuthenticatedFlag(true)
-        }).catch(error => {
-            console.log(error)
+        } else {
             setUserIsAuthenticatedFlag(false)
-        });
+        }
     }
 
     return (

@@ -13,21 +13,62 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
-const pages = [{ label: 'Magazzino', id: 'warehouse' }, { label: 'Storico', id: 'history' }, { label: 'Clienti', id: 'customers' }, { label: 'Dipendenti', id: 'employees' }];
 
 function App() {
   const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [auths, setAuths] = React.useState([]);
+  const [pages, setPages] = React.useState([{}]);
 
   React.useEffect(() => {
     userIsAuthenticated()
+    setAuths(localStorage.getItem("auths"))
   }, [])
+
+  React.useEffect(() => {
+    console.log("pagesss: ", pages)
+  }, [pages])
+
+  React.useEffect(() => {
+    var pgs = []
+    var pg = {}
+    console.log("authsssssss", auths)
+    if (auths !== null) {
+      if (auths.includes("warehouse")) {
+        pg = {}
+        pg['label'] = "Magazzino"
+        pg['id'] = "warehouse"
+        pgs.push(pg)
+      }
+      if (auths.includes("history")) {
+        pg = {}
+        pg['label'] = "Storico"
+        pg['id'] = "history"
+        pgs.push(pg)
+      }
+      if (auths.includes("customers")) {
+        pg = {}
+        pg['label'] = "Clienti"
+        pg['id'] = "customers"
+        pgs.push(pg)
+      }
+      if (auths.includes("employees")) {
+        pg = {}
+        pg['label'] = "Dipendenti"
+        pg['id'] = "employees"
+        pgs.push(pg)
+      }
+      setPages(pgs)
+    }
+  }, [auths])
 
   const userIsAuthenticated = () => {
     axiosInstance.get("authenticated", {
       headers: {
-        "x-access-token": localStorage.getItem("token")
+        "x-access-token": localStorage.getItem("token"),
+        "profile": localStorage.getItem("profile"),
+        "auths": localStorage.getItem("auths")
       }
     }).then(response => {
       console.log(response.data)

@@ -75,7 +75,10 @@ function Login(props) {
             .then(response => {
                 setLoggedIn(true)
                 setToken(response.data.token)
+                // console.log(response.data)
                 localStorage.setItem("token", response.data.token)
+                localStorage.setItem("auths", response.data.auths)
+                localStorage.setItem("profile", response.data.profile)
             }).catch(error => {
                 setShowError(true)
                 console.log(error)
@@ -85,7 +88,9 @@ function Login(props) {
     const userIsAuthenticated = () => {
         axiosInstance.get("authenticated", {
             headers: {
-                "x-access-token": localStorage.getItem("token")
+                "x-access-token": localStorage.getItem("token"),
+                "profile": localStorage.getItem("profile"),
+                "auths": localStorage.getItem("auths")
             }
         }).then(response => {
             console.log(response.data)
