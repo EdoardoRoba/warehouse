@@ -20,14 +20,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
-const idEmailAlert = '62086ab09422a5466157fe5a'
+// const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -40,19 +40,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 
 
@@ -70,27 +70,39 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
 
 // SCHEDULED
 cron.schedule('00 21 * * 5', () => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'idroaltech.bot@gmail.com',
-            pass: 'owgjqqmbvuzkprtw'
-        }
-    });
+    EmailTemplate.findOne({ use: "weeklyReport" }).then((emailWeeklyReport) => {
+        EmailTemplate.findOne({ use: "singleToolReport" }).then((emailSingleTool) => {
+            Tool.find().then((tools) => {
+                var listToolEmail = ""
+                for (let t of tools) {
+                    if (t.quantity < t.lowerBound) {
+                        listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment)
+                    }
+                }
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'idroaltech.bot@gmail.com',
+                        pass: 'owgjqqmbvuzkprtw'
+                    }
+                });
 
-    var mailOptions = {
-        from: 'idroaltech.bot@gmail.com',
-        to: 'roba.edoardo@gmail.com',
-        subject: 'NOTIFICA from website',
-        text: 'Prova email schedulata'
-    };
+                var mailOptions = {
+                    from: 'idroaltech.bot@gmail.com',
+                    to: 'roba.edoardo@gmail.com',
+                    subject: 'Report settimanale - catalogo prodotti',
+                    html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail)
+                };
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        res.send('Email sent: ' + info.response)
+                    }
+                });
+            }).catch((error) => { console.log("error: ", error) })
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            res.send('Email sent: ' + info.response)
-        }
+        });
     });
 });
 
@@ -256,7 +268,7 @@ app.put('/api/tool/:id', (req, res, next) => {
     const label = req.body.label
     Tool.findById(id).then((result) => {
         if (parseInt(quantity) < result.lowerBound) {
-            EmailTemplate.findById(idEmailAlert).then((resultEmail) => {
+            EmailTemplate.findOne({ use: "alertLowerBound" }).then((resultEmail) => {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
@@ -533,6 +545,6 @@ app.get('/api/customer/:id', (req, res) => {
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});

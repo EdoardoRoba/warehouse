@@ -15,7 +15,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import SettingsIcon from '@material-ui/icons/Settings';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
@@ -576,24 +577,33 @@ function Warehouse(props) {
                             <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
                             <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
                                 <IconButton onClick={() => { setOpenLibraryUpdate(true) }}>
-                                    <SystemUpdateAltIcon />
+                                    <SettingsIcon />
                                 </IconButton>
                             </Tooltip>
                         </div>
-
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                                Aggiungi prodotto
-                            </Button>
-                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
-                                Trova prodotto
-                            </Button>
-                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
-                                Aggiorna prodotto
-                            </Button>
-                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
-                                Elimina prodotto
-                            </Button>
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '90%' }}>
+                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
+                                    Aggiungi prodotto
+                                </Button>
+                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
+                                    Trova prodotto
+                                </Button>
+                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
+                                    Aggiorna prodotto
+                                </Button>
+                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
+                                    Elimina prodotto
+                                </Button>
+                            </div>
+                            <div style={{ width: '10%' }}>
+                                <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti">
+                                    <IconButton>
+                                        {/* onClick={() => { setOpenLibraryUpdate(true) }} */}
+                                        <GetAppIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
                         </div>
                         {
                             (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
