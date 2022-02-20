@@ -58,7 +58,8 @@ function Warehouse(props) {
     const [shelfColumnSelected, setShelfColumnSelected] = React.useState("")
     const [addBookFlag, setAddBookFlag] = React.useState(false);
     const [getBookFlag, setGetBookFlag] = React.useState(false);
-    const [updateBookFlag, setUpdateBookFlag] = React.useState(false);
+    const [updateAddBookFlag, setUpdateAddBookFlag] = React.useState(false);
+    const [updateRemoveBookFlag, setUpdateRemoveBookFlag] = React.useState(false);
     const [deleteBookFlag, setDeleteBookFlag] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
     const [confermaUpdate, setConfermaUpdate] = React.useState(false);
@@ -258,7 +259,8 @@ function Warehouse(props) {
 
     const handleChangeAddBook = () => {
         setAddBookFlag((prev) => !prev);
-        setUpdateBookFlag(false);
+        setUpdateRemoveBookFlag(false);
+        setUpdateAddBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
@@ -276,7 +278,8 @@ function Warehouse(props) {
 
     const handleChangeGetBook = () => {
         setGetBookFlag((prev) => !prev);
-        setUpdateBookFlag(false);
+        setUpdateRemoveBookFlag(false);
+        setUpdateAddBookFlag(false);
         setDeleteBookFlag(false);
         setAddBookFlag(false);
         setLabel("")
@@ -292,8 +295,28 @@ function Warehouse(props) {
         setToolFound(null)
     };
 
-    const handleChangeUpdateBook = () => {
-        setUpdateBookFlag((prev) => !prev);
+    const handleChangeUpdateAddBook = () => {
+        setUpdateAddBookFlag((prev) => !prev);
+        setUpdateRemoveBookFlag(false);
+        setAddBookFlag(false);
+        setDeleteBookFlag(false);
+        setGetBookFlag(false);
+        setLabel("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
+        setToolFound(null)
+    };
+
+    const handleChangeUpdateRemoveBook = () => {
+        setUpdateRemoveBookFlag((prev) => !prev);
+        setUpdateAddBookFlag(false);
         setAddBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
@@ -312,8 +335,9 @@ function Warehouse(props) {
 
     const handleChangeDeleteBook = () => {
         setDeleteBookFlag((prev) => !prev);
+        setUpdateRemoveBookFlag(false);
+        setUpdateAddBookFlag(false);
         setAddBookFlag(false);
-        setUpdateBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
         setQuantity("")
@@ -452,7 +476,7 @@ function Warehouse(props) {
 
     let getQuantity = () => {
         var count = 0
-        if (updateBookFlag && toolFound !== null) {
+        if ((updateAddBookFlag || updateRemoveBookFlag) && toolFound !== null) {
             for (let t of tools) {
                 if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
                     setInheritedQuantity(t.quantity)
@@ -501,7 +525,13 @@ function Warehouse(props) {
         if (employeeIsPresent) {
             setNonExistingEmployee("")
             var bookId = ""
-            const newField = { label: label.toLowerCase(), quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
+            const newField = {}
+            if (updateAddBookFlag) {
+                newField = { label: label.toLowerCase(), quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
+            }
+            if (updateRemoveBookFlag) {
+                newField = { label: label.toLowerCase(), quantity: oldQuantity - parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
+            }
             setInheritedLowerBound(parseInt(lb))
             tools.map((b) => {
                 if (b.label.toUpperCase() === label.toUpperCase()) {
@@ -600,13 +630,16 @@ function Warehouse(props) {
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '90%' }}>
                                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                                    Aggiungi prodotto
+                                    Aggiungi nuovo prodotto
                                 </Button>
                                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
                                     Trova prodotto
                                 </Button>
-                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
-                                    Aggiorna prodotto
+                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
+                                    Aumenta quantità prodotto
+                                </Button>
+                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
+                                    Diminuisci quantità prodotto
                                 </Button>
                                 <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
                                     Elimina prodotto
@@ -777,11 +810,11 @@ function Warehouse(props) {
                             </Box>)
                         }
                         {
-                            (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                            (!updateAddBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                 <Grow
-                                    in={updateBookFlag}
+                                    in={updateAddBookFlag}
                                     style={{ transformOrigin: '0 0 0' }}
-                                    {...(updateBookFlag ? { timeout: 1000 } : {})}
+                                    {...(updateAddBookFlag ? { timeout: 1000 } : {})}
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
@@ -850,9 +883,8 @@ function Warehouse(props) {
                                                 id="outlined-number"
                                                 label="quantità"
                                                 type="number"
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
+                                                style={{ width: '30%' }}
+                                                inputProps={{ min: 0 }}
                                                 onChange={(event) => { setQuantity(event.target.value) }}
                                             />
                                             {
@@ -882,7 +914,118 @@ function Warehouse(props) {
 
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Conferma</Button>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Aggiungi quantità inserita</Button>
+                                        </div>
+                                    </div>
+                                </Grow>
+                            </Box>)
+                        }
+                        {
+                            (!updateRemoveBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={updateRemoveBookFlag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(updateRemoveBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                                clearTimeout(timerUpd)
+                                                setTimeout(() => {
+                                                    setLabel(event.target.value)
+                                                }, 1000)
+                                            }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                onChange={(event, value) => {
+                                                    clearTimeout(timerUpd)
+                                                    setTimeout(() => {
+                                                        // setLabel(value)
+                                                        setToolFound(value)
+                                                    }, 1000)
+                                                }}
+                                            />
+                                            {inheritedQuantity === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità attuale presente"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità attuale presente"
+                                                value={inheritedQuantity}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            />}
+                                            {inheritedLowerBound === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={inheritedLowerBound}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            />}
+
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={employees}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                getOptionLabel={option => option.lastName}
+                                                renderInput={(params) => <TextField {...params} label="dipendente" />}
+                                                onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
+                                            />
+                                            <TextField
+                                                id="outlined-number"
+                                                label="quantità"
+                                                type="number"
+                                                style={{ width: '30%' }}
+                                                inputProps={{ min: 0 }}
+                                                onChange={(event) => { setQuantity(event.target.value) }}
+                                            />
+                                            {
+                                                inheritedLowerBound === -1 ? <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={0}
+                                                    onChange={(event) => { setLowerBound(event.target.value) }}
+                                                /> : <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => {
+                                                        setLowerBound(event.target.value)
+                                                        setInheritedLowerBound(event.target.value)
+                                                    }}
+                                                />
+                                            }
+
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Rimuovi quantità inserita</Button>
                                         </div>
                                     </div>
                                 </Grow>
