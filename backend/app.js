@@ -6,6 +6,7 @@ var fs = require('fs')
 var excel = require('excel4node');
 const Excel = require('exceljs');
 var excelbuilder = require('msexcel-builder');
+var Workbook = require('xlsx-workbook').Workbook;
 const Structure = require('./models/structure')
 const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
@@ -72,16 +73,32 @@ mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }).the
 }).catch((error) => { console.log(error) })
 
 // SCHEDULED
-cron.schedule('00 21 * * 5', () => {
+cron.schedule('00 15 * * 5', () => {
     EmailTemplate.findOne({ use: "weeklyReport" }).then((emailWeeklyReport) => {
         EmailTemplate.findOne({ use: "singleToolReport" }).then((emailSingleTool) => {
             Tool.find().then((tools) => {
                 var listToolEmail = ""
+                var allAlertTool = []
+                var singleTool = {}
                 for (let t of tools) {
                     if (t.quantity < t.lowerBound) {
+                        singleTool = {}
                         listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment)
+                        singleTool.prodotto = t.label
+                        singleTool.quantita = t.quantity
+                        singleTool.quantita_minima = t.lowerBound
+                        singleTool.prezzo = t.price
+                        singleTool.reparto = t.department
+                        singleTool.sotto_reparto = t.subDepartment
+                        allAlertTool.push(singleTool)
                     }
                 }
+                const workSheet = xlsx.utils.json_to_sheet(allAlertTool)
+                const workBook = xlsx.utils.book_new()
+
+                xlsx.utils.book_append_sheet(workBook, workSheet, "report")
+
+                let data = xlsx.write(workBook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
@@ -92,9 +109,13 @@ cron.schedule('00 21 * * 5', () => {
 
                 var mailOptions = {
                     from: 'idroaltech.bot@gmail.com',
-                    to: 'roba.edoardo@gmail.com',
+                    to: 'roba.edoardo@gmail.com, f.signoriello@gmail.com, info@idroaltech.it',
                     subject: 'Report settimanale - catalogo prodotti',
-                    html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail)
+                    html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail),
+                    attachments: {
+                        filename: "weekly_report.xlsx",
+                        content: data
+                    }
                 };
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
@@ -109,54 +130,63 @@ cron.schedule('00 21 * * 5', () => {
     });
 });
 //EMAIL
-app.post('/api/sendEmail', (req, res) => {
-    var workbook = excelbuilder.createWorkbook('./', 'sample.xlsx')
+// app.post('/api/sendEmail', (req, res) => {
 
-    // Create a new worksheet with 10 columns and 12 rows 
-    var sheet1 = workbook.createSheet('sheet1', 10, 12);
+//     EmailTemplate.findOne({ use: "weeklyReport" }).then((emailWeeklyReport) => {
+//         EmailTemplate.findOne({ use: "singleToolReport" }).then((emailSingleTool) => {
+//             Tool.find().then((tools) => {
+//                 var listToolEmail = ""
+//                 var allAlertTool = []
+//                 var singleTool = {}
+//                 for (let t of tools) {
+//                     if (t.quantity < t.lowerBound) {
+//                         singleTool = {}
+//                         listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment)
+//                         singleTool.prodotto = t.label
+//                         singleTool.quantita = t.quantity
+//                         singleTool.quantita_minima = t.lowerBound
+//                         singleTool.prezzo = t.price
+//                         singleTool.reparto = t.department
+//                         singleTool.sotto_reparto = t.subDepartment
+//                         allAlertTool.push(singleTool)
+//                     }
+//                 }
+//                 const workSheet = xlsx.utils.json_to_sheet(allAlertTool)
+//                 const workBook = xlsx.utils.book_new()
 
-    // Fill some data 
-    sheet1.set(1, 1, 'I am title');
-    for (var i = 2; i < 5; i++)
-        sheet1.set(i, 1, 'test' + i);
+//                 xlsx.utils.book_append_sheet(workBook, workSheet, "report")
 
-    // Save it 
-    workbook.save(function (ok) {
-        if (!ok)
-            workbook.cancel();
-        else
-            console.log('congratulations, your workbook created');
-    });
+//                 let data = xlsx.write(workBook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
+//                 var transporter = nodemailer.createTransport({
+//                     service: 'gmail',
+//                     auth: {
+//                         user: 'idroaltech.bot@gmail.com',
+//                         pass: 'owgjqqmbvuzkprtw'
+//                     }
+//                 });
 
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'idroaltech.bot@gmail.com',
-            pass: 'owgjqqmbvuzkprtw'
-        }
-    });
+//                 var mailOptions = {
+//                     from: 'idroaltech.bot@gmail.com',
+//                     to: 'roba.edoardo@gmail.com',
+//                     subject: 'Report settimanale - catalogo prodotti',
+//                     html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail),
+//                     attachments: {
+//                         filename: "weekly_report.xlsx",
+//                         content: data
+//                     }
+//                 };
+//                 transporter.sendMail(mailOptions, function (error, info) {
+//                     if (error) {
+//                         console.log(error);
+//                     } else {
+//                         res.send('Email sent: ' + info.response)
+//                     }
+//                 });
+//             }).catch((error) => { console.log("error: ", error) })
 
-    var mailOptions = {
-        from: 'idroaltech.bot@gmail.com',
-        to: 'roba.edoardo@gmail.com',
-        subject: 'NOTIFICA',
-        text: 'Prova',
-        attachments: [
-            {
-                filename: "excel_prova.xlsx",
-                content: writeStream
-            }
-        ]
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            res.send('Email sent: ' + info.response)
-        }
-    });
-})
+//         });
+//     });
+// })
 
 
 //AUTHS
