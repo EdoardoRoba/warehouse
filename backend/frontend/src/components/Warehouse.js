@@ -153,8 +153,16 @@ function Warehouse(props) {
     }, [library])
 
     React.useEffect(() => {
+        getQuantity()
+    }, [toolFound])
+
+    React.useEffect(() => {
         // console.log("layout: ", layout)
     }, [layout])
+
+    React.useEffect(() => {
+        // console.log("user: ", user)
+    }, [user])
 
     React.useEffect(() => {
         // console.log("departments: ", departments)
@@ -188,7 +196,7 @@ function Warehouse(props) {
     React.useEffect(() => {
         // console.log("label: ", label)
         // setTimerUpd(setTimeout(() => {
-        getQuantity()
+        // getQuantity()
         // clearTimeout(timerUpd)
         // }, 1000))
     }, [label])
@@ -211,6 +219,10 @@ function Warehouse(props) {
     React.useEffect(() => {
         // console.log("library: ", library)
     }, [library])
+
+    React.useEffect(() => {
+        // console.log("employees: ", employees)
+    }, [employees])
 
     React.useEffect(() => {
         // console.log("columnsLibrary: ", columnsLibrary)
@@ -259,6 +271,7 @@ function Warehouse(props) {
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
+        setToolFound(null)
     };
 
     const handleChangeGetBook = () => {
@@ -276,6 +289,7 @@ function Warehouse(props) {
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
+        setToolFound(null)
     };
 
     const handleChangeUpdateBook = () => {
@@ -293,6 +307,7 @@ function Warehouse(props) {
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
+        setToolFound(null)
     };
 
     const handleChangeDeleteBook = () => {
@@ -310,6 +325,7 @@ function Warehouse(props) {
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
+        setToolFound(null)
     };
 
     const handleChangeInheritedQuantity = (event) => {
@@ -436,9 +452,9 @@ function Warehouse(props) {
 
     let getQuantity = () => {
         var count = 0
-        if (updateBookFlag) {
+        if (updateBookFlag && toolFound !== null) {
             for (let t of tools) {
-                if (t.label.toUpperCase() === label.toUpperCase()) {
+                if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
                     setInheritedQuantity(t.quantity)
                     setInheritedLowerBound(t.lowerBound)
                     count = count + 1
@@ -485,7 +501,7 @@ function Warehouse(props) {
         if (employeeIsPresent) {
             setNonExistingEmployee("")
             var bookId = ""
-            const newField = { label: label, quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
+            const newField = { label: label.toLowerCase(), quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
             setInheritedLowerBound(parseInt(lb))
             tools.map((b) => {
                 if (b.label.toUpperCase() === label.toUpperCase()) {
@@ -769,12 +785,27 @@ function Warehouse(props) {
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
                                                 clearTimeout(timerUpd)
                                                 setTimeout(() => {
                                                     setLabel(event.target.value)
                                                 }, 1000)
-                                            }} />
+                                            }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                onChange={(event, value) => {
+                                                    clearTimeout(timerUpd)
+                                                    setTimeout(() => {
+                                                        // setLabel(value)
+                                                        setToolFound(value)
+                                                    }, 1000)
+                                                }}
+                                            />
                                             {inheritedQuantity === -1 ? <TextField
                                                 disabled
                                                 id="outlined-disabled"
@@ -804,7 +835,17 @@ function Warehouse(props) {
 
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} />
+                                            {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={employees}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                getOptionLabel={option => option.lastName}
+                                                renderInput={(params) => <TextField {...params} label="dipendente" />}
+                                                onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
+                                            />
                                             <TextField
                                                 id="outlined-number"
                                                 label="quantità"
@@ -841,7 +882,7 @@ function Warehouse(props) {
 
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(label, quantity, user, lowerBound) }}>Conferma</Button>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Conferma</Button>
                                         </div>
                                     </div>
                                 </Grow>

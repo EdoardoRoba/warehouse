@@ -732,10 +732,9 @@ function Customers(props) {
                                                 <p>Seleziona un file per vederne le specifiche</p>
                                             }
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             <Button disabled={!isFilePDFPicked} onClick={(event) => handleSubmissionPDF(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                            {/* onClick={handleSubmission} */}
-                                        </div>
+                                        </div> */}
                                     </div>
                                     {
                                         (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">cliente aggiornato correttamente!</Alert>

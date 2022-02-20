@@ -3,6 +3,9 @@ const mongoose = require('mongoose')
 const xlsx = require('xlsx')
 const upload = require('express-fileupload')
 var fs = require('fs')
+var excel = require('excel4node');
+const Excel = require('exceljs');
+var excelbuilder = require('msexcel-builder');
 const Structure = require('./models/structure')
 const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
@@ -20,14 +23,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-// const feUrl = "http://localhost:3000"
-const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+const feUrl = "http://localhost:3000"
+// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-app.use(express.static(path.join(__dirname, "/frontend/build")));
-app.use(cors())
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
+// app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -40,19 +43,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-// const whitelist = [feUrl]
-// // enable CORS policy
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (!origin || whitelist.indexOf(origin) !== -1) {
-//             callback(null, true)
-//         } else {
-//             callback(new Error("Not allowed by CORS"))
-//         }
-//     },
-//     credentials: true,
-// }
-// app.use(cors(corsOptions))
+const whitelist = [feUrl]
+// enable CORS policy
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
+    credentials: true,
+}
+app.use(cors(corsOptions))
 
 
 
@@ -105,6 +108,55 @@ cron.schedule('00 21 * * 5', () => {
         });
     });
 });
+//EMAIL
+app.post('/api/sendEmail', (req, res) => {
+    var workbook = excelbuilder.createWorkbook('./', 'sample.xlsx')
+
+    // Create a new worksheet with 10 columns and 12 rows 
+    var sheet1 = workbook.createSheet('sheet1', 10, 12);
+
+    // Fill some data 
+    sheet1.set(1, 1, 'I am title');
+    for (var i = 2; i < 5; i++)
+        sheet1.set(i, 1, 'test' + i);
+
+    // Save it 
+    workbook.save(function (ok) {
+        if (!ok)
+            workbook.cancel();
+        else
+            console.log('congratulations, your workbook created');
+    });
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'idroaltech.bot@gmail.com',
+            pass: 'owgjqqmbvuzkprtw'
+        }
+    });
+
+    var mailOptions = {
+        from: 'idroaltech.bot@gmail.com',
+        to: 'roba.edoardo@gmail.com',
+        subject: 'NOTIFICA',
+        text: 'Prova',
+        attachments: [
+            {
+                filename: "excel_prova.xlsx",
+                content: writeStream
+            }
+        ]
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            res.send('Email sent: ' + info.response)
+        }
+    });
+})
 
 
 //AUTHS
@@ -139,31 +191,6 @@ app.get('/api/auth/:id', (req, res) => {
 
 
 
-//EMAIL
-app.post('/api/sendEmail', (req, res) => {
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'idroaltech.bot@gmail.com',
-            pass: 'owgjqqmbvuzkprtw'
-        }
-    });
-
-    var mailOptions = {
-        from: 'idroaltech.bot@gmail.com',
-        to: 'roba.edoardo@gmail.com',
-        subject: 'NOTIFICA',
-        text: 'Prova'
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            res.send('Email sent: ' + info.response)
-        }
-    });
-})
 
 // STRUCTURE OF THE WAREHOUSE:
 // POST
@@ -545,6 +572,6 @@ app.get('/api/customer/:id', (req, res) => {
 
 
 // COMMENT WHEN RUNNING LOCALLY
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+// });
