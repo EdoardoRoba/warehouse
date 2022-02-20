@@ -525,7 +525,7 @@ function Warehouse(props) {
         if (employeeIsPresent) {
             setNonExistingEmployee("")
             var bookId = ""
-            const newField = {}
+            var newField = {}
             if (updateAddBookFlag) {
                 newField = { label: label.toLowerCase(), quantity: oldQuantity + parseInt(q), lastUser: user.toLowerCase(), lowerBound: parseInt(lb) } //, row: r - 1, column: c
             }
