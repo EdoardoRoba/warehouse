@@ -42,6 +42,11 @@ function Login(props) {
     const [showError, setShowError] = React.useState(false);
     const [loggedIn, setLoggedIn] = React.useState(false);
     const [token, setToken] = React.useState("");
+    const [loading, setLoading] = React.useState(true)
+
+    React.useEffect(() => {
+        setLoading(false)
+    }, []);
 
     React.useEffect(() => {
         const timer = setTimeout(() => {

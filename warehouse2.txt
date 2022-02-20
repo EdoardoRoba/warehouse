@@ -23,11 +23,10 @@ warehouse:
 storico
 email settimanale per cosa c'è in magazzino, lo storico della settimana
 download del catalogo + schermata
-add pulsante login + logout
-fix computo
 
 
-gestione cliente - nome, cognome, ...
+
+gestione cliente
 carica documento pdf, excel, ecc
 aggiungere note
 calendario appuntamenti - che si collega alla scheda del cliente

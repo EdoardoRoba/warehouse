@@ -36,10 +36,12 @@ function Customers(props) {
 
     const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [selectedFile, setSelectedFile] = React.useState();
+    const [selectedFilePDF, setSelectedFilePDF] = React.useState();
     const [selectedSopralluogo, setSelectedSopralluogo] = React.useState([{}]);
     const [selectedInstallazione, setSelectedInstallazione] = React.useState([{}]);
     const [selectedAssistenza, setSelectedAssistenza] = React.useState([{}]);
     const [isFilePicked, setIsFilePicked] = React.useState(false);
+    const [isFilePDFPicked, setIsFilePDFPicked] = React.useState(false);
     const [isSopralluogoPicked, setIsSopralluogoPicked] = React.useState(false);
     const [isInstallazionePicked, setIsInstallazionePicked] = React.useState(false);
     const [isAssistenzaPicked, setIsAssistenzaPicked] = React.useState(false);
@@ -73,6 +75,7 @@ function Customers(props) {
     const [assistenza, setAssistenza] = React.useState(false);
     const [note, setNote] = React.useState(false);
     const [pagamenti_testo, setPagamenti_testo] = React.useState(false);
+
 
     const style = {
         position: 'absolute',
@@ -136,6 +139,11 @@ function Customers(props) {
         setIsFilePicked(true);
     };
 
+    const changeHandlerPDF = (event) => {
+        setSelectedFilePDF(event.target.files[0]);
+        setIsFilePDFPicked(true);
+    };
+
     const changeHandlerPhotoSopralluogo = (event) => {
         setSelectedSopralluogo(event.target.files[0]);
         setIsSopralluogoPicked(true);
@@ -179,6 +187,26 @@ function Customers(props) {
                     setShowError(true)
                 })
             }
+        });
+    };
+
+    const handleSubmissionPDF = (e) => {
+        var customer = {}
+        customer.di_co = selectedFilePDF
+        // console.log(customer.di_co)
+        axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
+            // console.log("Fatto!", response)
+            setConfermaUpdate(true)
+            getCustomers()
+            axiosInstance.get('customer/' + customerSelected._id).then((res) => {
+                setCustomerSelected(res.data)
+            }).catch((error) => {
+                // console.log("error: ", error)
+                setShowError(true)
+            });
+        }).catch((error) => {
+            // console.log("error: ", error)
+            setShowError(true)
         });
     };
 
@@ -686,7 +714,29 @@ function Customers(props) {
                                         </CardContent>
                                     </Card>
                                     }
-
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <input type="file" name="file" onChange={changeHandlerPDF} /></div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            {isFilePicked ?
+                                                <div>
+                                                    <p>Nome file: {selectedFilePDF.name}</p>
+                                                    <p>Tipo di file: {selectedFilePDF.type}</p>
+                                                    <p>Dimensione in bytes: {selectedFilePDF.size}</p>
+                                                    <p>
+                                                        Ultima modifica:{' '}
+                                                        {selectedFilePDF.lastModifiedDate.toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                                :
+                                                <p>Seleziona un file per vederne le specifiche</p>
+                                            }
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <Button disabled={!isFilePDFPicked} onClick={(event) => handleSubmissionPDF(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                            {/* onClick={handleSubmission} */}
+                                        </div>
+                                    </div>
                                     {
                                         (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">cliente aggiornato correttamente!</Alert>
                                     }

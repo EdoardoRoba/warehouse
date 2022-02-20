@@ -43,6 +43,7 @@ function Employees(props) {
     const [showError, setShowError] = React.useState(false);
     const [notFound, setNotFound] = React.useState("");
     const [employeeFound, setEmployeeFound] = React.useState("");
+    const [showQuestionDelete, setShowQuestionDelete] = React.useState(false);
 
     React.useEffect(() => {
         getEmployees()
@@ -108,6 +109,7 @@ function Employees(props) {
         setBirth("")
         setFiscalCode("")
         setEmployeeFound(null)
+        setShowQuestionDelete(false)
     };
 
     const handleChangeGetEmployeeRecord = () => {
@@ -120,6 +122,7 @@ function Employees(props) {
         setBirth("")
         setFiscalCode("")
         setEmployeeFound(null)
+        setShowQuestionDelete(false)
     };
 
     const handleChangeUpdateEmployeeRecord = () => {
@@ -132,6 +135,7 @@ function Employees(props) {
         setBirth("")
         setFiscalCode("")
         setEmployeeFound(null)
+        setShowQuestionDelete(false)
     };
 
     const handleChangeDeleteEmployeeRecord = () => {
@@ -144,6 +148,7 @@ function Employees(props) {
         setBirth("")
         setFiscalCode("")
         setEmployeeFound(null)
+        setShowQuestionDelete(false)
     };
 
     const getEmployees = async () => {
@@ -305,8 +310,16 @@ function Employees(props) {
                                         <div style={{ marginTop: '2rem' }}>
                                             <Button style={{
                                                 color: 'white', backgroundColor: 'red', marginLeft: '1rem'
-                                            }} onClick={() => { deleteEmployeeRecord() }}>Conferma</Button>
+                                            }} onClick={() => { setShowQuestionDelete(true) }}>Conferma</Button>
                                         </div>
+                                        {
+                                            !showQuestionDelete ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
+                                                <Typography variant="subtitle1" gutterBottom component="div">
+                                                    Sei sicuro di voler cancellare i dati del dipendente {lastName.toUpperCase()}?
+                                                </Typography>
+                                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteEmployeeRecord() }}>Sì</Button>
+                                            </div>
+                                        }
                                     </div>
                                 </Grow>
                             </Box>)

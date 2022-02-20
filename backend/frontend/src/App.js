@@ -12,6 +12,9 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 
 function App() {
@@ -27,13 +30,12 @@ function App() {
   }, [])
 
   React.useEffect(() => {
-    console.log("pagesss: ", pages)
+    // console.log("pagesss: ", pages)
   }, [pages])
 
   React.useEffect(() => {
     var pgs = []
     var pg = {}
-    console.log("authsssssss", auths)
     if (auths !== null) {
       if (auths.includes("warehouse")) {
         pg = {}
@@ -79,6 +81,12 @@ function App() {
     });
   }
 
+  const freeCache = () => {
+    window.location.reload(true);
+    localStorage.clear()
+    // localStorage.removeItem("key")
+  }
+
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -106,6 +114,13 @@ function App() {
                     </Button>
                   ))}
                 </Box>
+                <Button style={{ right: '0' }} color="inherit">
+                  <Tooltip style={{ marginRight: '1rem' }} title="Logout">
+                    <IconButton onClick={() => { freeCache() }}>
+                      <Link style={{ color: 'white' }} to={"/login"}><ExitToAppIcon /></Link>
+                    </IconButton>
+                  </Tooltip>
+                </Button>
               </Toolbar>
             </Container>
           </AppBar>

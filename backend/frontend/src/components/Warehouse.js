@@ -77,6 +77,7 @@ function Warehouse(props) {
     const [addingDepartment, setAddingDepartment] = React.useState("");
     const [addingSubDepartment, setAddingSubDepartment] = React.useState("");
     const [disabledSDMenu, setDisabledSDMenu] = React.useState(true);
+    const [showQuestionDelete, setShowQuestionDelete] = React.useState(false);
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -256,6 +257,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
     };
 
     const handleChangeGetBook = () => {
@@ -272,6 +274,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
     };
 
     const handleChangeUpdateBook = () => {
@@ -288,6 +291,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
     };
 
     const handleChangeDeleteBook = () => {
@@ -304,6 +308,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
     };
 
     const handleChangeInheritedQuantity = (event) => {
@@ -536,7 +541,7 @@ function Warehouse(props) {
     }
 
     // DELETE
-    let deleteBook = (label) => {
+    let deleteTool = (label) => {
         var bookId = ""
         tools.map((b) => {
             if (b.label.toUpperCase() === label.toUpperCase()) {
@@ -844,8 +849,16 @@ function Warehouse(props) {
                                             <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
                                         </div>
                                         <div style={{ marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteBook(label) }}>Conferma</Button>
+                                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { setShowQuestionDelete(true) }}>Conferma</Button>
                                         </div>
+                                        {
+                                            !showQuestionDelete ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
+                                                <Typography variant="subtitle1" gutterBottom component="div">
+                                                    Sei sicuro di voler cancellare il prodotto {label.toLowerCase()}?
+                                                </Typography>
+                                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteTool(label) }}>Sì</Button>
+                                            </div>
+                                        }
                                     </div>
                                 </Grow>
                             </Box>)
