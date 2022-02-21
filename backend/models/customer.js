@@ -102,6 +102,10 @@ const customerSchema = new Schema({
     pagamenti_testo: {
         type: String,
         required: false
+    },
+    status: {
+        type: String,
+        required: true
     }
 }, { timestamps: true });
 

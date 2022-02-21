@@ -531,6 +531,7 @@ app.post('/api/newCustomerFile', (req, res) => {
             }
             i++
             customerMongo = new Customer(customer)
+            console.log(customerMongo)
             customerMongo.save().then((result) => {
                 console.log("File aggiunto!")
                 res.status(200).json({ message: 'File aggiunto!' })
@@ -559,6 +560,7 @@ app.post('/api/customer', (req, res) => {
         comune: req.body.comune,
         provincia: req.body.provincia,
         bonus: req.body.bonus,
+        status: req.body.status,
         termico_elettrico: req.body.termico_elettrico,
         computo: req.body.computo,
         data_sopralluogo: req.body.data_sopralluogo,

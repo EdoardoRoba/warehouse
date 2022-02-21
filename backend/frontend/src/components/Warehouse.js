@@ -28,6 +28,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import './Classes.css'
 
 function Warehouse(props) {
@@ -84,6 +86,8 @@ function Warehouse(props) {
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
     const beUrl = "http://localhost:8050/"
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
 
     const style = {
         position: 'absolute',
@@ -492,6 +496,17 @@ function Warehouse(props) {
         }
     }
 
+    const exportToCSV = () => { // csvData, fileName
+        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
+        var csvData = tools
+        let fileName = "prodotti_in_magazzino"
+        const ws = XLSX.utils.json_to_sheet(csvData);
+        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    }
+
     let handleChangeDepMenu = (e, value) => {
         setDepartment(value)
         // console.log(value)
@@ -647,8 +662,8 @@ function Warehouse(props) {
                             </div>
                             <div style={{ width: '10%' }}>
                                 <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti">
-                                    <IconButton>
-                                        {/* onClick={() => { setOpenLibraryUpdate(true) }} */}
+                                    <IconButton
+                                        onClick={() => { exportToCSV() }}>
                                         <GetAppIcon />
                                     </IconButton>
                                 </Tooltip>

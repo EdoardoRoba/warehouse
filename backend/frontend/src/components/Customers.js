@@ -23,6 +23,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { AiFillInfoCircle } from "react-icons/ai";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -58,25 +59,30 @@ function Customers(props) {
     const [openSopralluogo, setOpenSopralluogo] = React.useState(false);
     const [openInstallazione, setOpenInstallazione] = React.useState(false);
     const [openAssistenza, setOpenAssistenza] = React.useState(false);
-    const [company, setCompany] = React.useState(false);
-    const [nome_cognome, setNome_cognome] = React.useState(false);
-    const [telefono, setTelefono] = React.useState(false);
-    const [indirizzo, setIndirizzo] = React.useState(false);
-    const [comune, setComune] = React.useState(false);
-    const [provincia, setProvincia] = React.useState(false);
-    const [bonus, setBonus] = React.useState(false);
-    const [termico_elettrico, setTermico_elettrico] = React.useState(false);
-    const [computo, setComputo] = React.useState(false);
-    const [data_sopralluogo, setData_sopralluogo] = React.useState(false);
-    const [data_installazione, setData_installazione] = React.useState(false);
-    const [installatore, setInstallatore] = React.useState(false);
-    const [trasferta, setTrasferta] = React.useState(false);
-    const [collaudo, setCollaudo] = React.useState(false);
-    const [assistenza, setAssistenza] = React.useState(false);
-    const [note, setNote] = React.useState(false);
-    const [pagamenti_testo, setPagamenti_testo] = React.useState(false);
+    const [company, setCompany] = React.useState("");
+    const [nome_cognome, setNome_cognome] = React.useState("");
+    const [telefono, setTelefono] = React.useState("");
+    const [indirizzo, setIndirizzo] = React.useState("");
+    const [comune, setComune] = React.useState("");
+    const [provincia, setProvincia] = React.useState("");
+    const [bonus, setBonus] = React.useState("");
+    const [termico_elettrico, setTermico_elettrico] = React.useState("");
+    const [computo, setComputo] = React.useState("");
+    const [data_sopralluogo, setData_sopralluogo] = React.useState("");
+    const [data_installazione, setData_installazione] = React.useState("");
+    const [installatore, setInstallatore] = React.useState("");
+    const [trasferta, setTrasferta] = React.useState("");
+    const [collaudo, setCollaudo] = React.useState("");
+    const [assistenza, setAssistenza] = React.useState("");
+    const [status, setStatus] = React.useState("");
+    const [note, setNote] = React.useState("");
+    const [pagamenti_testo, setPagamenti_testo] = React.useState("");
 
-
+    const statusColors = {
+        closed: 'green',
+        pending: 'yellow',
+        emergency: 'red'
+    }
     const style = {
         position: 'absolute',
         top: '50%',
@@ -158,7 +164,7 @@ function Customers(props) {
     }
 
     let addCustomer = () => {
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, trasferta: trasferta, assistenza: assistenza, note: note, pagamenti_testo: pagamenti_testo })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, trasferta: trasferta, assistenza: assistenza, note: note, pagamenti_testo: pagamenti_testo, status: status })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -407,6 +413,7 @@ function Customers(props) {
                                         <input style={{ margin: '1rem', width: '50%' }} placeholder="assistenza" onChange={(event) => { setAssistenza(event.target.value) }} />
                                     </div>
                                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} />
                                         <input style={{ margin: '1rem', width: '50%' }} placeholder="note" onChange={(event) => { setNote(event.target.value.toLowerCase()) }} />
                                         <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
                                     </div>
@@ -449,6 +456,14 @@ function Customers(props) {
                                     />
                                     {customerSelected === null ? "" : <Card style={{ marginTop: '1rem' }}>
                                         <CardContent>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                <div style={{ marginRight: '3rem' }}>
+                                                    <AiFillInfoCircle style={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
+                                                    <Typography variant="h7" component="div">
+                                                        {customerSelected.status.toLowerCase()}
+                                                    </Typography>
+                                                </div>
+                                            </div>
                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                                 <div style={{ marginRight: '3rem' }}>
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
@@ -718,7 +733,7 @@ function Customers(props) {
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             <input type="file" name="file" onChange={changeHandlerPDF} /></div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            {isFilePicked ?
+                                            {isFilePDFPicked ?
                                                 <div>
                                                     <p>Nome file: {selectedFilePDF.name}</p>
                                                     <p>Tipo di file: {selectedFilePDF.type}</p>

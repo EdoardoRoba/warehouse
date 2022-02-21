@@ -21,8 +21,6 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 warehouse:
 storico
-email settimanale per cosa c'è in magazzino, lo storico della settimana
-download del catalogo + schermata
 
 
 
