@@ -278,6 +278,17 @@ app.delete('/api/structure/:id', (req, res) => {
     })
 })
 
+// app.delete('/api/customer/:id', (req, res) => {
+//     const id = "620fe7a16ddd9d1a6d5acadf"
+//     Customer.deleteOne(
+//         { _id: id }
+//     ).then((result) => {
+//         res.send(result)
+//     }).catch((error) => {
+//         console.log("error: ", error)
+//     })
+// })
+
 
 
 // TOOLS
