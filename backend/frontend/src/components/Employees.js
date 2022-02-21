@@ -44,6 +44,7 @@ function Employees(props) {
     const [notFound, setNotFound] = React.useState("");
     const [employeeFound, setEmployeeFound] = React.useState("");
     const [showQuestionDelete, setShowQuestionDelete] = React.useState(false);
+    const [auths, setAuths] = React.useState([])
 
     React.useEffect(() => {
         getEmployees()
@@ -79,20 +80,30 @@ function Employees(props) {
     }, [confermaDelete]);
 
     const userIsAuthenticated = () => {
-        if (localStorage.getItem("auths").includes("employees")) {
-            axiosInstance.get("authenticated", {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                    "profile": localStorage.getItem("profile"),
-                    "auths": localStorage.getItem("auths")
-                }
-            }).then(response => {
-                console.log(response.data)
-                setUserIsAuthenticatedFlag(true)
-            }).catch(error => {
-                console.log(error)
+        if (localStorage.getItem("auths") !== null) {
+            if (localStorage.getItem("auths").includes("employees")) {
+                axiosInstance.get("authenticated", {
+                    headers: {
+                        "x-access-token": localStorage.getItem("token"),
+                        "profile": localStorage.getItem("profile"),
+                        "auths": localStorage.getItem("auths")
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    setUserIsAuthenticatedFlag(true)
+                    var a = {}
+                    for (let au of localStorage.getItem("auths").split(',')) {
+                        a[au.split(":")[0]] = au.split(":")[1]
+                    }
+                    setAuths(a)
+                }).catch(error => {
+                    console.log(error)
+                    setUserIsAuthenticatedFlag(false)
+                });
+            } else {
                 setUserIsAuthenticatedFlag(false)
-            });
+
+            }
         } else {
             setUserIsAuthenticatedFlag(false)
 
@@ -305,7 +316,7 @@ function Employees(props) {
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div>
-                                            <input placeholder="dipendente" onChange={(event) => { setLastName(event.target.value) }} />
+                                            <input placeholder="dipendente (cognome)" onChange={(event) => { setLastName(event.target.value) }} />
                                         </div>
                                         <div style={{ marginTop: '2rem' }}>
                                             <Button style={{

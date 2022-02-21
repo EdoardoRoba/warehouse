@@ -82,6 +82,7 @@ function Warehouse(props) {
     const [addingSubDepartment, setAddingSubDepartment] = React.useState("");
     const [disabledSDMenu, setDisabledSDMenu] = React.useState(true);
     const [showQuestionDelete, setShowQuestionDelete] = React.useState(false);
+    const [auths, setAuths] = React.useState([{}])
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -242,21 +243,33 @@ function Warehouse(props) {
     }, [subDepartmentsForMenu])
 
     const userIsAuthenticated = () => {
-        if (localStorage.getItem("auths").includes("warehouse")) {
-            axiosInstance.get("authenticated", {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                    "profile": localStorage.getItem("profile"),
-                    "auths": localStorage.getItem("auths")
-                }
-            }).then(response => {
-                console.log(response.data)
-                setUserIsAuthenticatedFlag(true)
-            }).catch(error => {
-                console.log(error)
+        if (localStorage.getItem("auths") !== null) {
+            if (localStorage.getItem("auths").includes("warehouse")) {
+                axiosInstance.get("authenticated", {
+                    headers: {
+                        "x-access-token": localStorage.getItem("token"),
+                        "profile": localStorage.getItem("profile"),
+                        "auths": localStorage.getItem("auths")
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    setUserIsAuthenticatedFlag(true)
+                    var a = {}
+                    for (let au of localStorage.getItem("auths").split(',')) {
+                        a[au.split(":")[0]] = au.split(":")[1]
+                    }
+                    setAuths(a)
+                }).catch(error => {
+                    console.log(error)
+                    console.log(localStorage.getItem("auths"))
+                    setUserIsAuthenticatedFlag(false)
+                });
+            } else {
+                console.log("esterno")
                 setUserIsAuthenticatedFlag(false)
-            });
+            }
         } else {
+            console.log("esterno")
             setUserIsAuthenticatedFlag(false)
         }
     }
@@ -433,13 +446,7 @@ function Warehouse(props) {
                 setTools(res.data)
             })
     };
-    // const getLibraryStructure = async () => {
-    //     axiosInstance.get('structure')
-    //         .then(res => {
-    //             // console.log("Library: ", res.data)
-    //             setLibrary(res.data)
-    //         })
-    // };
+
     const getEmployees = async () => {
         axiosInstance.get('employee')
             .then(res => {
@@ -558,7 +565,14 @@ function Warehouse(props) {
                     // console.log("Fatto!", response)
                     setConfermaUpdate(true)
                     getTools()
-                    axiosInstance.post('history/' + label, { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) })
+                    var upds = {}
+                    if (updateAddBookFlag) {
+                        upds = { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity + parseInt(q), update: parseInt(q) } //, row: r - 1, column: c
+                    }
+                    if (updateRemoveBookFlag) {
+                        upds = { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity - parseInt(q), update: -parseInt(q) } //, row: r - 1, column: c
+                    }
+                    axiosInstance.post('history/' + label, upds)
                         .then(response => {
                             console.log("History added!")
                         }).catch(error => {
@@ -644,21 +658,30 @@ function Warehouse(props) {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '90%' }}>
-                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                                    Aggiungi nuovo prodotto
-                                </Button>
+                                {
+                                    auths["warehouse"] === "installer" ? "" :
+                                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
+                                            Aggiungi nuovo prodotto
+                                        </Button>
+                                }
                                 <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
                                     Trova prodotto
                                 </Button>
-                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
-                                    Aumenta quantità prodotto
-                                </Button>
+                                {
+                                    auths["warehouse"] === "installer" ? "" :
+                                        <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
+                                            Aumenta quantità prodotto
+                                        </Button>
+                                }
                                 <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
                                     Diminuisci quantità prodotto
                                 </Button>
-                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
-                                    Elimina prodotto
-                                </Button>
+                                {
+                                    auths["warehouse"] === "installer" ? "" :
+                                        <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
+                                            Elimina prodotto
+                                        </Button>
+                                }
                             </div>
                             <div style={{ width: '10%' }}>
                                 <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti">

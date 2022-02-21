@@ -20,13 +20,13 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 ----------------------------------------------------------
 warehouse:
-storico
 
 
 
 gestione cliente
 carica documento pdf, excel, ecc
 aggiungere note
+eliminare foto
 calendario appuntamenti - che si collega alla scheda del cliente
 
 

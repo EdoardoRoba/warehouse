@@ -8,7 +8,7 @@ const authSchema = new Schema({
         required: true
     },
     permissions: {
-        type: Array,
+        type: String,
         required: true
     }
 }, { timestamps: true });

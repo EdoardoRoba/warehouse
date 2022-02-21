@@ -77,12 +77,28 @@ function Customers(props) {
     const [status, setStatus] = React.useState("");
     const [note, setNote] = React.useState("");
     const [pagamenti_testo, setPagamenti_testo] = React.useState("");
+    const [auths, setAuths] = React.useState([])
 
     const statusColors = {
         closed: 'green',
         pending: 'yellow',
         emergency: 'red'
     }
+
+    const possibleStatuses = [
+        {
+            id: "closed",
+            label: "closed"
+        },
+        {
+            id: "pending",
+            label: "pending"
+        },
+        {
+            id: "emergency",
+            label: "emergency"
+        }
+    ]
     const style = {
         position: 'absolute',
         top: '50%',
@@ -292,8 +308,8 @@ function Customers(props) {
     }
 
     const userIsAuthenticated = () => {
-        if (localStorage.getItem("auths").includes("customers")) {
-            if (localStorage.getItem("auths").includes("warehouse")) {
+        if (localStorage.getItem("auths") !== null) {
+            if (localStorage.getItem("auths").includes("customers")) {
                 axiosInstance.get("authenticated", {
                     headers: {
                         "x-access-token": localStorage.getItem("token"),
@@ -303,6 +319,11 @@ function Customers(props) {
                 }).then(response => {
                     // console.log(response.data)
                     setUserIsAuthenticatedFlag(true)
+                    var a = {}
+                    for (let au of localStorage.getItem("auths").split(',')) {
+                        a[au.split(":")[0]] = au.split(":")[1]
+                    }
+                    setAuths(a)
                 }).catch(error => {
                     console.log(error)
                     setUserIsAuthenticatedFlag(false)
@@ -324,105 +345,117 @@ function Customers(props) {
                 </div> :
                     <div>
                         <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Gestione clienti</h1>
-                        <Accordion
-                            expanded={openAccordion || false}
-                            onChange={handleChangeAccordion}
-                            style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                            >
-                                <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
-                                    Carica file Excel
-                                </Typography>
-                                {/* <Typography sx={{ color: "text.secondary" }}>
-                                    I am an accordion
-                                </Typography> */}
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {/* <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '60%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                    <Alert severity="warning">Il caricamento di un nuovo file sovrascriverà il precedente!</Alert>
-                                </div> */}
-                                <div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input type="file" name="file" onChange={changeHandler} /></div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        {isFilePicked ?
-                                            <div>
-                                                <p>Nome file: {selectedFile.name}</p>
-                                                <p>Tipo di file: {selectedFile.type}</p>
-                                                <p>Dimensione in bytes: {selectedFile.size}</p>
-                                                <p>
-                                                    Ultima modifica:{' '}
-                                                    {selectedFile.lastModifiedDate.toLocaleDateString()}
-                                                </p>
+                        {
+                            auths["customers"] === "installer" ? "" : <div>
+                                <Accordion
+                                    expanded={openAccordion || false}
+                                    onChange={handleChangeAccordion}
+                                    style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1bh-content"
+                                    >
+                                        <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
+                                            Carica file Excel
+                                        </Typography>
+                                        {/* <Typography sx={{ color: "text.secondary" }}>
+                                                I am an accordion
+                                            </Typography> */}
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        {/* <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '60%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                                <Alert severity="warning">Il caricamento di un nuovo file sovrascriverà il precedente!</Alert>
+                                            </div> */}
+                                        <div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input type="file" name="file" onChange={changeHandler} /></div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                {isFilePicked ?
+                                                    <div>
+                                                        <p>Nome file: {selectedFile.name}</p>
+                                                        <p>Tipo di file: {selectedFile.type}</p>
+                                                        <p>Dimensione in bytes: {selectedFile.size}</p>
+                                                        <p>
+                                                            Ultima modifica:{' '}
+                                                            {selectedFile.lastModifiedDate.toLocaleDateString()}
+                                                        </p>
+                                                    </div>
+                                                    :
+                                                    <p>Seleziona un file per vederne le specifiche</p>
+                                                }
                                             </div>
-                                            :
-                                            <p>Seleziona un file per vederne le specifiche</p>
-                                        }
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <Button disabled={!isFilePicked} onClick={(event) => handleSubmission(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                        {/* onClick={handleSubmission} */}
-                                    </div>
-                                </div>
-                            </AccordionDetails>
-                        </Accordion>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <Button disabled={!isFilePicked} onClick={(event) => handleSubmission(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                {/* onClick={handleSubmission} */}
+                                            </div>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
 
-                        <Accordion
-                            expanded={openAccordionManual || false}
-                            onChange={handleChangeAccordionManual}
-                            style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
-                        >
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                            >
-                                <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
-                                    Carica singolo cliente
-                                </Typography>
-                                {/* <Typography sx={{ color: "text.secondary" }}>
-                                    I am an accordion
-                                </Typography> */}
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%' }}>
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toLowerCase()) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="termico/elettrico" onChange={(event) => { setTermico_elettrico(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="computo" onChange={(event) => { setComputo(event.target.value) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '33%' }} placeholder="installatore" onChange={(event) => { setInstallatore(event.target.value) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="trasferta" onChange={(event) => { setTrasferta(event.target.value) }} />
-                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="assistenza" onChange={(event) => { setAssistenza(event.target.value) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} />
-                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="note" onChange={(event) => { setNote(event.target.value.toLowerCase()) }} />
-                                        <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addCustomer}>Conferma</Button>
-                                    </div>
-                                </div>
-                            </AccordionDetails>
-                        </Accordion>
+                                <Accordion
+                                    expanded={openAccordionManual || false}
+                                    onChange={handleChangeAccordionManual}
+                                    style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1bh-content"
+                                    >
+                                        <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
+                                            Carica singolo cliente
+                                        </Typography>
+                                        {/* <Typography sx={{ color: "text.secondary" }}>
+                                                I am an accordion
+                                            </Typography> */}
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%' }}>
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toLowerCase()) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="termico/elettrico" onChange={(event) => { setTermico_elettrico(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="computo" onChange={(event) => { setComputo(event.target.value) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="installatore" onChange={(event) => { setInstallatore(event.target.value) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="trasferta" onChange={(event) => { setTrasferta(event.target.value) }} />
+                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="assistenza" onChange={(event) => { setAssistenza(event.target.value) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                {/* <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={possibleStatuses}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="stato" />}
+                                                    onChange={(event, value) => { setStatus(value.label) }}
+                                                />
+                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="note" onChange={(event) => { setNote(event.target.value.toLowerCase()) }} />
+                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addCustomer}>Conferma</Button>
+                                            </div>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                            </div>
+                        }
                         {
                             (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">File aggiunto correttamente!</Alert>
                         }
@@ -635,23 +668,28 @@ function Customers(props) {
                                                         {customerSelected.note}
                                                     </Typography>
                                                 </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                        PAGAMENTI (PDF)
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.pagamenti_pdf}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                        PAGAMENTI (TESTO)
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.pagamenti_testo}
-                                                    </Typography>
-                                                </div>
+
                                             </div>
+                                            {
+                                                auths["warehouse"] === "installer" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                            PAGAMENTI (PDF)
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {customerSelected.pagamenti_pdf}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                            PAGAMENTI (TESTO)
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {customerSelected.pagamenti_testo}
+                                                        </Typography>
+                                                    </div>
+                                                </div>
+                                            }
                                             <div style={{ justifyContent: 'left', textAlign: 'left', marginTop: '5rem' }}>
                                                 <div style={{ marginRight: '3rem', marginBottom: '4rem' }}>
                                                     <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>

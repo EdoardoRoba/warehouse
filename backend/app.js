@@ -24,14 +24,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -44,19 +44,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 
 
@@ -405,10 +405,22 @@ app.post('/api/history/:tool', (req, res) => {
 
 // GET
 app.get('/api/history', (req, res) => {
-    // it gets all the element in that document
-    History.find().then((result) => {
-        res.send(result);
-    }).catch((error) => { console.log("error: ", error) })
+    if (req.query.type !== undefined) {
+        if (req.query.type === "user") {
+            History.find({ user: req.query.data }).then((result) => {
+                res.send(result);
+            }).catch((error) => { console.log("error: ", error) })
+        } else {
+            History.find({ tool: req.query.data }).then((result) => {
+                res.send(result);
+            }).catch((error) => { console.log("error: ", error) })
+        }
+    } else {
+        // it gets all the element in that document
+        History.find().then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    }
 })
 
 
@@ -459,9 +471,8 @@ app.post('/api/profile', (req, res) => {
 
     const username = req.body.username
     const password = req.body.password
-
     Profile.find().then((result) => {
-        var profile = result.filter((res) => res.password === password && res.username === username)
+        var profile = result.filter((ress) => ress.password === password && ress.username === username)
         if (profile.length > 0) {
             const id = res.id
             const token = jwt.sign({ id }, "jwtSecret", {
@@ -482,7 +493,7 @@ app.post('/api/profile', (req, res) => {
 const verifyJWT = (req, res, next) => {
     const token = req.headers["x-access-token"]
     const profile = req.headers["profile"]
-    const auths = req.headers["auths"].split(',')
+    const auths = req.headers["auths"] //.split(',')
     if (!token) {
         res.status(406).send("The user is not authenticated.")
     } else {
@@ -492,7 +503,7 @@ const verifyJWT = (req, res, next) => {
                 // res.json({ auth: false, message: "You failed to authenticate." })
             } else {
                 Auth.findOne({ code: profile }).then((resAuth) => {
-                    if (JSON.stringify(auths.sort()) === JSON.stringify(resAuth.permissions.sort())) {
+                    if (auths.replace(":*", "") === resAuth.permissions.replace(":*", "")) {
                         req.userId = decoded.id;
                         next();
                     } else {
@@ -615,6 +626,6 @@ app.get('/api/customer/:id', (req, res) => {
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});
