@@ -15,6 +15,7 @@ const Employee = require('./models/employee')
 const Profile = require('./models/profile')
 const Customer = require('./models/customer')
 const Auth = require('./models/auth')
+const Color = require('./models/color')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -24,14 +25,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -44,19 +45,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 
 
@@ -83,13 +84,14 @@ cron.schedule('00 15 * * 5', () => {
                 for (let t of tools) {
                     if (t.quantity < t.lowerBound) {
                         singleTool = {}
-                        listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment)
+                        listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment).replace("{marca}", t.marca)
                         singleTool.prodotto = t.label
                         singleTool.quantita = t.quantity
                         singleTool.quantita_minima = t.lowerBound
                         singleTool.prezzo = t.price
                         singleTool.reparto = t.department
                         singleTool.sotto_reparto = t.subDepartment
+                        singleTool.marca = t.marca
                         allAlertTool.push(singleTool)
                     }
                 }
@@ -302,7 +304,8 @@ app.post('/api/tool', (req, res) => {
         subDepartment: req.body.subDepartment,
         price: req.body.price,
         lastUser: req.body.lastUser,
-        code: req.body.code
+        code: req.body.code,
+        marca: req.body.marca
     })
     // console.log("tool: ", tool)
     tool.save().then((result) => {
@@ -349,7 +352,7 @@ app.put('/api/tool/:id', (req, res, next) => {
                     from: 'idroaltech.bot@gmail.com',
                     to: 'roba.edoardo@gmail.com', // info@idroaltech.it',
                     subject: 'NOTIFICA QUANTITA\' LIMITE - ' + label.toUpperCase(),
-                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment)
+                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment).replace("{marca}", result.marca)
                 };
 
                 transporter.sendMail(mailOptions, function (error, info) {
@@ -602,7 +605,6 @@ app.get('/api/customer', (req, res) => {
 app.put('/api/customer/:id', (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
-    // console.log(body)
     Customer.findByIdAndUpdate(
         { _id: id },
         body
@@ -623,9 +625,31 @@ app.get('/api/customer/:id', (req, res) => {
     }).catch((error) => { console.log("error: ", error) })
 })
 
+// POST COLORS
+app.post('/api/colorsStatus', (req, res) => {
+    const color = new Color({
+        label: req.body.label,
+        color: req.body.color
+    })
+    // console.log("color: ", color)
+    color.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET COLORS
+app.get('/api/colorsStatus', (req, res) => {
+    // it gets all the element in that document
+    Color.find().then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});

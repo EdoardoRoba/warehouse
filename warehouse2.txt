@@ -22,7 +22,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 warehouse:
 - Sui clienti invece di fare solo il filtro sul nome metto nome cognome e stato e che si possano filtrare
 - Modifica campi cliente (solo admin)
-- aggiunta di nuovi stati dei clienti
+- cerca prodotto per codice: univoco (wait)
 
 
 gestione cliente

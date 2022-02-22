@@ -25,13 +25,17 @@ const toolSchema = new Schema({
     },
     price: {
         type: Number,
-        required: true
+        required: false
     },
     lastUser: {
         type: String,
         required: false
     },
     code: {
+        type: String,
+        required: false
+    },
+    marca: {
         type: String,
         required: false
     }

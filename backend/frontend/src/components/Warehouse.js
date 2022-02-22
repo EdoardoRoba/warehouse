@@ -40,7 +40,11 @@ function Warehouse(props) {
     const [inheritedQuantity, setInheritedQuantity] = React.useState(-1)
     const [inheritedLowerBound, setInheritedLowerBound] = React.useState(-1)
     const [label, setLabel] = React.useState("")
-    const [code, setCode] = React.useState("")
+    const [labelToUpdate, setLabelToUpdate] = React.useState("")
+    const [code, setCode] = React.useState(null)
+    const [codeToUpdate, setCodeToUpdate] = React.useState("")
+    const [marca, setMarca] = React.useState(null)
+    const [marcaToUpdate, setMarcaToUpdate] = React.useState("")
     const [quantity, setQuantity] = React.useState("")
     const [user, setUser] = React.useState("")
     const [lowerBound, setLowerBound] = React.useState(0)
@@ -62,6 +66,7 @@ function Warehouse(props) {
     const [getBookFlag, setGetBookFlag] = React.useState(false);
     const [updateAddBookFlag, setUpdateAddBookFlag] = React.useState(false);
     const [updateRemoveBookFlag, setUpdateRemoveBookFlag] = React.useState(false);
+    const [updateBookFlag, setUpdateBookFlag] = React.useState(false);
     const [deleteBookFlag, setDeleteBookFlag] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
     const [confermaUpdate, setConfermaUpdate] = React.useState(false);
@@ -201,10 +206,6 @@ function Warehouse(props) {
 
     React.useEffect(() => {
         // console.log("label: ", label)
-        // setTimerUpd(setTimeout(() => {
-        // getQuantity()
-        // clearTimeout(timerUpd)
-        // }, 1000))
     }, [label])
 
     React.useEffect(() => {
@@ -278,6 +279,7 @@ function Warehouse(props) {
         setAddBookFlag((prev) => !prev);
         setUpdateRemoveBookFlag(false);
         setUpdateAddBookFlag(false);
+        setUpdateBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
@@ -297,6 +299,7 @@ function Warehouse(props) {
         setGetBookFlag((prev) => !prev);
         setUpdateRemoveBookFlag(false);
         setUpdateAddBookFlag(false);
+        setUpdateBookFlag(false);
         setDeleteBookFlag(false);
         setAddBookFlag(false);
         setLabel("")
@@ -315,10 +318,13 @@ function Warehouse(props) {
     const handleChangeUpdateAddBook = () => {
         setUpdateAddBookFlag((prev) => !prev);
         setUpdateRemoveBookFlag(false);
+        setUpdateBookFlag(false);
         setAddBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
         setQuantity("")
         setPrice("")
         setLowerBound(0)
@@ -334,10 +340,35 @@ function Warehouse(props) {
     const handleChangeUpdateRemoveBook = () => {
         setUpdateRemoveBookFlag((prev) => !prev);
         setUpdateAddBookFlag(false);
+        setUpdateBookFlag(false);
         setAddBookFlag(false);
         setDeleteBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
+        setQuantity("")
+        setPrice("")
+        setLowerBound(0)
+        setUser("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
+        setDisabledSDMenu(true)
+        setSubDepartmentsForMenu([])
+        setShowQuestionDelete(false)
+        setToolFound(null)
+    };
+
+    const handleChangeUpdateBook = () => {
+        setUpdateBookFlag((prev) => !prev);
+        setUpdateAddBookFlag(false);
+        setUpdateRemoveBookFlag(false);
+        setAddBookFlag(false);
+        setDeleteBookFlag(false);
+        setGetBookFlag(false);
+        setLabel("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
         setQuantity("")
         setPrice("")
         setLowerBound(0)
@@ -354,9 +385,12 @@ function Warehouse(props) {
         setDeleteBookFlag((prev) => !prev);
         setUpdateRemoveBookFlag(false);
         setUpdateAddBookFlag(false);
+        setUpdateBookFlag(false);
         setAddBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
         setQuantity("")
         setPrice("")
         setLowerBound(0)
@@ -475,7 +509,7 @@ function Warehouse(props) {
 
     // POST
     let addTool = () => {
-        axiosInstance.post('tool', { label: label, quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '', code: code })
+        axiosInstance.post('tool', { label: label.toUpperCase(), quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '', code: code, marca: marca })
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
@@ -487,7 +521,7 @@ function Warehouse(props) {
 
     let getQuantity = () => {
         var count = 0
-        if ((updateAddBookFlag || updateRemoveBookFlag) && toolFound !== null) {
+        if ((updateAddBookFlag || updateRemoveBookFlag || updateBookFlag) && toolFound !== null && labelToUpdate === "") {
             for (let t of tools) {
                 if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
                     setInheritedQuantity(t.quantity)
@@ -593,6 +627,50 @@ function Warehouse(props) {
 
     }
 
+    let updateEntireBook = (labelU, lb) => {
+        if (lb === 0) {
+            lb = inheritedLowerBound
+        }
+        var bookId = ""
+        var newField = {}
+        if (lb !== "") {
+            newField["lowerBound"] = parseInt(lb)
+        }
+        if (labelToUpdate !== "") {
+            newField["label"] = labelToUpdate.toLowerCase()
+        }
+        if (marcaToUpdate !== "") {
+            newField["marca"] = marcaToUpdate.toLowerCase()
+        }
+        if (codeToUpdate !== "") {
+            newField["code"] = codeToUpdate.toLowerCase()
+        }
+        setInheritedLowerBound(parseInt(lb))
+        tools.map((b) => {
+            if (b.label.toUpperCase() === labelU.toUpperCase()) {
+                bookId = b._id
+            }
+        })
+        if (bookId !== "") {
+            axiosInstance.put("tool/" + bookId, newField).then(response => {
+                // console.log("Fatto!", response)
+                setConfermaUpdate(true)
+                getTools()
+                setTimeout(() => {
+                    setLabelToUpdate("")
+                }, 1000)
+            }).catch((error) => {
+                // console.log("error: ", error)
+                setShowError(true)
+            });
+        } else {
+            setConfermaUpdate(false)
+            setNotFound(label)
+        }
+        getTools()
+
+    }
+
     let addDepartment = () => {
         var name = ""
         var father = ""
@@ -677,6 +755,12 @@ function Warehouse(props) {
                                     Diminuisci quantità prodotto
                                 </Button>
                                 {
+                                    auths["warehouse"] !== "*" ? "" :
+                                        <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
+                                            Modifica prodotto
+                                        </Button>
+                                }
+                                {
                                     auths["warehouse"] === "installer" ? "" :
                                         <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
                                             Elimina prodotto
@@ -700,14 +784,17 @@ function Warehouse(props) {
                                     {...(addBookFlag ? { timeout: 1000 } : {})}
                                 >
                                     <div style={{ marginTop: '2rem' }}>
-                                        <div>
-                                            <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
-                                            <input placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
+                                        <div style={{ marginBottom: '1rem' }}>
+                                            <input style={{ marginRight: '1rem' }} placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                            <input style={{ marginRight: '1rem' }} placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
                                             <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
-                                            <input placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                                            <input placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
-                                            {/* <input placeholder="reparto" onChange={(event) => { setDepartment(event.target.value) }} />
-                                <input placeholder="sotto-reparto" onChange={(event) => { setSubDepartment(event.target.value) }} /> */}
+                                        </div>
+                                        <div style={{ marginBottom: '1rem' }}>
+                                            <input style={{ marginRight: '1rem' }} placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                            <input style={{ marginRight: '1rem' }} placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
+                                            <input placeholder="marca" onChange={(event) => { setMarca(event.target.value) }} />
+                                        </div>
+                                        <div>
                                             <div style={{ display: 'flex', marginTop: '1rem' }}>
                                                 <Autocomplete
                                                     disablePortal
@@ -1070,6 +1157,87 @@ function Warehouse(props) {
                             </Box>)
                         }
                         {
+                            (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <Grow
+                                    in={updateBookFlag}
+                                    style={{ transformOrigin: '0 0 0' }}
+                                    {...(updateBookFlag ? { timeout: 1000 } : {})}
+                                >
+                                    <div style={{ marginTop: '2rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                                clearTimeout(timerUpd)
+                                                setTimeout(() => {
+                                                    setLabel(event.target.value)
+                                                }, 1000)
+                                            }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                // style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                onChange={(event, value) => {
+                                                    clearTimeout(timerUpd)
+                                                    setTimeout(() => {
+                                                        // setLabel(value)
+                                                        setToolFound(value)
+                                                    }, 1000)
+                                                }}
+                                            />
+                                            {inheritedLowerBound === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={inheritedLowerBound}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            />}
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
+                                            <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
+                                            <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
+                                            {
+                                                inheritedLowerBound === -1 ? <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima (non obbligatorio)"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={0}
+                                                    onChange={(event) => { setLowerBound(event.target.value) }}
+                                                /> : <TextField
+                                                    id="outlined-number"
+                                                    label="quantità minima (non obbligatorio)"
+                                                    type="number"
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => {
+                                                        setLowerBound(event.target.value)
+                                                        setInheritedLowerBound(event.target.value)
+                                                    }}
+                                                />
+                                            }
+
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto prodotto</Button>
+                                        </div>
+                                    </div>
+                                </Grow>
+                            </Box>)
+                        }
+                        {
                             (!deleteBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                 <Grow
                                     in={deleteBookFlag}
@@ -1078,7 +1246,20 @@ function Warehouse(props) {
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div>
-                                            <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                            {/* <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} /> */}
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={tools}
+                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
+                                                onChange={(event, value) => {
+                                                    if (value !== null) {
+                                                        setLabel(value.label)
+                                                    }
+                                                }}
+                                            />
                                         </div>
                                         <div style={{ marginTop: '2rem' }}>
                                             <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { setShowQuestionDelete(true) }}>Conferma</Button>
