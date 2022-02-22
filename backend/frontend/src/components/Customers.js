@@ -1102,13 +1102,12 @@ function Customers(props) {
             {
                 customerSelected === null ? "" : <div>
                     <Modal
-                        style={{ maxHeight: '60%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}
                         open={openSopralluogo}
                         onClose={() => { setOpenSopralluogo(false) }}
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
+                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
                             {
                                 customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                     <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
@@ -1132,14 +1131,17 @@ function Customers(props) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
+                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
                             {
-                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                     <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
                                     {
                                         customerSelected.foto_fine_installazione.map((fotoin) => {
                                             return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
                                                 <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoin} alt="Logo" />
+                                                <IconButton onClick={() => { deleteImage(fotoin, "foto_fine_installazione") }}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                             </Typography>
                                         })
                                     }
@@ -1154,14 +1156,17 @@ function Customers(props) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
+                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
                             {
-                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                     <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
                                     {
                                         customerSelected.foto_assistenza.map((fotoas) => {
                                             return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
                                                 <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoas} alt="Logo" />
+                                                <IconButton onClick={() => { deleteImage(fotoas, "foto_assistenza") }}>
+                                                    <DeleteIcon />
+                                                </IconButton>
                                             </Typography>
                                         })
                                     }
