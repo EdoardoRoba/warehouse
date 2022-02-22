@@ -30,6 +30,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import FileBase64 from 'react-file-base64';
+import { DataGrid } from '@mui/x-data-grid';
 import './Classes.css'
 import axios from "axios";
 
@@ -85,6 +86,11 @@ function Customers(props) {
         emergency: 'red'
     }
 
+    const columns = [
+        { field: 'nome_cognome', headerName: 'nome e cognome', width: 300 },
+        { field: 'status', headerName: 'stato', width: 300 }
+    ]
+
     const possibleStatuses = [
         {
             id: "closed",
@@ -119,6 +125,14 @@ function Customers(props) {
     React.useEffect(() => {
         // console.log("file: ", selectedFile)
     }, [selectedFile])
+
+    React.useEffect(() => {
+        // console.log("customers: ", customers)
+    }, [customers])
+
+    React.useEffect(() => {
+        // console.log("customerSelected: ", customerSelected)
+    }, [customerSelected])
 
     React.useEffect(() => {
         // console.log("excel: ", excel)
@@ -477,7 +491,17 @@ function Customers(props) {
                             </AccordionSummary>
                             <AccordionDetails>
                                 <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '80%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                    <Autocomplete
+                                    <div style={{ height: 400, width: '100%' }}>
+                                        <DataGrid
+                                            rows={customers}
+                                            columns={columns}
+                                            getRowId={(row) => row._id}
+                                            pageSize={5}
+                                            rowsPerPageOptions={[5]}
+                                            onRowClick={(event, value) => { setCustomerSelected(event.row) }}
+                                        />
+                                    </div>
+                                    {/* <Autocomplete
                                         disablePortal
                                         id="combo-box-demo"
                                         options={customers}
@@ -486,7 +510,7 @@ function Customers(props) {
                                         getOptionLabel={option => option.nome_cognome}
                                         renderInput={(params) => <TextField {...params} label="cliente" />}
                                         onChange={(event, value) => { setCustomerSelected(value) }}
-                                    />
+                                    /> */}
                                     {customerSelected === null ? "" : <Card style={{ marginTop: '1rem' }}>
                                         <CardContent>
                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>

@@ -10,7 +10,7 @@ git push heroku master
 
 password idroaltech.bot: owgjqqmbvuzkprtw
 password portale "admin": idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
-password portale "basic": base:base === YmFzZTpiYXNl
+password portale "basic": base:base === edoroba.8794
 
 
 jenkins password: ffd4c201629043ad86606e756d0f39a9
@@ -20,7 +20,9 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 ----------------------------------------------------------
 warehouse:
-
+- Sui clienti invece di fare solo il filtro sul nome metto nome cognome e stato e che si possano filtrare
+- Modifica campi cliente (solo admin)
+- aggiunta di nuovi stati dei clienti
 
 
 gestione cliente
