@@ -93,10 +93,6 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route exact path="/" element={<Login replace to="/login" />} />
-        <Route exact path='/login' element={< Login />}></Route>
-      </Routes>
 
       {
         !userIsAuthenticatedFlag ? "" : <div>
@@ -127,6 +123,10 @@ function App() {
         </div>
       }
       <Routes>
+        <Route exact path="/" element={<Login replace to="/login" />} />
+        <Route exact path='/login' element={< Login />}></Route>
+        {/* </Routes>
+      <Routes> */}
         <Route exact path='/warehouse' element={< Warehouse />}></Route>
         <Route exact path='/history' element={< History />}></Route>
         <Route exact path='/customers' element={< Customers />}></Route>
