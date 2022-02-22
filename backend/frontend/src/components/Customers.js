@@ -140,6 +140,10 @@ function Customers(props) {
     }, [customerSelected])
 
     React.useEffect(() => {
+        // console.log("openColorsUpdate: ", openColorsUpdate)
+    }, [openColorsUpdate])
+
+    React.useEffect(() => {
         // console.log("excel: ", excel)
     }, [excel])
 
@@ -1193,35 +1197,34 @@ function Customers(props) {
                             </div>
                         </Box>
                     </Modal>
-                    {/* Modal to add statuses and colors */}
-                    <Modal
-                        open={openColorsUpdate}
-                        onClose={() => { handleCloseColorsUpdate() }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
-                                Aggiungi uno stato e il suo colore:
-                            </Typography>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <div>
-                                    <input style={{ marginTop: '2rem', marginBottom: '2rem' }} placeholder="nuovo stato" onChange={(event) => { setStatusToAdd(event.target.value.toLowerCase()) }} />
-                                    {/* <input placeholder="colore associato" onChange={(event) => { setColorToAdd(event.target.value.toLowerCase()) }} /> */}
-                                    <SketchPicker
-                                        color={colorToAdd}
-                                        disableAlpha={true}
-                                        onChangeComplete={handleChangeComplete}
-                                    />
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addStatusColor() }}>Conferma</Button>
-                            </div>
-                        </Box>
-                    </Modal>
                 </div>
             }
+            {/* Modal to add statuses and colors */}
+            <Modal
+                open={openColorsUpdate}
+                onClose={() => { handleCloseColorsUpdate() }}
+                aria-labelledby="modal-modal-label"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                        Aggiungi uno stato e il suo colore:
+                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                        <div>
+                            <input style={{ marginTop: '2rem', marginBottom: '2rem' }} placeholder="nuovo stato" onChange={(event) => { setStatusToAdd(event.target.value.toLowerCase()) }} />
+                            <SketchPicker
+                                color={colorToAdd}
+                                disableAlpha={true}
+                                onChangeComplete={handleChangeComplete}
+                            />
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                        <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addStatusColor() }}>Conferma</Button>
+                    </div>
+                </Box>
+            </Modal>
         </div >
     );
 }
