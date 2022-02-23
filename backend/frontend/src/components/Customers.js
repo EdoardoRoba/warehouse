@@ -86,29 +86,31 @@ function Customers(props) {
     const [statusToAdd, setStatusToAdd] = React.useState("");
     const [colorToAdd, setColorToAdd] = React.useState("");
     const [statusColors, setStatusColors] = React.useState("");
+    const [possibleStatuses, setPossibleStatuses] = React.useState("");
     const [fieldToEdit, setFieldToEdit] = React.useState("");
     const [valueToEdit, setValueToEdit] = React.useState("");
     const [openEditField, setOpenEditField] = React.useState(false);
+    const [openEditStatus, setOpenEditStatus] = React.useState(false);
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', width: 300 },
         { field: 'status', headerName: 'stato', width: 300 }
     ]
 
-    const possibleStatuses = [
-        {
-            id: "closed",
-            label: "closed"
-        },
-        {
-            id: "pending",
-            label: "pending"
-        },
-        {
-            id: "emergency",
-            label: "emergency"
-        }
-    ]
+    // const possibleStatuses = [
+    //     {
+    //         id: "closed",
+    //         label: "closed"
+    //     },
+    //     {
+    //         id: "pending",
+    //         label: "pending"
+    //     },
+    //     {
+    //         id: "emergency",
+    //         label: "emergency"
+    //     }
+    // ]
     const style = {
         position: 'absolute',
         top: '50%',
@@ -196,9 +198,16 @@ function Customers(props) {
         axiosInstance.get('colorsStatus')
             .then(res => {
                 var scs = {}
+                var pss = []
+                var ps = {}
                 for (let sc of res.data) {
+                    ps = {}
                     scs[sc.label] = sc.color
+                    ps["id"] = sc.label
+                    ps["label"] = sc.label
+                    pss.push(ps)
                 }
+                setPossibleStatuses(pss)
                 setStatusColors(scs)
             })
     }
@@ -276,6 +285,13 @@ function Customers(props) {
         setOpenEditField(false)
     };
 
+    const handleCloseEditStatus = () => {
+        setFieldToEdit("")
+        setValueToEdit("")
+        getCustomers()
+        setOpenEditStatus(false)
+    };
+
     const editField = () => {
         var newField = {}
         newField[fieldToEdit] = valueToEdit
@@ -284,6 +300,24 @@ function Customers(props) {
                 console.log("aggiornato!")
                 setCustomerSelected(resp.data)
                 handleCloseEditField()
+            }).catch((error) => {
+                console.log("error")
+                console.log(error)
+            })
+        }).catch((error) => {
+            console.log("error")
+            console.log(error)
+        })
+    }
+
+    const editStatus = () => {
+        var newField = {}
+        newField[fieldToEdit] = valueToEdit
+        axiosInstance.put("customer/" + customerSelected._id, newField).then((response) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+                console.log("aggiornato!")
+                setCustomerSelected(resp.data)
+                handleCloseEditStatus()
             }).catch((error) => {
                 console.log("error")
                 console.log(error)
@@ -618,6 +652,15 @@ function Customers(props) {
                                                     <Typography variant="h7" component="div">
                                                         {customerSelected.status.toLowerCase()}
                                                     </Typography>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                            onClick={() => {
+                                                                setFieldToEdit("status")
+                                                                setOpenEditStatus(true)
+                                                            }}>
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                    }
                                                 </div>
                                             </div>
                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
@@ -1194,6 +1237,40 @@ function Customers(props) {
                             }} />
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
                                 <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { editField() }}>Conferma</Button>
+                            </div>
+                        </Box>
+                    </Modal>
+                    {/* Modal to edit status */}
+                    <Modal
+                        open={openEditStatus}
+                        onClose={() => { handleCloseEditStatus() }}
+                        aria-labelledby="modal-modal-label"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                Aggiorna il campo {fieldToEdit.toUpperCase()}:
+                            </Typography>
+                            <Autocomplete
+                                disablePortal
+                                style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginRight: 'auto', marginLeft: 'auto' }}
+                                id="combo-box-demo"
+                                options={possibleStatuses}
+                                sx={{ width: 300 }}
+                                renderInput={(params) => <TextField {...params} label="stato" />}
+                                onChange={(event, value) => {
+                                    if (value !== null) {
+                                        setValueToEdit(value.label)
+                                    }
+                                }}
+                            />
+                            {
+                                (valueToEdit === "" || valueToEdit === null || valueToEdit === undefined) ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <AiFillInfoCircle style={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
+                                </div>
+                            }
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                <Button style={{ color: 'white', backgroundColor: 'green' }} onClick={() => { editStatus() }}>Conferma</Button>
                             </div>
                         </Box>
                     </Modal>

@@ -5,6 +5,7 @@ frontend: axiosInstance is ok. change baseURL
 git add .
 git commit -am "comment"
 git push heroku master
+(heroku open)
 -- > https://my-warehouse-app-heroku.herokuapp.com/
 ----------
 
