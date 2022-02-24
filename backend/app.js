@@ -61,8 +61,8 @@ app.use(cors(corsOptions))
 
 
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb' }));
+app.use(express.json({ limit: '500mb' }));
+app.use(express.urlencoded({ limit: '500mb' }));
 app.use(upload())
 
 // Connect to server
@@ -84,7 +84,7 @@ cron.schedule('00 15 * * 5', () => {
                 for (let t of tools) {
                     if (t.quantity < t.lowerBound) {
                         singleTool = {}
-                        listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment).replace("{marca}", t.marca)
+                        listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment).replace("{marca}", t.marca).replace("{code}", t.code)
                         singleTool.prodotto = t.label
                         singleTool.quantita = t.quantity
                         singleTool.quantita_minima = t.lowerBound
@@ -92,6 +92,7 @@ cron.schedule('00 15 * * 5', () => {
                         singleTool.reparto = t.department
                         singleTool.sotto_reparto = t.subDepartment
                         singleTool.marca = t.marca
+                        singleTool.code = t.code
                         allAlertTool.push(singleTool)
                     }
                 }
@@ -111,7 +112,7 @@ cron.schedule('00 15 * * 5', () => {
 
                 var mailOptions = {
                     from: 'idroaltech.bot@gmail.com',
-                    to: 'roba.edoardo@gmail.com, f.signoriello@gmail.com, info@idroaltech.it',
+                    to: 'roba.edoardo@gmail.com, logistica@idroaltech.it',
                     subject: 'Report settimanale - catalogo prodotti',
                     html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail),
                     attachments: {
@@ -350,9 +351,9 @@ app.put('/api/tool/:id', (req, res, next) => {
 
                 var mailOptions = {
                     from: 'idroaltech.bot@gmail.com',
-                    to: 'roba.edoardo@gmail.com', // info@idroaltech.it',
+                    to: 'roba.edoardo@gmail.com, logistica@idroaltech.it', // info@idroaltech.it',
                     subject: 'NOTIFICA QUANTITA\' LIMITE - ' + label.toUpperCase(),
-                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment).replace("{marca}", result.marca)
+                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment).replace("{marca}", t.marca).replace("{code}", t.code)
                 };
 
                 transporter.sendMail(mailOptions, function (error, info) {

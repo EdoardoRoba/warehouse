@@ -26,7 +26,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TablePagination from '@mui/material/TablePagination';
+import TableFooter from '@mui/material/TableFooter';
 import Paper from '@mui/material/Paper';
+import { DataGrid } from '@mui/x-data-grid';
+
 import './Classes.css'
 import { getToolbarUtilityClass } from "@mui/material";
 
@@ -42,6 +46,16 @@ function History(props) {
     const [employees, setEmployees] = React.useState([])
     const [tools, setTools] = React.useState([])
     const [auths, setAuths] = React.useState([])
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(20);
+
+    const columns = [
+        { field: 'user', headerName: 'Utente', width: 200 },
+        { field: 'tool', headerName: 'Attrezzo', width: 350 },
+        { field: 'totalQuantity', headerName: 'Quantità totale', width: 200 },
+        { field: 'update', headerName: 'Azione fatta', width: 200 },
+        { field: 'createdAt', headerName: 'Data', width: 200 }
+    ]
 
     React.useEffect(() => {
         userIsAuthenticated()
@@ -80,6 +94,16 @@ function History(props) {
             .then(res => {
                 setTools(res.data)
             })
+    };
+
+    const handleChangePage = (event, newPage) => {
+        console.log(newPage)
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     const getHistory = () => {
@@ -134,8 +158,10 @@ function History(props) {
             } else {
                 setEmployeeSelected(null)
                 setToolSelected(value.label)
+                console.log(value.label)
                 axiosInstance.get('history', { params: { type: "tool", data: value.label } })
                     .then(response => {
+                        console.log(response.data)
                         setHistoryShown(response.data)
                     }).catch(error => {
                         setShowError(true)
@@ -182,7 +208,7 @@ function History(props) {
                         }
                         {
                             (showHistory === false) ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%', marginTop: '3rem', marginLeft: 'auto', marginRight: 'auto' }}>
-                                <TableContainer component={Paper}>
+                                {/* <TableContainer component={Paper}>
                                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                                         <TableHead>
                                             <TableRow>
@@ -210,7 +236,17 @@ function History(props) {
                                             ))}
                                         </TableBody>
                                     </Table>
-                                </TableContainer>
+                                </TableContainer> */}
+                                <div style={{ height: 650, width: '100%' }}>
+                                    <DataGrid
+                                        rows={historyShown}
+                                        columns={columns}
+                                        getRowId={(row) => row._id}
+                                        pageSize={10}
+                                        rowsPerPageOptions={[10]}
+                                    // onRowClick={(event, value) => { setCustomerSelected(event.row) }}
+                                    />
+                                </div>
                             </div>
                         }
                     </div >

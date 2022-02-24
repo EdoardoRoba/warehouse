@@ -20,6 +20,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import BrushIcon from '@material-ui/icons/Brush';
 import EditIcon from '@material-ui/icons/Edit';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
@@ -34,6 +35,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FileBase64 from 'react-file-base64';
 import { DataGrid } from '@mui/x-data-grid';
 import { SketchPicker } from 'react-color';
+import { saveAs } from 'file-saver'
 import './Classes.css'
 import axios from "axios";
 
@@ -97,20 +99,6 @@ function Customers(props) {
         { field: 'status', headerName: 'stato', width: 300 }
     ]
 
-    // const possibleStatuses = [
-    //     {
-    //         id: "closed",
-    //         label: "closed"
-    //     },
-    //     {
-    //         id: "pending",
-    //         label: "pending"
-    //     },
-    //     {
-    //         id: "emergency",
-    //         label: "emergency"
-    //     }
-    // ]
     const style = {
         position: 'absolute',
         top: '50%',
@@ -156,6 +144,10 @@ function Customers(props) {
     React.useEffect(() => {
         // console.log("valueToEdit: ", valueToEdit)
     }, [valueToEdit])
+
+    React.useEffect(() => {
+        // console.log("customerSelected: ", customerSelected)
+    }, [customerSelected])
 
     React.useEffect(() => {
         // console.log("selectedSopralluogo: ", selectedSopralluogo[0].base64)
@@ -369,7 +361,9 @@ function Customers(props) {
     const handleSubmissionSopralluogo = (e) => {
         var customer = {}
         customer.foto_sopralluogo = customerSelected.foto_sopralluogo
-        customer.foto_sopralluogo.push(selectedSopralluogo[0].base64)
+        for (let s of selectedSopralluogo) {
+            customer.foto_sopralluogo.push(s.base64)
+        }
         // console.log(customer.foto_sopralluogo)
         axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
             // console.log("Fatto!", response)
@@ -390,7 +384,9 @@ function Customers(props) {
     const handleSubmissionInstallazione = (e) => {
         var customer = {}
         customer.foto_fine_installazione = customerSelected.foto_fine_installazione
-        customer.foto_fine_installazione.push(selectedInstallazione[0].base64)
+        for (let s of selectedInstallazione) {
+            customer.foto_fine_installazione.push(s.base64)
+        }
         // console.log(customer.foto_fine_installazione)
         axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
             // console.log("Fatto!", response)
@@ -411,7 +407,9 @@ function Customers(props) {
     const handleSubmissionAssistenza = (e) => {
         var customer = {}
         customer.foto_assistenza = customerSelected.foto_assistenza
-        customer.foto_assistenza.push(selectedAssistenza[0].base64)
+        for (let s of selectedAssistenza) {
+            customer.foto_assistenza.push(s.base64)
+        }
         // console.log(customer.foto_assistenza)
         axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
             // console.log("Fatto!", response)
@@ -428,6 +426,10 @@ function Customers(props) {
             setShowError(true)
         });
     };
+
+    const downloadImage = (image, filename) => {
+        saveAs(image, filename + '.jpg')
+    }
 
     const handleChangeAccordion = () => {
         setOpenAccordion((prev) => !prev)
@@ -1162,9 +1164,14 @@ function Customers(props) {
                                         customerSelected.foto_sopralluogo.map((fotosl) => {
                                             return <Typography style={{ marginTop: '2rem', marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
                                                 <img style={{ maxHeight: '200px', maxWidth: '200px', marginRight: '2rem' }} src={fotosl} alt="Logo" />
-                                                <IconButton onClick={() => { deleteImage(fotosl, "foto_sopralluogo") }}>
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <IconButton onClick={() => { deleteImage(fotosl, "foto_sopralluogo") }}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => { downloadImage(fotosl, customerSelected.nome_cognome.replace(" ", "_") + "_sopralluogo_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                        <GetAppIcon />
+                                                    </IconButton>
+                                                </div>
                                             </Typography>
                                         })
                                     }
@@ -1186,9 +1193,14 @@ function Customers(props) {
                                         customerSelected.foto_fine_installazione.map((fotoin) => {
                                             return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
                                                 <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoin} alt="Logo" />
-                                                <IconButton onClick={() => { deleteImage(fotoin, "foto_fine_installazione") }}>
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <IconButton onClick={() => { deleteImage(fotoin, "foto_fine_installazione") }}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => { downloadImage(fotoin, customerSelected.nome_cognome.replace(" ", "_") + "_fine_installazione_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                        <GetAppIcon />
+                                                    </IconButton>
+                                                </div>
                                             </Typography>
                                         })
                                     }
@@ -1211,9 +1223,14 @@ function Customers(props) {
                                         customerSelected.foto_assistenza.map((fotoas) => {
                                             return <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
                                                 <img style={{ maxHeight: '200px', maxWidth: '200px' }} src={fotoas} alt="Logo" />
-                                                <IconButton onClick={() => { deleteImage(fotoas, "foto_assistenza") }}>
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <IconButton onClick={() => { deleteImage(fotoas, "foto_assistenza") }}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => { downloadImage(fotoas, customerSelected.nome_cognome.replace(" ", "_") + "_assistenza_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                        <GetAppIcon />
+                                                    </IconButton>
+                                                </div>
                                             </Typography>
                                         })
                                     }

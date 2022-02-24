@@ -5,7 +5,7 @@ const Schema = mongoose.Schema // defines the schema of the data
 const customerSchema = new Schema({
     company: {
         type: String,
-        required: true
+        required: false
     },
     nome_cognome: {
         type: String,
@@ -13,31 +13,31 @@ const customerSchema = new Schema({
     },
     telefono: {
         type: Number,
-        required: true
+        required: false
     },
     indirizzo: {
         type: String,
-        required: true
+        required: false
     },
     comune: {
         type: String,
-        required: true
+        required: false
     },
     provincia: {
         type: String,
-        required: true
+        required: false
     },
     bonus: {
         type: String,
-        required: true
+        required: false
     },
     termico_elettrico: {
         type: String,
-        required: true
+        required: false
     },
     computo: {
         type: String,
-        required: true
+        required: false
     },
     data_sopralluogo: {
         type: String,
@@ -105,7 +105,7 @@ const customerSchema = new Schema({
     },
     status: {
         type: String,
-        required: true
+        required: false
     }
 }, { timestamps: true });
 

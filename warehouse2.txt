@@ -9,9 +9,10 @@ git push heroku master
 -- > https://my-warehouse-app-heroku.herokuapp.com/
 ----------
 
-password idroaltech.bot: owgjqqmbvuzkprtw
-password portale "admin": idroaltech:idroaltech === aWRyb2FsdGVjaDppZHJvYWx0ZWNo
-password portale "basic": base:base === edoroba.8794
+password idroaltech.bot (app): owgjqqmbvuzkprtw
+password portale "admin": idroaltech:idroaltech === edoroba.8794
+password portale "basic": magazzino.000
+password portale "tecnico": tecnico.000
 
 
 jenkins password: ffd4c201629043ad86606e756d0f39a9
@@ -20,16 +21,16 @@ http://localhost:8000/ (o 8080)
 java -jar C:\Users\edoar\Downloads\jenkins.war
 
 ----------------------------------------------------------
+
 warehouse:
-- Sui clienti invece di fare solo il filtro sul nome metto nome cognome e stato e che si possano filtrare
-- Modifica campi cliente (solo admin)
 - cerca prodotto per codice: univoco (wait)
+- scheda prodotto: lascia solo quantità e quantità minimo
+- reparti e sotto-reparti grassetto, prodotto no, quantità/quantità min distingui caratteri
+- dare i permessi ad installatori per vedere clienti specifici
 
 
 gestione cliente
 carica documento pdf, excel, ecc
-aggiungere note
-eliminare foto
 calendario appuntamenti - che si collega alla scheda del cliente
 
 

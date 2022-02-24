@@ -17,7 +17,9 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import SettingsIcon from '@material-ui/icons/Settings';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import AddIcon from '@material-ui/icons/Add';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { AiOutlineInfoCircle } from "react-icons/ai";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -39,6 +41,8 @@ function Warehouse(props) {
     const [employees, setEmployees] = React.useState([])
     const [inheritedQuantity, setInheritedQuantity] = React.useState(-1)
     const [inheritedLowerBound, setInheritedLowerBound] = React.useState(-1)
+    const [inheritedDepartment, setInheritedDepartment] = React.useState(-1)
+    const [inheritedSubDepartment, setInheritedSubDepartment] = React.useState(-1)
     const [label, setLabel] = React.useState("")
     const [labelToUpdate, setLabelToUpdate] = React.useState("")
     const [code, setCode] = React.useState(null)
@@ -50,7 +54,9 @@ function Warehouse(props) {
     const [lowerBound, setLowerBound] = React.useState(0)
     const [price, setPrice] = React.useState("")
     const [department, setDepartment] = React.useState("")
+    const [departmentToUpdate, setDepartmentToUpdate] = React.useState("")
     const [subDepartment, setSubDepartment] = React.useState("")
+    const [subDepartmentToUpdate, setSubDepartmentToUpdate] = React.useState("")
     const [rowLayout, setRowLayout] = React.useState("")
     const [columnLayout, setColumnLayout] = React.useState("")
     const [library, setLibrary] = React.useState(null)
@@ -58,7 +64,7 @@ function Warehouse(props) {
     const [rowsLibrary, setRowsLibrary] = React.useState([])
     const [columnsLibrary, setColumnsLibrary] = React.useState([])
     const [open, setOpen] = React.useState(false);
-    const [openLibraryUpdate, setOpenLibraryUpdate] = React.useState(false);
+    const [openLibraryAdd, setOpenLibraryAdd] = React.useState(false);
     const [toolsInShelf, setToolsInShelf] = React.useState([])
     const [shelfRowSelected, setShelfRowSelected] = React.useState("")
     const [shelfColumnSelected, setShelfColumnSelected] = React.useState("")
@@ -67,6 +73,7 @@ function Warehouse(props) {
     const [updateAddBookFlag, setUpdateAddBookFlag] = React.useState(false);
     const [updateRemoveBookFlag, setUpdateRemoveBookFlag] = React.useState(false);
     const [updateBookFlag, setUpdateBookFlag] = React.useState(false);
+    const [updateBookListFlag, setUpdateBookListFlag] = React.useState(false);
     const [deleteBookFlag, setDeleteBookFlag] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
     const [confermaUpdate, setConfermaUpdate] = React.useState(false);
@@ -76,6 +83,7 @@ function Warehouse(props) {
     const [nonExistingEmployee, setNonExistingEmployee] = React.useState("");
     const [departments, setDepartments] = React.useState([]);
     const [subDepartments, setSubDepartments] = React.useState([]);
+    const [allDeps, setAllDeps] = React.useState([]);
     const [subDepartmentsForMenu, setSubDepartmentsForMenu] = React.useState([]);
     const [openPapers, setOpenPapers] = React.useState({});
     const [sdSelected, setSdSelected] = React.useState("");
@@ -88,6 +96,8 @@ function Warehouse(props) {
     const [disabledSDMenu, setDisabledSDMenu] = React.useState(true);
     const [showQuestionDelete, setShowQuestionDelete] = React.useState(false);
     const [auths, setAuths] = React.useState([{}])
+    const [openEditDeps, setOpenEditDeps] = React.useState(false)
+    const [editedDepartmentLabel, seteditedDepartmentLabel] = React.useState("")
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -165,11 +175,17 @@ function Warehouse(props) {
 
     React.useEffect(() => {
         getQuantity()
+        getInheritedDeps()
+        // console.log("toolFound: ", toolFound)
     }, [toolFound])
 
     React.useEffect(() => {
         // console.log("layout: ", layout)
     }, [layout])
+
+    React.useEffect(() => {
+        // console.log("inheritedDepartment: ", inheritedDepartment)
+    }, [inheritedDepartment])
 
     React.useEffect(() => {
         // console.log("user: ", user)
@@ -283,12 +299,21 @@ function Warehouse(props) {
         setDeleteBookFlag(false);
         setGetBookFlag(false);
         setLabel("")
+        setCode("")
+        setMarca("")
         setQuantity("")
         setPrice("")
         setLowerBound(0)
         setUser("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -305,10 +330,19 @@ function Warehouse(props) {
         setLabel("")
         setQuantity("")
         setPrice("")
+        setCode("")
+        setMarca("")
         setLowerBound(0)
         setUser("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -325,12 +359,19 @@ function Warehouse(props) {
         setLabel("")
         setLabelToUpdate("")
         setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setQuantity("")
         setPrice("")
+        setCode("")
+        setMarca("")
         setLowerBound(0)
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -347,12 +388,19 @@ function Warehouse(props) {
         setLabel("")
         setLabelToUpdate("")
         setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setQuantity("")
         setPrice("")
+        setCode("")
+        setMarca("")
         setLowerBound(0)
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -369,12 +417,19 @@ function Warehouse(props) {
         setLabel("")
         setLabelToUpdate("")
         setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setQuantity("")
         setPrice("")
+        setCode("")
+        setMarca("")
         setLowerBound(0)
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -391,12 +446,19 @@ function Warehouse(props) {
         setLabel("")
         setLabelToUpdate("")
         setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
         setQuantity("")
         setPrice("")
+        setCode("")
+        setMarca("")
         setLowerBound(0)
         setUser("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedDepartment(-1)
+        setInheritedSubDepartment(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -411,42 +473,45 @@ function Warehouse(props) {
         setInheritedLowerBound(event)
     }
 
+    const handleChangeInheritedDepartment = (event) => {
+        setInheritedDepartment(event)
+    }
+
+    const handleChangeInheritedSubDepartment = (event) => {
+        setInheritedSubDepartment(event)
+    }
+
     const handleChangeSwitch = () => {
         setIsSubDep((prev) => !prev)
     }
 
-    // const createLibrary = () => {
-    //     var structure = []
-    //     var structureGrid = []
-    //     var rows = []
-    //     var cols = []
-    //     if (library.length > 0) {
-    //         for (var c = 0; c < library[0].columns; c++) {
-    //             rows = []
-    //             structureGrid[c] = []
-    //             structure[c] = []
-    //             for (var r = 0; r < library[0].rows; r++) {
-    //                 structure[c].push({ row: r, column: c, selected: false, key: r.toString() + alphabet[c].toString(), color: '#964b00c7' })
-    //                 rows.push(r)
-    //             }
-    //             cols.push(c)
-    //         }
-    //     }
-    //     setLayout(structure)
-    //     setRowsLibrary(rows)
-    //     setColumnsLibrary(cols)
-    // }
-
     const handleClose = (l) => {
         setOpen(false)
-        setToolsInSd([])
-        setToolInSd(null)
+        setUpdateBookListFlag(false)
+        setToolInSd({})
+        setInheritedDepartment("")
+        setInheritedLowerBound(-1)
+        setInheritedQuantity(-1)
+        setInheritedSubDepartment("")
+        setLabelToUpdate("")
+        setMarcaToUpdate("")
+        setCodeToUpdate("")
+        setDepartmentToUpdate("")
+        setSubDepartmentToUpdate("")
     };
 
     const handleCloseLibraryUpdate = () => {
-        setOpenLibraryUpdate(false)
+        setOpenLibraryAdd(false)
         getTools()
-        // getLibraryStructure()
+        getDepartments()
+        setAddingDepartment("")
+        setAddingSubDepartment("")
+    };
+
+    const handleCloseEditDeps = () => {
+        setOpenLibraryAdd(false)
+        setOpenEditDeps(false)
+        getTools()
         getDepartments()
         setAddingDepartment("")
         setAddingSubDepartment("")
@@ -461,7 +526,7 @@ function Warehouse(props) {
             }
         }
         setToolsInSd(toolsInSdVar)
-        setOpen(true)
+        // setOpen(true)
     }
 
     const showToolInSd = (e, tool) => {
@@ -492,13 +557,16 @@ function Warehouse(props) {
         axiosInstance.get('structure')
             .then(res => {
                 var depts = res.data
+                setAllDeps(depts)
                 var openDeps = {}
                 var subds = depts.filter((d) => (d.father !== undefined && d.father !== ""))
+                subds.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                setSubDepartments(subds)
                 for (var deps of subds) {
                     openDeps[deps.label] = false
                 }
-                setSubDepartments(subds)
                 var ds = depts.filter((d) => d.father === undefined || d.father === "")
+                ds.sort((a, b) => (a.label > b.label) ? 1 : -1)
                 setDepartments(ds)
                 for (var depd of ds) {
                     openDeps[depd.label] = false
@@ -521,7 +589,7 @@ function Warehouse(props) {
 
     let getQuantity = () => {
         var count = 0
-        if ((updateAddBookFlag || updateRemoveBookFlag || updateBookFlag) && toolFound !== null && labelToUpdate === "") {
+        if ((updateAddBookFlag || updateRemoveBookFlag || updateBookFlag || updateBookListFlag) && toolFound !== null && labelToUpdate === "") {
             for (let t of tools) {
                 if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
                     setInheritedQuantity(t.quantity)
@@ -537,10 +605,39 @@ function Warehouse(props) {
         }
     }
 
+    let getInheritedDeps = () => {
+        var count = 0
+        if ((updateAddBookFlag || updateRemoveBookFlag || updateBookFlag || updateBookListFlag) && toolFound !== null && labelToUpdate === "") {
+            for (let t of tools) {
+                if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
+                    setInheritedDepartment(t.department)
+                    setInheritedSubDepartment(t.subDepartment)
+                    count = count + 1
+                }
+            }
+            if (count === 0) {
+                setNotFound(true)
+                setInheritedDepartment(0)
+                setInheritedSubDepartment(0)
+            }
+        }
+    }
+
     const exportToCSV = () => { // csvData, fileName
         // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
         var csvData = tools
         let fileName = "prodotti_in_magazzino"
+        const ws = XLSX.utils.json_to_sheet(csvData);
+        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, fileName + fileExtension);
+    }
+
+    const exportToCSVAlert = () => { // csvData, fileName
+        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
+        var csvData = tools.filter((t) => t.quantity < t.lowerBound)
+        let fileName = "prodotti_sotto_soglia_minima"
         const ws = XLSX.utils.json_to_sheet(csvData);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
@@ -558,6 +655,32 @@ function Warehouse(props) {
             setSubDepartmentsForMenu(sdMenu)
             setDisabledSDMenu(false)
             setDepartment(value.label)
+        }
+    }
+
+    let handleChangeEditDep = (e, value) => {
+        setDepartmentToUpdate(value)
+    }
+
+    const editDepartment = () => {
+        axiosInstance.put("structure/" + departmentToUpdate._id, { label: editedDepartmentLabel }).then(response => {
+            console.log("Reparto aggiornato!")
+            handleCloseEditDeps()
+        }).catch(error => {
+            setShowError(true)
+        });
+    }
+
+    let handleChangeDepMenuToUpdate = (e, value) => {
+        setDepartmentToUpdate(value)
+        // console.log(value)
+        if (value !== null) {
+            let sdMenu = subDepartments.filter((sd) => {
+                return sd.father === value.label
+            })
+            setSubDepartmentsForMenu(sdMenu)
+            setDisabledSDMenu(false)
+            setDepartmentToUpdate(value.label)
         }
     }
 
@@ -645,6 +768,12 @@ function Warehouse(props) {
         if (codeToUpdate !== "") {
             newField["code"] = codeToUpdate.toLowerCase()
         }
+        if (departmentToUpdate !== "") {
+            newField["department"] = departmentToUpdate.toLowerCase()
+        }
+        if (subDepartmentToUpdate !== "") {
+            newField["subDepartment"] = subDepartmentToUpdate.toLowerCase()
+        }
         setInheritedLowerBound(parseInt(lb))
         tools.map((b) => {
             if (b.label.toUpperCase() === labelU.toUpperCase()) {
@@ -654,11 +783,15 @@ function Warehouse(props) {
         if (bookId !== "") {
             axiosInstance.put("tool/" + bookId, newField).then(response => {
                 // console.log("Fatto!", response)
+                closeOpenPaper(toolInSd.subDepartment)
                 setConfermaUpdate(true)
                 getTools()
+                setInheritedDepartment(departmentToUpdate)
+                setInheritedSubDepartment(subDepartmentToUpdate)
                 setTimeout(() => {
                     setLabelToUpdate("")
                 }, 1000)
+                setOpen(false)
             }).catch((error) => {
                 // console.log("error: ", error)
                 setShowError(true)
@@ -691,6 +824,12 @@ function Warehouse(props) {
     let updateOpenPapers = (dep) => {
         var oD = { ...openPapers }
         oD[dep] = !oD[dep]
+        setOpenPapers(oD)
+    }
+
+    let closeOpenPaper = (dep) => {
+        var oD = { ...openPapers }
+        oD[dep] = false
         setOpenPapers(oD)
     }
 
@@ -728,14 +867,16 @@ function Warehouse(props) {
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                             <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
-                            <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
-                                <IconButton onClick={() => { setOpenLibraryUpdate(true) }}>
-                                    <SettingsIcon />
-                                </IconButton>
-                            </Tooltip>
+                            {
+                                auths["warehouse"] === "installer" ? "" : <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
+                                    <IconButton onClick={() => { setOpenLibraryAdd(true) }}>
+                                        <SettingsIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            }
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '90%' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                 {
                                     auths["warehouse"] === "installer" ? "" :
                                         <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
@@ -768,10 +909,18 @@ function Warehouse(props) {
                                 }
                             </div>
                             <div style={{ width: '10%' }}>
-                                <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti">
+                                <Tooltip title="Scarica catalogo prodotti">
                                     <IconButton
                                         onClick={() => { exportToCSV() }}>
                                         <GetAppIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                            <div style={{ width: '10%' }}>
+                                <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti sotto la soglia minima">
+                                    <IconButton
+                                        onClick={() => { exportToCSVAlert() }}>
+                                        <GetAppIcon style={{ color: 'red' }} />
                                     </IconButton>
                                 </Tooltip>
                             </div>
@@ -1165,17 +1314,11 @@ function Warehouse(props) {
                                 >
                                     <div style={{ marginTop: '2rem' }}>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
-                                                clearTimeout(timerUpd)
-                                                setTimeout(() => {
-                                                    setLabel(event.target.value)
-                                                }, 1000)
-                                            }} /> */}
                                             <Autocomplete
                                                 disablePortal
                                                 id="combo-box-demo"
                                                 options={tools}
-                                                // style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                style={{ marginRight: "2rem" }}
                                                 sx={{ width: 300 }}
                                                 renderInput={(params) => <TextField {...params} label="prodotti" />}
                                                 onChange={(event, value) => {
@@ -1189,21 +1332,81 @@ function Warehouse(props) {
                                             {inheritedLowerBound === -1 ? <TextField
                                                 disabled
                                                 id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
                                                 label="quantità minima attuale richiesta"
                                                 value={0}
                                                 onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                             /> : <TextField
                                                 disabled
+                                                style={{ marginRight: "2rem" }}
                                                 id="outlined-disabled"
                                                 label="quantità minima attuale richiesta"
                                                 value={inheritedLowerBound}
                                                 onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                             />}
+                                            {inheritedDepartment === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="reparto attuale"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="reparto attuale"
+                                                value={inheritedDepartment}
+                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                            />}
+                                            {inheritedSubDepartment === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="sotto-reparto attuale"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="sotto-reparto attuale"
+                                                value={inheritedSubDepartment}
+                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                            />}
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <h4>da modificare:</h4>
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
                                             <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
                                             <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={departments}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
+                                                onChange={(event, value) => {
+                                                    handleChangeDepMenuToUpdate(event, value)
+                                                }}
+                                            />
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                disabled={disabledSDMenu}
+                                                options={subDepartmentsForMenu}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
+                                                onChange={(event, value) => {
+                                                    if (value !== null) {
+                                                        setSubDepartmentToUpdate(value.label)
+                                                    }
+                                                }}
+                                            />
                                             {
                                                 inheritedLowerBound === -1 ? <TextField
                                                     id="outlined-number"
@@ -1231,7 +1434,7 @@ function Warehouse(props) {
 
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto prodotto</Button>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto</Button>
                                         </div>
                                     </div>
                                 </Grow>
@@ -1323,9 +1526,46 @@ function Warehouse(props) {
                                                 subDepartments.map((sd) => {
                                                     if (sd.father === d.label) {
                                                         return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                                                            <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
+                                                            <Accordion
+                                                                expanded={openPapers[sd.label] || false}
+                                                                style={{ width: '80%' }}
+                                                                onChange={() => {
+                                                                    updateOpenPapers(sd.label)
+                                                                    showSubDepartment(sd)
+                                                                }}
+                                                            >
+                                                                <AccordionSummary
+                                                                    expandIcon={<ExpandMoreIcon />}
+                                                                    aria-controls="panel1bh-content"
+                                                                >
+                                                                    <Typography variant="h6" sx={{ width: "100%", flexShrink: 0 }}>
+                                                                        {sd.label.toUpperCase()}
+                                                                    </Typography>
+                                                                </AccordionSummary>
+                                                                <AccordionDetails>
+                                                                    {
+                                                                        toolsInSd.map((t) => {
+                                                                            return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                                                <Typography onClick={() => { console.log(t) }}>
+                                                                                    {t.label.toUpperCase()}
+                                                                                </Typography>
+                                                                                <Typography style={{ marginLeft: '2rem' }}>
+                                                                                    q: {t.quantity}
+                                                                                </Typography>
+                                                                                <AiOutlineInfoCircle onClick={() => {
+                                                                                    setOpen(true)
+                                                                                    setUpdateBookListFlag(true)
+                                                                                    setToolInSd(t)
+                                                                                    setToolFound(t)
+                                                                                }} style={{ marginLeft: '2rem', color: 'green' }} />
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </AccordionDetails>
+                                                            </Accordion>
+                                                            {/* <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
                                                                 {sd.label.toUpperCase()}
-                                                            </Typography>
+                                                            </Typography> */}
                                                         </div>
                                                     }
                                                 })
@@ -1343,81 +1583,128 @@ function Warehouse(props) {
                         <Modal
                             open={open}
                             style={{ padding: '5rem' }}
-                            onClose={() => { handleClose(layout) }}
+                            onClose={() => { handleClose() }}
                             aria-labelledby="modal-modal-label"
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={style}>
-                                <Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                                    Cerca un prodotto nel reparto: {sdSelected.toUpperCase()}
-                                </Typography>
-                                {/* {
-                        (toolsInShelf.length === 0) ? <span style={{ color: 'grey' }}>Nello ripiano selezionato non sono presenti prodotti.</span> :
-                            toolsInShelf.map((bis) => {
-                                return <li style={{ marginBottom: '0.5rem' }}>{bis.label} - {bis.quantity}</li>
-                            })
-                    } */}
-                                <Autocomplete
-                                    disablePortal
-                                    id="combo-box-demo"
-                                    options={toolsInSd}
-                                    sx={{ width: 300 }}
-                                    renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                    onChange={(event, value) => { showToolInSd(event, value) }}
-                                />
-                                {toolInSd === null ? "" : <Card style={{ marginTop: '1rem' }} sx={{ minWidth: 275 }}>
-                                    <CardContent>
-                                        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            prodotto
-                                        </Typography>
-                                        <Typography variant="h5" component="div">
-                                            {toolInSd.label.toUpperCase()}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            reparto
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.department}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            sotto-reparto
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.subDepartment}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            quantità
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.quantity}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            quantità minima necessaria
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.lowerBound}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            prezzo d'acquisto (per unità)
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.price}
-                                        </Typography>
-                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                            ultimo utente
-                                        </Typography>
-                                        <Typography variant="h7" component="div">
-                                            {toolInSd.lastUser}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
+                                {
+                                    (toolInSd === undefined || toolInSd === null || toolInSd.label === null || toolInSd.label === undefined) ? "" : <div><Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        Modifica prodotto: {toolInSd.label.toUpperCase()}
+                                    </Typography>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            {inheritedQuantity === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="quantità minima attuale richiesta"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={inheritedQuantity}
+                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                            />}
+                                            {inheritedLowerBound === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="quantità minima attuale richiesta"
+                                                value={0}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="quantità minima attuale richiesta"
+                                                value={inheritedLowerBound}
+                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                            />}
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            {inheritedDepartment === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="reparto attuale"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="reparto attuale"
+                                                value={inheritedDepartment}
+                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                            />}
+                                            {inheritedSubDepartment === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="sotto-reparto attuale"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="sotto-reparto attuale"
+                                                value={inheritedSubDepartment}
+                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                            />}
+                                        </div>
+                                        da modificare:
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={departments}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
+                                                onChange={(event, value) => {
+                                                    handleChangeDepMenuToUpdate(event, value)
+                                                }}
+                                            />
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                disabled={disabledSDMenu}
+                                                options={subDepartmentsForMenu}
+                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                sx={{ width: 300 }}
+                                                renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
+                                                onChange={(event, value) => {
+                                                    if (value !== null) {
+                                                        setSubDepartmentToUpdate(value.label)
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto</Button>
+                                        </div>
+                                    </div>
                                 }
+
                             </Box>
                         </Modal>
 
                         {/* Modal to update library structure */}
                         <Modal
-                            open={openLibraryUpdate}
+                            open={openLibraryAdd}
                             onClose={() => { handleCloseLibraryUpdate() }}
                             aria-labelledby="modal-modal-label"
                             aria-describedby="modal-modal-description"
@@ -1446,6 +1733,39 @@ function Warehouse(props) {
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
                                     <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addDepartment() }}>Conferma</Button>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <Button style={{ color: 'black', backgroundColor: 'trasnparent', fontSize: 'small' }} onClick={() => { setOpenEditDeps(true) }}>Vuoi modificare un reparto o un sottoreparto già esistente?</Button>
+                                </div>
+                            </Box>
+                        </Modal>
+                        <Modal
+                            open={openEditDeps}
+                            onClose={() => { handleCloseEditDeps() }}
+                            aria-labelledby="modal-modal-label"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                    Modifica un reparto o sottoreparto:
+                                </Typography>
+                                <Autocomplete
+                                    disablePortal
+                                    id="combo-box-demo"
+                                    options={allDeps}
+                                    style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "2rem" }}
+                                    sx={{ width: 300 }}
+                                    renderInput={(params) => <TextField {...params} label="tutti i reparti" />}
+                                    onChange={(event, value) => {
+                                        handleChangeEditDep(event, value)
+                                    }}
+                                />
+                                modifica:
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <input style={{ marginTop: '2rem' }} placeholder="nuovo nome" onChange={(event) => { seteditedDepartmentLabel(event.target.value) }} />
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { editDepartment() }}>Conferma</Button>
                                 </div>
                             </Box>
                         </Modal>
