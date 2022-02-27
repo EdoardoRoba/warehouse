@@ -24,9 +24,11 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - cerca prodotto per codice: univoco (wait)
-- scheda prodotto: lascia solo quantità e quantità minimo
 - reparti e sotto-reparti grassetto, prodotto no, quantità/quantità min distingui caratteri
 - dare i permessi ad installatori per vedere clienti specifici
+- email catalogo: dfrop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
+- menu non visibile da mobile (menu burger)
+- sul diminuisci/aumenta/modifica mettere last updated
 
 
 gestione cliente

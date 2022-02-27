@@ -9,16 +9,23 @@ import Customers from './components/Customers';
 import Employees from './components/Employees';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import MenuIcon from '@material-ui/icons/Menu';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import List from '@mui/material/List';
 
 
 function App() {
   const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
+  const [openLeft, setOpenLeft] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [auths, setAuths] = React.useState([]);
@@ -91,6 +98,39 @@ function App() {
     setAnchorElNav(null);
   };
 
+  const toggleDrawer = () => {
+    setOpenLeft((prev) => !prev)
+  }
+
+  const list = () => (
+    // <Box
+    //   // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+    //   role="presentation"
+    //   onClick={toggleDrawer}
+    //   onKeyDown={toggleDrawer}
+    // >
+    <List>
+      {pages.map((page) => (
+        <ListItem button key={page.label}>
+          {/* <ListItemText primary={page.label} />
+           */}
+          <Button
+            key={page}
+            onClick={() => {
+              handleCloseNavMenu()
+              toggleDrawer()
+            }}
+          >
+            <Link to={"/" + page.id}>{page.label}</Link>
+          </Button>
+        </ListItem>
+
+      ))
+      }
+    </List >
+    // </Box>
+  );
+
   return (
     <Router>
 
@@ -99,7 +139,20 @@ function App() {
           <AppBar position="static">
             <Container maxWidth="xl" style={{ marginLeft: '0' }}>
               <Toolbar disableGutters>
-                <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  <IconButton onClick={toggleDrawer}
+                    style={{ color: 'white' }}>
+                    <MenuIcon />
+                  </IconButton>
+                  <Drawer
+                    anchor={"left"}
+                    open={openLeft}
+                    onClose={toggleDrawer}
+                  >
+                    {list()}
+                  </Drawer>
+                </Box>
+                {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   {pages.map((page) => (
                     <Button
                       key={page}
@@ -109,7 +162,7 @@ function App() {
                       <Link style={{ color: 'white' }} to={"/" + page.id}>{page.label}</Link>
                     </Button>
                   ))}
-                </Box>
+                </Box>*/}
                 <Button style={{ right: '0' }} color="inherit">
                   <Tooltip style={{ marginRight: '1rem' }} title="Logout">
                     <IconButton onClick={() => { freeCache() }}>
