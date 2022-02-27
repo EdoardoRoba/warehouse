@@ -43,6 +43,7 @@ function Warehouse(props) {
     const [inheritedLowerBound, setInheritedLowerBound] = React.useState(-1)
     const [inheritedDepartment, setInheritedDepartment] = React.useState(-1)
     const [inheritedSubDepartment, setInheritedSubDepartment] = React.useState(-1)
+    const [inheritedLastUpdated, setInheritedLastUpdated] = React.useState(-1)
     const [label, setLabel] = React.useState("")
     const [labelToUpdate, setLabelToUpdate] = React.useState("")
     const [code, setCode] = React.useState(null)
@@ -176,6 +177,7 @@ function Warehouse(props) {
     React.useEffect(() => {
         getQuantity()
         getInheritedDeps()
+        getInheritedLastUpdated()
         // console.log("toolFound: ", toolFound)
     }, [toolFound])
 
@@ -269,7 +271,7 @@ function Warehouse(props) {
                         "auths": localStorage.getItem("auths")
                     }
                 }).then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     setUserIsAuthenticatedFlag(true)
                     var a = {}
                     for (let au of localStorage.getItem("auths").split(',')) {
@@ -278,15 +280,12 @@ function Warehouse(props) {
                     setAuths(a)
                 }).catch(error => {
                     console.log(error)
-                    console.log(localStorage.getItem("auths"))
                     setUserIsAuthenticatedFlag(false)
                 });
             } else {
-                console.log("esterno")
                 setUserIsAuthenticatedFlag(false)
             }
         } else {
-            console.log("esterno")
             setUserIsAuthenticatedFlag(false)
         }
     }
@@ -314,6 +313,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -343,6 +343,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -372,6 +373,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -401,6 +403,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -430,6 +433,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -459,6 +463,7 @@ function Warehouse(props) {
         setInheritedQuantity(-1)
         setInheritedDepartment(-1)
         setInheritedSubDepartment(-1)
+        setInheritedLastUpdated(-1)
         setDisabledSDMenu(true)
         setSubDepartmentsForMenu([])
         setShowQuestionDelete(false)
@@ -481,6 +486,10 @@ function Warehouse(props) {
         setInheritedSubDepartment(event)
     }
 
+    const handleChangeInheritedLastUpdated = (event) => {
+        setInheritedLastUpdated(event)
+    }
+
     const handleChangeSwitch = () => {
         setIsSubDep((prev) => !prev)
     }
@@ -492,6 +501,7 @@ function Warehouse(props) {
         setInheritedDepartment("")
         setInheritedLowerBound(-1)
         setInheritedQuantity(-1)
+        setInheritedLastUpdated(-1)
         setInheritedSubDepartment("")
         setLabelToUpdate("")
         setMarcaToUpdate("")
@@ -525,7 +535,9 @@ function Warehouse(props) {
                 toolsInSdVar.push(tool)
             }
         }
+        toolsInSdVar.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
         setToolsInSd(toolsInSdVar)
+        updateOpenPapers(sd.label)
         // setOpen(true)
     }
 
@@ -542,7 +554,9 @@ function Warehouse(props) {
         axiosInstance.get('tool')
             .then(res => {
                 // console.log("Tools: ", res.data)
-                setTools(res.data)
+                let ts = res.data
+                ts.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
+                setTools(ts)
             })
     };
 
@@ -560,13 +574,13 @@ function Warehouse(props) {
                 setAllDeps(depts)
                 var openDeps = {}
                 var subds = depts.filter((d) => (d.father !== undefined && d.father !== ""))
-                subds.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                subds.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
                 setSubDepartments(subds)
                 for (var deps of subds) {
                     openDeps[deps.label] = false
                 }
                 var ds = depts.filter((d) => d.father === undefined || d.father === "")
-                ds.sort((a, b) => (a.label > b.label) ? 1 : -1)
+                ds.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
                 setDepartments(ds)
                 for (var depd of ds) {
                     openDeps[depd.label] = false
@@ -619,6 +633,22 @@ function Warehouse(props) {
                 setNotFound(true)
                 setInheritedDepartment(0)
                 setInheritedSubDepartment(0)
+            }
+        }
+    }
+
+    let getInheritedLastUpdated = () => {
+        var count = 0
+        if ((updateAddBookFlag || updateRemoveBookFlag || updateBookFlag || updateBookListFlag) && toolFound !== null && labelToUpdate === "") {
+            for (let t of tools) {
+                if (t.label.toUpperCase() === toolFound.label.toUpperCase()) {
+                    setInheritedLastUpdated(t.updatedAt.replace("T", " ").replace("Z", " "))
+                    count = count + 1
+                }
+            }
+            if (count === 0) {
+                setNotFound(true)
+                setInheritedLastUpdated(0)
             }
         }
     }
@@ -783,7 +813,9 @@ function Warehouse(props) {
         if (bookId !== "") {
             axiosInstance.put("tool/" + bookId, newField).then(response => {
                 // console.log("Fatto!", response)
-                closeOpenPaper(toolInSd.subDepartment)
+                if (toolInSd !== null) {
+                    closeOpenPaper(toolInSd.subDepartment)
+                }
                 setConfermaUpdate(true)
                 getTools()
                 setInheritedDepartment(departmentToUpdate)
@@ -1139,7 +1171,21 @@ function Warehouse(props) {
                                                 value={inheritedLowerBound}
                                                 onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                             />}
-
+                                            {inheritedLastUpdated === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="ultima modifica"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="ultima modifica"
+                                                value={inheritedLastUpdated}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                            />}
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
@@ -1250,7 +1296,21 @@ function Warehouse(props) {
                                                 value={inheritedLowerBound}
                                                 onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                             />}
-
+                                            {inheritedLastUpdated === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="ultima modifica"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="ultima modifica"
+                                                value={inheritedLastUpdated}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                            />}
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
@@ -1373,6 +1433,21 @@ function Warehouse(props) {
                                                 label="sotto-reparto attuale"
                                                 value={inheritedSubDepartment}
                                                 onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                            />}
+                                            {inheritedLastUpdated === -1 ? <TextField
+                                                disabled
+                                                id="outlined-disabled"
+                                                style={{ marginRight: "2rem" }}
+                                                label="ultima modifica"
+                                                value={""}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                            /> : <TextField
+                                                disabled
+                                                style={{ marginRight: "2rem" }}
+                                                id="outlined-disabled"
+                                                label="ultima modifica"
+                                                value={inheritedLastUpdated}
+                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                             />}
                                         </div>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
@@ -1530,7 +1605,6 @@ function Warehouse(props) {
                                                                 expanded={openPapers[sd.label] || false}
                                                                 style={{ width: '80%' }}
                                                                 onChange={() => {
-                                                                    updateOpenPapers(sd.label)
                                                                     showSubDepartment(sd)
                                                                 }}
                                                             >

@@ -26,8 +26,7 @@ warehouse:
 - cerca prodotto per codice: univoco (wait)
 - reparti e sotto-reparti grassetto, prodotto no, quantità/quantità min distingui caratteri
 - dare i permessi ad installatori per vedere clienti specifici
-- email catalogo: dfrop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
-- menu non visibile da mobile (menu burger)
+- email catalogo: drop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
 - sul diminuisci/aumenta/modifica mettere last updated
 
 
