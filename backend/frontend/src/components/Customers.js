@@ -21,6 +21,7 @@ import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import BrushIcon from '@material-ui/icons/Brush';
 import EditIcon from '@material-ui/icons/Edit';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import LinkIcon from '@material-ui/icons/Link';
 import IconButton from '@mui/material/IconButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
@@ -36,8 +37,11 @@ import FileBase64 from 'react-file-base64';
 import { DataGrid } from '@mui/x-data-grid';
 import { SketchPicker } from 'react-color';
 import { saveAs } from 'file-saver'
+import { storage } from "../firebase";
+// import { firebase } from "firebase/compat/app";
 import './Classes.css'
 import axios from "axios";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 function Customers(props) {
 
@@ -92,7 +96,9 @@ function Customers(props) {
     const [fieldToEdit, setFieldToEdit] = React.useState("");
     const [valueToEdit, setValueToEdit] = React.useState("");
     const [openEditField, setOpenEditField] = React.useState(false);
+    const [openLoadPdf, setOpenLoadPdf] = React.useState(false);
     const [openEditStatus, setOpenEditStatus] = React.useState(false);
+    const [progress, setProgress] = React.useState(0);
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', width: 300 },
@@ -277,6 +283,14 @@ function Customers(props) {
         setOpenEditField(false)
     };
 
+    const handleCloseLoadPdf = () => {
+        setFieldToEdit("")
+        setValueToEdit("")
+        setSelectedFilePDF({})
+        getCustomers()
+        setOpenLoadPdf(false)
+    };
+
     const handleCloseEditStatus = () => {
         setFieldToEdit("")
         setValueToEdit("")
@@ -320,24 +334,34 @@ function Customers(props) {
         })
     }
 
-    const handleSubmissionPDF = (e) => {
-        var customer = {}
-        customer.di_co = selectedFilePDF
-        // console.log(customer.di_co)
-        axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
-            // console.log("Fatto!", response)
-            setConfermaUpdate(true)
-            getCustomers()
-            axiosInstance.get('customer/' + customerSelected._id).then((res) => {
-                setCustomerSelected(res.data)
-            }).catch((error) => {
-                // console.log("error: ", error)
-                setShowError(true)
-            });
-        }).catch((error) => {
-            // console.log("error: ", error)
-            setShowError(true)
-        });
+    const handleSubmissionPDF = () => {
+        if (!selectedFilePDF) return;
+        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + fieldToEdit)
+        const uploadTask = uploadBytesResumable(storageRef, selectedFilePDF)
+        uploadTask.on("state_changed", (snapshot) => {
+            const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+            setProgress(progr)
+        }, (error) => console.log("error: ", error),
+            () => {
+                //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                    console.log("fileUrl: ", fileUrl)
+
+                    var newField = {}
+                    newField[fieldToEdit] = fileUrl
+                    axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+                        axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                            console.log("customer updated")
+                            setCustomerSelected(respp.data)
+                            handleCloseLoadPdf()
+                        }).catch((error) => {
+                            console.log("error")
+                            console.log(error)
+                        })
+                    })
+                })
+            }
+        )
     };
 
     const deleteImage = (ph, phType) => {
@@ -900,14 +924,20 @@ function Customers(props) {
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                         DI.CO
                                                     </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.di_co}
-                                                    </Typography>
+                                                    {
+                                                        customerSelected.di_co === "" || customerSelected.di_co === null || customerSelected.di_co === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                <IconButton>
+                                                                    <a href={customerSelected.di_co}><LinkIcon /></a>
+                                                                </IconButton>
+                                                                {/* {customerSelected.di_co} */}
+                                                            </Typography>
+                                                    }
                                                     {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("di_co")
-                                                                setOpenEditField(true)
+                                                                setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -919,14 +949,20 @@ function Customers(props) {
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                         CHECK LIST
                                                     </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.check_list}
-                                                    </Typography>
+                                                    {
+                                                        customerSelected.check_list === "" || customerSelected.check_list === null || customerSelected.check_list === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                <IconButton>
+                                                                    <a href={customerSelected.check_list}><LinkIcon /></a>
+                                                                </IconButton>
+                                                                {/* {customerSelected.di_co} */}
+                                                            </Typography>
+                                                    }
                                                     {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("check_list")
-                                                                setOpenEditField(true)
+                                                                setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -936,14 +972,20 @@ function Customers(props) {
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                         FGAS
                                                     </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.fgas}
-                                                    </Typography>
+                                                    {
+                                                        customerSelected.fgas === "" || customerSelected.fgas === null || customerSelected.fgas === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                <IconButton>
+                                                                    <a href={customerSelected.fgas}><LinkIcon /></a>
+                                                                </IconButton>
+                                                                {/* {customerSelected.di_co} */}
+                                                            </Typography>
+                                                    }
                                                     {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("fgas")
-                                                                setOpenEditField(true)
+                                                                setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -953,14 +995,20 @@ function Customers(props) {
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                         PROVA FUMI
                                                     </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.prova_fumi}
-                                                    </Typography>
+                                                    {
+                                                        customerSelected.prova_fumi === "" || customerSelected.prova_fumi === null || customerSelected.prova_fumi === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                <IconButton>
+                                                                    <a href={customerSelected.prova_fumi}><LinkIcon /></a>
+                                                                </IconButton>
+                                                                {/* {customerSelected.di_co} */}
+                                                            </Typography>
+                                                    }
                                                     {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("prova_fumi")
-                                                                setOpenEditField(true)
+                                                                setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -970,14 +1018,20 @@ function Customers(props) {
                                                     <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                         COLLAUDO
                                                     </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {customerSelected.collaudo}
-                                                    </Typography>
+                                                    {
+                                                        customerSelected.collaudo === "" || customerSelected.collaudo === null || customerSelected.collaudo === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                <IconButton>
+                                                                    <a href={customerSelected.collaudo}><LinkIcon /></a>
+                                                                </IconButton>
+                                                                {/* {customerSelected.di_co} */}
+                                                            </Typography>
+                                                    }
                                                     {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("collaudo")
-                                                                setOpenEditField(true)
+                                                                setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon />
                                                         </IconButton>
@@ -1027,9 +1081,24 @@ function Customers(props) {
                                                         <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                             PAGAMENTI (PDF)
                                                         </Typography>
-                                                        <Typography variant="h7" component="div">
-                                                            {customerSelected.pagamenti_pdf}
-                                                        </Typography>
+                                                        {
+                                                            customerSelected.pagamenti_pdf === "" || customerSelected.pagamenti_pdf === null || customerSelected.pagamenti_pdf === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    <IconButton>
+                                                                        <a href={customerSelected.pagamenti_pdf}><LinkIcon /></a>
+                                                                    </IconButton>
+                                                                    {/* {customerSelected.di_co} */}
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("pagamenti_pdf")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                        }
                                                     </div>
                                                     <div style={{ marginRight: '3rem' }}>
                                                         <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
@@ -1038,6 +1107,15 @@ function Customers(props) {
                                                         <Typography variant="h7" component="div">
                                                             {customerSelected.pagamenti_testo}
                                                         </Typography>
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("pagamenti_testo")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                        }
                                                     </div>
                                                 </div>
                                             }
@@ -1118,28 +1196,7 @@ function Customers(props) {
                                         </CardContent>
                                     </Card>
                                     }
-                                    {/* <div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <input type="file" name="file" onChange={changeHandlerPDF} /></div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            {isFilePDFPicked ?
-                                                <div>
-                                                    <p>Nome file: {selectedFilePDF.name}</p>
-                                                    <p>Tipo di file: {selectedFilePDF.type}</p>
-                                                    <p>Dimensione in bytes: {selectedFilePDF.size}</p>
-                                                    <p>
-                                                        Ultima modifica:{' '}
-                                                        {selectedFilePDF.lastModifiedDate.toLocaleDateString()}
-                                                    </p>
-                                                </div>
-                                                :
-                                                <p>Seleziona un file per vederne le specifiche</p>
-                                            }
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <Button disabled={!isFilePDFPicked} onClick={(event) => handleSubmissionPDF(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                        </div>
-                                    </div> */}
+
                                     {
                                         (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">cliente aggiornato correttamente!</Alert>
                                     }
@@ -1253,7 +1310,38 @@ function Customers(props) {
                                 setValueToEdit(event.target.value)
                             }} />
                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { editField() }}>Conferma</Button>
+                                <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { handleSubmissionPDF() }}>Conferma</Button>
+                            </div>
+                        </Box>
+                    </Modal>
+                    <Modal
+                        open={openLoadPdf}
+                        onClose={() => { handleCloseLoadPdf() }}
+                        aria-labelledby="modal-modal-label"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                Carica file pdf {fieldToEdit.toUpperCase()}:
+                            </Typography>
+                            <div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <input type="file" name="file" onChange={changeHandlerPDF} /></div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    {isFilePDFPicked ?
+                                        <div>
+                                            <p>Nome file: {selectedFilePDF.name}</p>
+                                            <p>Tipo di file: {selectedFilePDF.type}</p>
+                                            <p>Dimensione in bytes: {selectedFilePDF.size}</p>
+                                        </div>
+                                        :
+                                        <p>Seleziona un file per vederne le specifiche</p>
+                                    }
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Button disabled={!isFilePDFPicked} onClick={(event) => handleSubmissionPDF()} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                </div>
+                                <h1>Uploaded {progress} %</h1>
                             </div>
                         </Box>
                     </Modal>
