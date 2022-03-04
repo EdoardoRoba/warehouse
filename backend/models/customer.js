@@ -64,23 +64,23 @@ const customerSchema = new Schema({
         required: false
     },
     di_co: {
-        type: String,
+        type: Array,
         required: false
     },
     check_list: {
-        type: String,
+        type: Array,
         required: false
     },
     fgas: {
-        type: String,
+        type: Array,
         required: false
     },
     prova_fumi: {
-        type: String,
+        type: Array,
         required: false
     },
     collaudo: {
-        type: String,
+        type: Array,
         required: false
     },
     assistenza: {
@@ -96,7 +96,7 @@ const customerSchema = new Schema({
         required: false
     },
     pagamenti_pdf: {
-        type: String,
+        type: Array,
         required: false
     },
     pagamenti_testo: {

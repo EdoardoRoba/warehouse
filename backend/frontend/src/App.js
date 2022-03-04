@@ -21,6 +21,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
+import { ItaurosTextField } from "itauros-material";
 
 
 function App() {
@@ -30,6 +31,11 @@ function App() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [auths, setAuths] = React.useState([]);
   const [pages, setPages] = React.useState([{}]);
+
+  const [valueSelect, setValueSelect] = React.useState("");
+  function onChangeIta(value) {
+    setValueSelect(value)
+  }
 
   React.useEffect(() => {
     userIsAuthenticated()
@@ -133,6 +139,24 @@ function App() {
 
   return (
     <Router>
+
+      {/* <div style={{ width: "60%" }}>
+        <ItaurosTextField
+          title={"Nome"}
+          id={"name"}
+          isLoading={false}
+          size={"large"}
+          isDisabled={false}
+          allowClear={false}
+          required={true}
+          placeholder={"inserisci qui il tuo nome"}
+          value={valueSelect}
+          onChange={onChangeIta}
+          rules={[{ type: "text", rule: "^[0-9A-Z]{1,5}$", message: "This field does not follow regex rule." }]}
+          maxLength={10}
+        // className={style["itauros-text-field"]}
+        />
+      </div> */}
 
       {
         !userIsAuthenticatedFlag ? "" : <div>

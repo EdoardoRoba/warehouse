@@ -9,6 +9,7 @@ git push heroku master
 -- > https://my-warehouse-app-heroku.herokuapp.com/
 ----------
 
+password idroaltech.bot (gmail): idroaltech.bot8794
 password idroaltech.bot (app): owgjqqmbvuzkprtw
 password portale "admin": idroaltech:idroaltech === edoroba.8794
 password portale "basic": magazzino.000
@@ -27,7 +28,7 @@ warehouse:
 - reparti e sotto-reparti grassetto, prodotto no, quantità/quantità min distingui caratteri
 - dare i permessi ad installatori per vedere clienti specifici
 - email catalogo: drop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
-- sul diminuisci/aumenta/modifica mettere last updated
+- aprire tutto schermo le foto
 
 
 gestione cliente
