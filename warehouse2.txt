@@ -46,5 +46,3 @@ calendario appuntamenti - che si collega alla scheda del cliente
 
 
 
-
-

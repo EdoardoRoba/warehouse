@@ -18,8 +18,10 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import SettingsIcon from '@material-ui/icons/Settings';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import AddIcon from '@material-ui/icons/Add';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { QrReader } from 'react-qr-reader';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
@@ -30,6 +32,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import CircularProgress from '@mui/material/CircularProgress';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import './Classes.css'
@@ -66,6 +69,7 @@ function Warehouse(props) {
     const [columnsLibrary, setColumnsLibrary] = React.useState([])
     const [open, setOpen] = React.useState(false);
     const [openLibraryAdd, setOpenLibraryAdd] = React.useState(false);
+    const [openQrCode, setOpenQrCode] = React.useState(false);
     const [toolsInShelf, setToolsInShelf] = React.useState([])
     const [shelfRowSelected, setShelfRowSelected] = React.useState("")
     const [shelfColumnSelected, setShelfColumnSelected] = React.useState("")
@@ -99,6 +103,8 @@ function Warehouse(props) {
     const [auths, setAuths] = React.useState([{}])
     const [openEditDeps, setOpenEditDeps] = React.useState(false)
     const [editedDepartmentLabel, seteditedDepartmentLabel] = React.useState("")
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [qrData, setQrData] = React.useState('No result');
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
@@ -111,7 +117,7 @@ function Warehouse(props) {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 400,
+        width: '50%',
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
@@ -287,6 +293,19 @@ function Warehouse(props) {
             }
         } else {
             setUserIsAuthenticatedFlag(false)
+        }
+    }
+
+    const handleErrorWebCam = (error) => {
+        console.log(error);
+    }
+
+    const handleScanWebCam = (result) => {
+        console.log("prova ", result)
+        if (result) {
+            setQrData(result);
+            console.log("qrData: ", result)
+            setOpenQrCode(false)
         }
     }
 
@@ -518,6 +537,11 @@ function Warehouse(props) {
         setAddingSubDepartment("")
     };
 
+    const handleCloseQrCode = () => {
+        setOpenQrCode(false)
+        getTools()
+    }
+
     const handleCloseEditDeps = () => {
         setOpenLibraryAdd(false)
         setOpenEditDeps(false)
@@ -557,6 +581,7 @@ function Warehouse(props) {
                 let ts = res.data
                 ts.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
                 setTools(ts)
+                setIsLoading(false)
             })
     };
 
@@ -565,6 +590,7 @@ function Warehouse(props) {
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
+                setIsLoading(false)
             })
     }
     const getDepartments = async () => {
@@ -586,6 +612,7 @@ function Warehouse(props) {
                     openDeps[depd.label] = false
                 }
                 setOpenPapers(openDeps)
+                setIsLoading(false)
             })
     }
 
@@ -595,9 +622,11 @@ function Warehouse(props) {
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
+                setIsLoading(false)
             }).catch(error => {
                 // console.log("error")
                 setShowError(true)
+                setIsLoading(false)
             });
     }
 
@@ -696,8 +725,10 @@ function Warehouse(props) {
         axiosInstance.put("structure/" + departmentToUpdate._id, { label: editedDepartmentLabel }).then(response => {
             console.log("Reparto aggiornato!")
             handleCloseEditDeps()
+            setIsLoading(false)
         }).catch(error => {
             setShowError(true)
+            setIsLoading(false)
         });
     }
 
@@ -762,20 +793,25 @@ function Warehouse(props) {
                     axiosInstance.post('history/' + label, upds)
                         .then(response => {
                             console.log("History added!")
+                            setIsLoading(false)
                         }).catch(error => {
                             setShowError(true)
+                            setIsLoading(false)
                         });
                 }).catch((error) => {
                     // console.log("error: ", error)
                     setShowError(true)
+                    setIsLoading(false)
                 });
             } else {
                 setConfermaUpdate(false)
                 setNotFound(label)
+                setIsLoading(false)
             }
             getTools()
         } else {
             setNonExistingEmployee(user)
+            setIsLoading(false)
         }
 
     }
@@ -824,13 +860,16 @@ function Warehouse(props) {
                     setLabelToUpdate("")
                 }, 1000)
                 setOpen(false)
+                setIsLoading(false)
             }).catch((error) => {
                 // console.log("error: ", error)
+                setIsLoading(false)
                 setShowError(true)
             });
         } else {
             setConfermaUpdate(false)
             setNotFound(label)
+            setIsLoading(false)
         }
         getTools()
 
@@ -847,9 +886,11 @@ function Warehouse(props) {
         }
         axiosInstance.post('structure', { label: name.toLowerCase(), father: father.toLowerCase() }).then(response => {
             handleCloseLibraryUpdate()
+            setIsLoading(false)
         }).catch(error => {
             // console.log("error")
             setShowError(true)
+            setIsLoading(false)
         });
     }
 
@@ -878,13 +919,16 @@ function Warehouse(props) {
                 .then(() => {
                     setConfermaDelete(true)
                     getTools()
+                    setIsLoading(false)
                 }).catch(error => {
                     console.log(error)
                     setShowError(true)
+                    setIsLoading(false)
                 });
         } else {
             setConfermaDelete(false)
             setNotFound(label)
+            setIsLoading(false)
         }
         getTools()
     }
@@ -897,95 +941,598 @@ function Warehouse(props) {
                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/login"}>Vai al Login</Link></Button></div>
                 </div> :
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                            <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
-                            {
-                                auths["warehouse"] === "installer" ? "" : <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
-                                    <IconButton onClick={() => { setOpenLibraryAdd(true) }}>
-                                        <SettingsIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            }
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                {
-                                    auths["warehouse"] === "installer" ? "" :
-                                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
-                                            Aggiungi nuovo prodotto
-                                        </Button>
-                                }
-                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
-                                    Trova prodotto
-                                </Button>
-                                {
-                                    auths["warehouse"] === "installer" ? "" :
-                                        <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
-                                            Aumenta quantità prodotto
-                                        </Button>
-                                }
-                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
-                                    Diminuisci quantità prodotto
-                                </Button>
-                                {
-                                    auths["warehouse"] !== "*" ? "" :
-                                        <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
-                                            Modifica prodotto
-                                        </Button>
-                                }
-                                {
-                                    auths["warehouse"] === "installer" ? "" :
-                                        <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
-                                            Elimina prodotto
-                                        </Button>
-                                }
-                            </div>
-                            <div style={{ width: '10%' }}>
-                                <Tooltip title="Scarica catalogo prodotti">
-                                    <IconButton
-                                        onClick={() => { exportToCSV() }}>
-                                        <GetAppIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                            <div style={{ width: '10%' }}>
-                                <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti sotto la soglia minima">
-                                    <IconButton
-                                        onClick={() => { exportToCSVAlert() }}>
-                                        <GetAppIcon style={{ color: 'red' }} />
-                                    </IconButton>
-                                </Tooltip>
-                            </div>
-                        </div>
                         {
-                            (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={addBookFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(addBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ marginBottom: '1rem' }}>
-                                            <input style={{ marginRight: '1rem' }} placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
-                                            <input style={{ marginRight: '1rem' }} placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
-                                            <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
+                            !isLoading ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', zIndex: "999" }}>
+                                <CircularProgress style={{ position: 'fixed', marginTop: '3rem' }} />
+                            </div>
+                        }
+                        <div style={{ zIndex: '-1', width: '100%' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <h1 style={{ fontFamily: 'times', marginLeft: '1rem', marginRight: 'auto' }}>Magazzino</h1>
+                                {
+                                    auths["warehouse"] === "installer" ? "" : <Tooltip style={{ marginRight: '1rem' }} title="Aggiorna struttura magazzino">
+                                        <IconButton onClick={() => { setOpenLibraryAdd(true) }}>
+                                            <SettingsIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            </div>
+                            {/* <div style={{ zIndex: '1', width: '50%', height: '100px' }}>
+                                <h3>Scannerizza:</h3>
+                                <IconButton onClick={() => { setOpenQrCode(true) }}>
+                                    <PhotoCameraIcon />
+                                </IconButton>
+
+                                <p>{qrData}</p>
+                            </div> */}
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
+                                    {
+                                        auths["warehouse"] === "installer" ? "" :
+                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
+                                                Aggiungi nuovo prodotto
+                                            </Button>
+                                    }
+                                    <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
+                                        Trova prodotto
+                                    </Button>
+                                    {
+                                        auths["warehouse"] === "installer" ? "" :
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
+                                                Aumenta quantità prodotto
+                                            </Button>
+                                    }
+                                    <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
+                                        Diminuisci quantità prodotto
+                                    </Button>
+                                    {
+                                        auths["warehouse"] !== "*" ? "" :
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
+                                                Modifica prodotto
+                                            </Button>
+                                    }
+                                    {
+                                        auths["warehouse"] === "installer" ? "" :
+                                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
+                                                Elimina prodotto
+                                            </Button>
+                                    }
+                                </div>
+                                <div style={{ width: '10%' }}>
+                                    <Tooltip title="Scarica catalogo prodotti">
+                                        <IconButton
+                                            onClick={() => { exportToCSV() }}>
+                                            <GetAppIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                                <div style={{ width: '10%' }}>
+                                    <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti sotto la soglia minima">
+                                        <IconButton
+                                            onClick={() => { exportToCSVAlert() }}>
+                                            <GetAppIcon style={{ color: 'red' }} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </div>
+                            {
+                                (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={addBookFlag}
+                                        style={{ transformOrigin: '0 0 0' }}
+                                        {...(addBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div style={{ marginBottom: '1rem' }}>
+                                                <input style={{ marginRight: '1rem' }} placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                                <input style={{ marginRight: '1rem' }} placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
+                                                <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
+                                            </div>
+                                            <div style={{ marginBottom: '1rem' }}>
+                                                <input style={{ marginRight: '1rem' }} placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                                <input style={{ marginRight: '1rem' }} placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
+                                                <input placeholder="marca" onChange={(event) => { setMarca(event.target.value) }} />
+                                            </div>
+                                            <div>
+                                                <div style={{ display: 'flex', marginTop: '1rem' }}>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={departments}
+                                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                        sx={{ width: 300 }}
+                                                        renderInput={(params) => <TextField {...params} label="reparti" />}
+                                                        onChange={(event, value) => {
+                                                            handleChangeDepMenu(event, value)
+                                                        }}
+                                                    />
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        disabled={disabledSDMenu}
+                                                        options={subDepartmentsForMenu}
+                                                        style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                        sx={{ width: 300 }}
+                                                        renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
+                                                        onChange={(event, value) => {
+                                                            if (value !== null) {
+                                                                setSubDepartment(value.label)
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+
+                                            </div>
+                                            <div style={{ marginTop: '2rem' }}>
+                                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
+                                                    addTool()
+                                                    setIsLoading(true)
+                                                }}>Conferma</Button>
+                                            </div>
                                         </div>
-                                        <div style={{ marginBottom: '1rem' }}>
-                                            <input style={{ marginRight: '1rem' }} placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                                            <input style={{ marginRight: '1rem' }} placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
-                                            <input placeholder="marca" onChange={(event) => { setMarca(event.target.value) }} />
+                                    </Grow>
+                                </Box>)
+                            }
+                            {
+                                (!getBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={getBookFlag}
+                                        style={{ transformOrigin: '0 0 0', width: "80%" }}
+                                        {...(getBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
+                                                    onChange={(event, value) => { showToolFound(event, value) }}
+                                                />
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    sx={{ width: 300 }}
+                                                    getOptionLabel={option => option.code}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti (per codice)" />}
+                                                    onChange={(event, value) => { showToolFound(event, value) }}
+                                                />
+                                            </div>
+                                            {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
+                                                <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            prodotto
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.label}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            reparto
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.department}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            sotto-reparto
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.subDepartment}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            quantità
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.quantity}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            quantità minima necessaria
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.lowerBound}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            prezzo d'acquisto (per unità)
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.price}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            codice prodotto
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.code}
+                                                        </Typography>
+                                                    </div>
+                                                    <div style={{ marginRight: '3rem' }}>
+                                                        <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                            ultimo utente
+                                                        </Typography>
+                                                        <Typography variant="h7" component="div">
+                                                            {toolFound.lastUser}
+                                                        </Typography>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                            }
                                         </div>
-                                        <div>
-                                            <div style={{ display: 'flex', marginTop: '1rem' }}>
+
+                                    </Grow>
+                                </Box>)
+                            }
+                            {
+                                (!updateAddBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={updateAddBookFlag}
+                                        style={{ transformOrigin: '0 0 0' }}
+                                        {...(updateAddBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                                clearTimeout(timerUpd)
+                                                setTimeout(() => {
+                                                    setLabel(event.target.value)
+                                                }, 1000)
+                                            }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                    onChange={(event, value) => {
+                                                        clearTimeout(timerUpd)
+                                                        setTimeout(() => {
+                                                            // setLabel(value)
+                                                            setToolFound(value)
+                                                        }, 1000)
+                                                    }}
+                                                />
+                                                {inheritedQuantity === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità attuale presente"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità attuale presente"
+                                                    value={inheritedQuantity}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                />}
+                                                {inheritedLowerBound === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                />}
+                                                {inheritedLastUpdated === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="ultima modifica"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="ultima modifica"
+                                                    value={inheritedLastUpdated}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                />}
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={employees}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    getOptionLabel={option => option.lastName}
+                                                    renderInput={(params) => <TextField {...params} label="dipendente" />}
+                                                    onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
+                                                />
+                                                <TextField
+                                                    id="outlined-number"
+                                                    label="quantità"
+                                                    type="number"
+                                                    style={{ width: '30%' }}
+                                                    inputProps={{ min: 0 }}
+                                                    onChange={(event) => { setQuantity(event.target.value) }}
+                                                />
+                                                {
+                                                    inheritedLowerBound === -1 ? <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={0}
+                                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                                    /> : <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={inheritedLowerBound}
+                                                        onChange={(event) => {
+                                                            setLowerBound(event.target.value)
+                                                            setInheritedLowerBound(event.target.value)
+                                                        }}
+                                                    />
+                                                }
+
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
+                                                    updateBook(toolFound.label, quantity, user, lowerBound)
+                                                    setIsLoading(true)
+                                                }}>Aggiungi quantità inserita</Button>
+                                            </div>
+                                        </div>
+                                    </Grow>
+                                </Box>)
+                            }
+                            {
+                                (!updateRemoveBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={updateRemoveBookFlag}
+                                        style={{ transformOrigin: '0 0 0' }}
+                                        {...(updateRemoveBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
+                                                clearTimeout(timerUpd)
+                                                setTimeout(() => {
+                                                    setLabel(event.target.value)
+                                                }, 1000)
+                                            }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                    onChange={(event, value) => {
+                                                        clearTimeout(timerUpd)
+                                                        setTimeout(() => {
+                                                            // setLabel(value)
+                                                            setToolFound(value)
+                                                        }, 1000)
+                                                    }}
+                                                />
+                                                {inheritedQuantity === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità attuale presente"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità attuale presente"
+                                                    value={inheritedQuantity}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                />}
+                                                {inheritedLowerBound === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                />}
+                                                {inheritedLastUpdated === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="ultima modifica"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="ultima modifica"
+                                                    value={inheritedLastUpdated}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                />}
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={employees}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    getOptionLabel={option => option.lastName}
+                                                    renderInput={(params) => <TextField {...params} label="dipendente" />}
+                                                    onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
+                                                />
+                                                <TextField
+                                                    id="outlined-number"
+                                                    label="quantità"
+                                                    type="number"
+                                                    style={{ width: '30%' }}
+                                                    inputProps={{ min: 0 }}
+                                                    onChange={(event) => { setQuantity(event.target.value) }}
+                                                />
+                                                {
+                                                    inheritedLowerBound === -1 ? <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={0}
+                                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                                    /> : <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={inheritedLowerBound}
+                                                        onChange={(event) => {
+                                                            setLowerBound(event.target.value)
+                                                            setInheritedLowerBound(event.target.value)
+                                                        }}
+                                                    />
+                                                }
+
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
+                                                    updateBook(toolFound.label, quantity, user, lowerBound)
+                                                    setIsLoading(true)
+                                                }}>Rimuovi quantità inserita</Button>
+                                            </div>
+                                        </div>
+                                    </Grow>
+                                </Box>)
+                            }
+                            {
+                                (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={updateBookFlag}
+                                        style={{ transformOrigin: '0 0 0' }}
+                                        {...(updateBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti" />}
+                                                    onChange={(event, value) => {
+                                                        clearTimeout(timerUpd)
+                                                        setTimeout(() => {
+                                                            // setLabel(value)
+                                                            setToolFound(value)
+                                                        }, 1000)
+                                                    }}
+                                                />
+                                                {inheritedLowerBound === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="quantità minima attuale richiesta"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                />}
+                                                {inheritedDepartment === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="reparto attuale"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="reparto attuale"
+                                                    value={inheritedDepartment}
+                                                    onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                                />}
+                                                {inheritedSubDepartment === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="sotto-reparto attuale"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="sotto-reparto attuale"
+                                                    value={inheritedSubDepartment}
+                                                    onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                                />}
+                                                {inheritedLastUpdated === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="ultima modifica"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="ultima modifica"
+                                                    value={inheritedLastUpdated}
+                                                    onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
+                                                />}
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <h4>da modificare:</h4>
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
+                                                <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
+                                                <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
                                                 <Autocomplete
                                                     disablePortal
                                                     id="combo-box-demo"
                                                     options={departments}
-                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
                                                     sx={{ width: 300 }}
-                                                    renderInput={(params) => <TextField {...params} label="reparti" />}
+                                                    renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
                                                     onChange={(event, value) => {
-                                                        handleChangeDepMenu(event, value)
+                                                        handleChangeDepMenuToUpdate(event, value)
                                                     }}
                                                 />
                                                 <Autocomplete
@@ -993,856 +1540,410 @@ function Warehouse(props) {
                                                     id="combo-box-demo"
                                                     disabled={disabledSDMenu}
                                                     options={subDepartmentsForMenu}
-                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
                                                     sx={{ width: 300 }}
-                                                    renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
+                                                    renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
                                                     onChange={(event, value) => {
                                                         if (value !== null) {
-                                                            setSubDepartment(value.label)
+                                                            setSubDepartmentToUpdate(value.label)
+                                                        }
+                                                    }}
+                                                />
+                                                {
+                                                    inheritedLowerBound === -1 ? <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima (non obbligatorio)"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={0}
+                                                        onChange={(event) => { setLowerBound(event.target.value) }}
+                                                    /> : <TextField
+                                                        id="outlined-number"
+                                                        label="quantità minima (non obbligatorio)"
+                                                        type="number"
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        value={inheritedLowerBound}
+                                                        onChange={(event) => {
+                                                            setLowerBound(event.target.value)
+                                                            setInheritedLowerBound(event.target.value)
+                                                        }}
+                                                    />
+                                                }
+
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
+                                                    updateEntireBook(toolFound.label, lowerBound)
+                                                    setIsLoading(true)
+                                                }}>Modifica prodotto</Button>
+                                            </div>
+                                        </div>
+                                    </Grow>
+                                </Box>)
+                            }
+                            {
+                                (!deleteBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <Grow
+                                        in={deleteBookFlag}
+                                        style={{ transformOrigin: '0 0 0' }}
+                                        {...(deleteBookFlag ? { timeout: 1000 } : {})}
+                                    >
+                                        <div style={{ marginTop: '2rem' }}>
+                                            <div>
+                                                {/* <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} /> */}
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={tools}
+                                                    style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
+                                                    onChange={(event, value) => {
+                                                        if (value !== null) {
+                                                            setLabel(value.label)
                                                         }
                                                     }}
                                                 />
                                             </div>
-
-                                        </div>
-                                        <div style={{ marginTop: '2rem' }}>
-                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addTool}>Conferma</Button>
-                                        </div>
-                                    </div>
-                                </Grow>
-                            </Box>)
-                        }
-                        {
-                            (!getBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={getBookFlag}
-                                    style={{ transformOrigin: '0 0 0', width: "80%" }}
-                                    {...(getBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
-                                                onChange={(event, value) => { showToolFound(event, value) }}
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                                sx={{ width: 300 }}
-                                                getOptionLabel={option => option.code}
-                                                renderInput={(params) => <TextField {...params} label="prodotti (per codice)" />}
-                                                onChange={(event, value) => { showToolFound(event, value) }}
-                                            />
-                                        </div>
-                                        {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
-                                            <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        prodotto
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.label}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        reparto
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.department}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        sotto-reparto
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.subDepartment}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        quantità
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.quantity}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        quantità minima necessaria
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.lowerBound}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        prezzo d'acquisto (per unità)
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.price}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        codice prodotto
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.code}
-                                                    </Typography>
-                                                </div>
-                                                <div style={{ marginRight: '3rem' }}>
-                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                        ultimo utente
-                                                    </Typography>
-                                                    <Typography variant="h7" component="div">
-                                                        {toolFound.lastUser}
-                                                    </Typography>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                        }
-                                    </div>
-
-                                </Grow>
-                            </Box>)
-                        }
-                        {
-                            (!updateAddBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={updateAddBookFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(updateAddBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
-                                                clearTimeout(timerUpd)
-                                                setTimeout(() => {
-                                                    setLabel(event.target.value)
-                                                }, 1000)
-                                            }} /> */}
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                                onChange={(event, value) => {
-                                                    clearTimeout(timerUpd)
-                                                    setTimeout(() => {
-                                                        // setLabel(value)
-                                                        setToolFound(value)
-                                                    }, 1000)
-                                                }}
-                                            />
-                                            {inheritedQuantity === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={inheritedQuantity}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            />}
-                                            {inheritedLowerBound === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedLowerBound}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            />}
-                                            {inheritedLastUpdated === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="ultima modifica"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="ultima modifica"
-                                                value={inheritedLastUpdated}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            />}
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={employees}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                getOptionLabel={option => option.lastName}
-                                                renderInput={(params) => <TextField {...params} label="dipendente" />}
-                                                onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
-                                            />
-                                            <TextField
-                                                id="outlined-number"
-                                                label="quantità"
-                                                type="number"
-                                                style={{ width: '30%' }}
-                                                inputProps={{ min: 0 }}
-                                                onChange={(event) => { setQuantity(event.target.value) }}
-                                            />
+                                            <div style={{ marginTop: '2rem' }}>
+                                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { setShowQuestionDelete(true) }}>Conferma</Button>
+                                            </div>
                                             {
-                                                inheritedLowerBound === -1 ? <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={0}
-                                                    onChange={(event) => { setLowerBound(event.target.value) }}
-                                                /> : <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={inheritedLowerBound}
-                                                    onChange={(event) => {
-                                                        setLowerBound(event.target.value)
-                                                        setInheritedLowerBound(event.target.value)
-                                                    }}
-                                                />
+                                                !showQuestionDelete ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
+                                                    <Typography variant="subtitle1" gutterBottom component="div">
+                                                        Sei sicuro di voler cancellare il prodotto {label.toLowerCase()}?
+                                                    </Typography>
+                                                    <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => {
+                                                        deleteTool(label)
+                                                        setIsLoading(true)
+                                                    }}>Sì</Button>
+                                                </div>
                                             }
+                                        </div>
+                                    </Grow>
+                                </Box>)
+                            }
 
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Aggiungi quantità inserita</Button>
-                                        </div>
-                                    </div>
-                                </Grow>
-                            </Box>)
-                        }
-                        {
-                            (!updateRemoveBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={updateRemoveBookFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(updateRemoveBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
-                                                clearTimeout(timerUpd)
-                                                setTimeout(() => {
-                                                    setLabel(event.target.value)
-                                                }, 1000)
-                                            }} /> */}
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                                onChange={(event, value) => {
-                                                    clearTimeout(timerUpd)
-                                                    setTimeout(() => {
-                                                        // setLabel(value)
-                                                        setToolFound(value)
-                                                    }, 1000)
-                                                }}
-                                            />
-                                            {inheritedQuantity === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità attuale presente"
-                                                value={inheritedQuantity}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            />}
-                                            {inheritedLowerBound === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedLowerBound}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            />}
-                                            {inheritedLastUpdated === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="ultima modifica"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="ultima modifica"
-                                                value={inheritedLastUpdated}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            />}
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={employees}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                getOptionLabel={option => option.lastName}
-                                                renderInput={(params) => <TextField {...params} label="dipendente" />}
-                                                onChange={(event, value) => { setUser(value.lastName.toLowerCase()) }}
-                                            />
-                                            <TextField
-                                                id="outlined-number"
-                                                label="quantità"
-                                                type="number"
-                                                style={{ width: '30%' }}
-                                                inputProps={{ min: 0 }}
-                                                onChange={(event) => { setQuantity(event.target.value) }}
-                                            />
-                                            {
-                                                inheritedLowerBound === -1 ? <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={0}
-                                                    onChange={(event) => { setLowerBound(event.target.value) }}
-                                                /> : <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={inheritedLowerBound}
-                                                    onChange={(event) => {
-                                                        setLowerBound(event.target.value)
-                                                        setInheritedLowerBound(event.target.value)
-                                                    }}
-                                                />
-                                            }
+                            <div>
+                                {
+                                    (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiunto correttamente!</Alert>
+                                }
+                                {
+                                    (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiornato correttamente!</Alert>
+                                }
+                                {
+                                    (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto eliminato correttamente!</Alert>
+                                }
+                                {
+                                    (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">prodotto {notFound} non trovato! Controlla che il prodotto sia scritto correttamente.</Alert>
+                                }
+                                {
+                                    (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Controlla la connessione o i dati inseriti.</Alert>
+                                }
+                                {
+                                    (nonExistingEmployee === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Utente inserito non presente.</Alert>
+                                }
+                            </div>
 
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateBook(toolFound.label, quantity, user, lowerBound) }}>Rimuovi quantità inserita</Button>
-                                        </div>
-                                    </div>
-                                </Grow>
-                            </Box>)
-                        }
-                        {
-                            (!updateBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={updateBookFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(updateBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="prodotti" />}
-                                                onChange={(event, value) => {
-                                                    clearTimeout(timerUpd)
-                                                    setTimeout(() => {
-                                                        // setLabel(value)
-                                                        setToolFound(value)
-                                                    }, 1000)
-                                                }}
-                                            />
-                                            {inheritedLowerBound === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedLowerBound}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            />}
-                                            {inheritedDepartment === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="reparto attuale"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="reparto attuale"
-                                                value={inheritedDepartment}
-                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
-                                            />}
-                                            {inheritedSubDepartment === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="sotto-reparto attuale"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="sotto-reparto attuale"
-                                                value={inheritedSubDepartment}
-                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
-                                            />}
-                                            {inheritedLastUpdated === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="ultima modifica"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="ultima modifica"
-                                                value={inheritedLastUpdated}
-                                                onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
-                                            />}
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <h4>da modificare:</h4>
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
-                                            <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
-                                            <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={departments}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
-                                                onChange={(event, value) => {
-                                                    handleChangeDepMenuToUpdate(event, value)
-                                                }}
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                disabled={disabledSDMenu}
-                                                options={subDepartmentsForMenu}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
-                                                onChange={(event, value) => {
-                                                    if (value !== null) {
-                                                        setSubDepartmentToUpdate(value.label)
-                                                    }
-                                                }}
-                                            />
-                                            {
-                                                inheritedLowerBound === -1 ? <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima (non obbligatorio)"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={0}
-                                                    onChange={(event) => { setLowerBound(event.target.value) }}
-                                                /> : <TextField
-                                                    id="outlined-number"
-                                                    label="quantità minima (non obbligatorio)"
-                                                    type="number"
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    value={inheritedLowerBound}
-                                                    onChange={(event) => {
-                                                        setLowerBound(event.target.value)
-                                                        setInheritedLowerBound(event.target.value)
-                                                    }}
-                                                />
-                                            }
-
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto</Button>
-                                        </div>
-                                    </div>
-                                </Grow>
-                            </Box>)
-                        }
-                        {
-                            (!deleteBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                <Grow
-                                    in={deleteBookFlag}
-                                    style={{ transformOrigin: '0 0 0' }}
-                                    {...(deleteBookFlag ? { timeout: 1000 } : {})}
-                                >
-                                    <div style={{ marginTop: '2rem' }}>
-                                        <div>
-                                            {/* <input placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} /> */}
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={tools}
-                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
-                                                onChange={(event, value) => {
-                                                    if (value !== null) {
-                                                        setLabel(value.label)
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                        <div style={{ marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { setShowQuestionDelete(true) }}>Conferma</Button>
-                                        </div>
-                                        {
-                                            !showQuestionDelete ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
-                                                <Typography variant="subtitle1" gutterBottom component="div">
-                                                    Sei sicuro di voler cancellare il prodotto {label.toLowerCase()}?
+                            {/* WAREHOUSE */}
+                            <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
+                            <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
+                                {
+                                    departments.map((d) => {
+                                        return <Accordion
+                                            expanded={openPapers[d.label] || false}
+                                            onChange={() => { updateOpenPapers(d.label) }}
+                                        >
+                                            <AccordionSummary
+                                                expandIcon={<ExpandMoreIcon />}
+                                                aria-controls="panel1bh-content"
+                                            >
+                                                <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
+                                                    {d.label.toUpperCase()}
                                                 </Typography>
-                                                <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={() => { deleteTool(label) }}>Sì</Button>
+                                                {/* <Typography sx={{ color: "text.secondary" }}>
+                                    I am an accordion
+                                </Typography> */}
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                {
+                                                    subDepartments.map((sd) => {
+                                                        if (sd.father === d.label) {
+                                                            return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                                <Accordion
+                                                                    expanded={openPapers[sd.label] || false}
+                                                                    style={{ width: '80%' }}
+                                                                    onChange={() => {
+                                                                        showSubDepartment(sd)
+                                                                    }}
+                                                                >
+                                                                    <AccordionSummary
+                                                                        expandIcon={<ExpandMoreIcon />}
+                                                                        aria-controls="panel1bh-content"
+                                                                    >
+                                                                        <Typography variant="h6" sx={{ width: "100%", flexShrink: 0 }}>
+                                                                            {sd.label.toUpperCase()}
+                                                                        </Typography>
+                                                                    </AccordionSummary>
+                                                                    <AccordionDetails>
+                                                                        {
+                                                                            toolsInSd.map((t) => {
+                                                                                return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
+                                                                                    <Typography onClick={() => { console.log(t) }}>
+                                                                                        {t.label.toUpperCase()}
+                                                                                    </Typography>
+                                                                                    <Typography style={{ marginLeft: '2rem' }}>
+                                                                                        q: {t.quantity}
+                                                                                    </Typography>
+                                                                                    <AiOutlineInfoCircle onClick={() => {
+                                                                                        setOpen(true)
+                                                                                        setUpdateBookListFlag(true)
+                                                                                        setToolInSd(t)
+                                                                                        setToolFound(t)
+                                                                                    }} style={{ marginLeft: '2rem', color: 'green' }} />
+                                                                                </div>
+                                                                            })
+                                                                        }
+                                                                    </AccordionDetails>
+                                                                </Accordion>
+                                                                {/* <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
+                                                                {sd.label.toUpperCase()}
+                                                            </Typography> */}
+                                                            </div>
+                                                        }
+                                                    })
+                                                }
+                                            </AccordionDetails>
+                                        </Accordion>
+
+                                    })
+                                }
+                            </div>
+
+
+
+                            {/* Modal to show tools in the selected shelf */}
+                            <Modal
+                                open={open}
+                                style={{ padding: '5rem' }}
+                                onClose={() => { handleClose() }}
+                                aria-labelledby="modal-modal-label"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style}>
+                                    {
+                                        (toolInSd === undefined || toolInSd === null || toolInSd.label === null || toolInSd.label === undefined) ? "" : <div><Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                            Modifica prodotto: {toolInSd.label.toUpperCase()}
+                                        </Typography>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                {inheritedQuantity === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="quantità minima attuale richiesta"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={inheritedQuantity}
+                                                    onChange={(event) => { handleChangeInheritedQuantity(event) }}
+                                                />}
+                                                {inheritedLowerBound === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="quantità minima attuale richiesta"
+                                                    value={0}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="quantità minima attuale richiesta"
+                                                    value={inheritedLowerBound}
+                                                    onChange={(event) => { handleChangeInheritedLowerBound(event) }}
+                                                />}
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                {inheritedDepartment === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="reparto attuale"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="reparto attuale"
+                                                    value={inheritedDepartment}
+                                                    onChange={(event) => { handleChangeInheritedDepartment(event) }}
+                                                />}
+                                                {inheritedSubDepartment === -1 ? <TextField
+                                                    disabled
+                                                    id="outlined-disabled"
+                                                    style={{ marginRight: "2rem" }}
+                                                    label="sotto-reparto attuale"
+                                                    value={""}
+                                                    onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                                /> : <TextField
+                                                    disabled
+                                                    style={{ marginRight: "2rem" }}
+                                                    id="outlined-disabled"
+                                                    label="sotto-reparto attuale"
+                                                    value={inheritedSubDepartment}
+                                                    onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
+                                                />}
+                                            </div>
+                                            da modificare:
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
+                                                <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={departments}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
+                                                    onChange={(event, value) => {
+                                                        handleChangeDepMenuToUpdate(event, value)
+                                                    }}
+                                                />
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    disabled={disabledSDMenu}
+                                                    options={subDepartmentsForMenu}
+                                                    style={{ marginLeft: 'auto', marginRight: "2rem" }}
+                                                    sx={{ width: 300 }}
+                                                    renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
+                                                    onChange={(event, value) => {
+                                                        if (value !== null) {
+                                                            setSubDepartmentToUpdate(value.label)
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={() => {
+                                                    updateEntireBook(toolFound.label, lowerBound)
+                                                    setIsLoading(true)
+                                                }}>Modifica prodotto</Button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </Box>
+                            </Modal>
+
+                            {/* Modal to update library structure */}
+                            <Modal
+                                open={openLibraryAdd}
+                                onClose={() => { handleCloseLibraryUpdate() }}
+                                aria-labelledby="modal-modal-label"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style}>
+                                    <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        Aggiungi un reparto o sottoreparto:
+                                    </Typography>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch checked={isSubDep} onChange={handleChangeSwitch} name="subdep" />
+                                        }
+                                        style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}
+                                        label="Seleziona se è un sottoreparto"
+                                    />
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                        {
+                                            isSubDep ? "" : <input style={{ marginTop: '2rem' }} placeholder="reparto" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                        }
+                                        {
+                                            !isSubDep ? "" : <div>
+                                                <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                                <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
                                             </div>
                                         }
                                     </div>
-                                </Grow>
-                            </Box>)
-                        }
-
-                        <div>
-                            {
-                                (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiunto correttamente!</Alert>
-                            }
-                            {
-                                (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto aggiornato correttamente!</Alert>
-                            }
-                            {
-                                (!confermaDelete) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">prodotto eliminato correttamente!</Alert>
-                            }
-                            {
-                                (notFound === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">prodotto {notFound} non trovato! Controlla che il prodotto sia scritto correttamente.</Alert>
-                            }
-                            {
-                                (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Controlla la connessione o i dati inseriti.</Alert>
-                            }
-                            {
-                                (nonExistingEmployee === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Utente inserito non presente.</Alert>
-                            }
-                        </div>
-
-                        {/* WAREHOUSE */}
-                        <h2 style={{ marginTop: '5rem', fontFamily: 'times', marginLeft: '1rem' }}>Reparti:</h2>
-                        <div style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem', marginBottom: '4rem' }}>
-                            {
-                                departments.map((d) => {
-                                    return <Accordion
-                                        expanded={openPapers[d.label] || false}
-                                        onChange={() => { updateOpenPapers(d.label) }}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
-                                            aria-controls="panel1bh-content"
-                                        >
-                                            <Typography variant="h4" sx={{ width: "33%", flexShrink: 0 }}>
-                                                {d.label.toUpperCase()}
-                                            </Typography>
-                                            {/* <Typography sx={{ color: "text.secondary" }}>
-                                    I am an accordion
-                                </Typography> */}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            {
-                                                subDepartments.map((sd) => {
-                                                    if (sd.father === d.label) {
-                                                        return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                                                            <Accordion
-                                                                expanded={openPapers[sd.label] || false}
-                                                                style={{ width: '80%' }}
-                                                                onChange={() => {
-                                                                    showSubDepartment(sd)
-                                                                }}
-                                                            >
-                                                                <AccordionSummary
-                                                                    expandIcon={<ExpandMoreIcon />}
-                                                                    aria-controls="panel1bh-content"
-                                                                >
-                                                                    <Typography variant="h6" sx={{ width: "100%", flexShrink: 0 }}>
-                                                                        {sd.label.toUpperCase()}
-                                                                    </Typography>
-                                                                </AccordionSummary>
-                                                                <AccordionDetails>
-                                                                    {
-                                                                        toolsInSd.map((t) => {
-                                                                            return <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
-                                                                                <Typography onClick={() => { console.log(t) }}>
-                                                                                    {t.label.toUpperCase()}
-                                                                                </Typography>
-                                                                                <Typography style={{ marginLeft: '2rem' }}>
-                                                                                    q: {t.quantity}
-                                                                                </Typography>
-                                                                                <AiOutlineInfoCircle onClick={() => {
-                                                                                    setOpen(true)
-                                                                                    setUpdateBookListFlag(true)
-                                                                                    setToolInSd(t)
-                                                                                    setToolFound(t)
-                                                                                }} style={{ marginLeft: '2rem', color: 'green' }} />
-                                                                            </div>
-                                                                        })
-                                                                    }
-                                                                </AccordionDetails>
-                                                            </Accordion>
-                                                            {/* <Typography className="hovered" onClick={() => { showSubDepartment(sd) }}>
-                                                                {sd.label.toUpperCase()}
-                                                            </Typography> */}
-                                                        </div>
-                                                    }
-                                                })
-                                            }
-                                        </AccordionDetails>
-                                    </Accordion>
-
-                                })
-                            }
-                        </div>
-
-
-
-                        {/* Modal to show tools in the selected shelf */}
-                        <Modal
-                            open={open}
-                            style={{ padding: '5rem' }}
-                            onClose={() => { handleClose() }}
-                            aria-labelledby="modal-modal-label"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style}>
-                                {
-                                    (toolInSd === undefined || toolInSd === null || toolInSd.label === null || toolInSd.label === undefined) ? "" : <div><Typography style={{ marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                                        Modifica prodotto: {toolInSd.label.toUpperCase()}
-                                    </Typography>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            {inheritedQuantity === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedQuantity}
-                                                onChange={(event) => { handleChangeInheritedQuantity(event) }}
-                                            />}
-                                            {inheritedLowerBound === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="quantità minima attuale richiesta"
-                                                value={0}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="quantità minima attuale richiesta"
-                                                value={inheritedLowerBound}
-                                                onChange={(event) => { handleChangeInheritedLowerBound(event) }}
-                                            />}
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            {inheritedDepartment === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="reparto attuale"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="reparto attuale"
-                                                value={inheritedDepartment}
-                                                onChange={(event) => { handleChangeInheritedDepartment(event) }}
-                                            />}
-                                            {inheritedSubDepartment === -1 ? <TextField
-                                                disabled
-                                                id="outlined-disabled"
-                                                style={{ marginRight: "2rem" }}
-                                                label="sotto-reparto attuale"
-                                                value={""}
-                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
-                                            /> : <TextField
-                                                disabled
-                                                style={{ marginRight: "2rem" }}
-                                                id="outlined-disabled"
-                                                label="sotto-reparto attuale"
-                                                value={inheritedSubDepartment}
-                                                onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
-                                            />}
-                                        </div>
-                                        da modificare:
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={departments}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
-                                                onChange={(event, value) => {
-                                                    handleChangeDepMenuToUpdate(event, value)
-                                                }}
-                                            />
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                disabled={disabledSDMenu}
-                                                options={subDepartmentsForMenu}
-                                                style={{ marginLeft: 'auto', marginRight: "2rem" }}
-                                                sx={{ width: 300 }}
-                                                renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
-                                                onChange={(event, value) => {
-                                                    if (value !== null) {
-                                                        setSubDepartmentToUpdate(value.label)
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={() => { updateEntireBook(toolFound.label, lowerBound) }}>Modifica prodotto</Button>
-                                        </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                        <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
+                                            addDepartment()
+                                            setIsLoading(true)
+                                        }}>Conferma</Button>
                                     </div>
-                                }
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                        <Button style={{ color: 'black', backgroundColor: 'trasnparent', fontSize: 'small' }} onClick={() => { setOpenEditDeps(true) }}>Vuoi modificare un reparto o un sottoreparto già esistente?</Button>
+                                    </div>
+                                </Box>
 
-                            </Box>
-                        </Modal>
+                            </Modal>
 
-                        {/* Modal to update library structure */}
-                        <Modal
-                            open={openLibraryAdd}
-                            onClose={() => { handleCloseLibraryUpdate() }}
-                            aria-labelledby="modal-modal-label"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style}>
-                                <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                                    Aggiungi un reparto o sottoreparto:
-                                </Typography>
-                                <FormControlLabel
-                                    control={
-                                        <Switch checked={isSubDep} onChange={handleChangeSwitch} name="subdep" />
-                                    }
-                                    style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}
-                                    label="Seleziona se è un sottoreparto"
-                                />
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    {
-                                        isSubDep ? "" : <input style={{ marginTop: '2rem' }} placeholder="reparto" onChange={(event) => { setAddingDepartment(event.target.value) }} />
-                                    }
-                                    {
-                                        !isSubDep ? "" : <div>
-                                            <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
-                                            <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
-                                        </div>
-                                    }
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { addDepartment() }}>Conferma</Button>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <Button style={{ color: 'black', backgroundColor: 'trasnparent', fontSize: 'small' }} onClick={() => { setOpenEditDeps(true) }}>Vuoi modificare un reparto o un sottoreparto già esistente?</Button>
-                                </div>
-                            </Box>
-                        </Modal>
-                        <Modal
-                            open={openEditDeps}
-                            onClose={() => { handleCloseEditDeps() }}
-                            aria-labelledby="modal-modal-label"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style}>
-                                <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
-                                    Modifica un reparto o sottoreparto:
-                                </Typography>
-                                <Autocomplete
-                                    disablePortal
-                                    id="combo-box-demo"
-                                    options={allDeps}
-                                    style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "2rem" }}
-                                    sx={{ width: 300 }}
-                                    renderInput={(params) => <TextField {...params} label="tutti i reparti" />}
-                                    onChange={(event, value) => {
-                                        handleChangeEditDep(event, value)
-                                    }}
-                                />
-                                modifica:
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <input style={{ marginTop: '2rem' }} placeholder="nuovo nome" onChange={(event) => { seteditedDepartmentLabel(event.target.value) }} />
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { editDepartment() }}>Conferma</Button>
-                                </div>
-                            </Box>
-                        </Modal>
+                            <Modal
+                                open={openQrCode}
+                                onClose={() => { handleCloseQrCode() }}
+                                aria-labelledby="modal-modal-label"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style}>
+                                    <div style={{ width: "100%", height: "100%", marginLeft: 'auto', marginRight: 'auto' }}>
+                                        <QrReader
+                                            delay={500}
+                                            style={{ width: '300px !important', height: "300px !important" }}
+                                            onError={handleErrorWebCam}
+                                            onScan={handleScanWebCam}
+                                        />
+                                        <h3>Scanned By WebCam Code: {qrData}</h3>
+                                    </div>
+                                </Box>
+                            </Modal>
+
+                            <Modal
+                                open={openEditDeps}
+                                onClose={() => { handleCloseEditDeps() }}
+                                aria-labelledby="modal-modal-label"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={style}>
+                                    <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="modal-modal-label" variant="h6" component="h2">
+                                        Modifica un reparto o sottoreparto:
+                                    </Typography>
+                                    <Autocomplete
+                                        disablePortal
+                                        id="combo-box-demo"
+                                        options={allDeps}
+                                        style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "2rem" }}
+                                        sx={{ width: 300 }}
+                                        renderInput={(params) => <TextField {...params} label="tutti i reparti" />}
+                                        onChange={(event, value) => {
+                                            handleChangeEditDep(event, value)
+                                        }}
+                                    />
+                                    modifica:
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                        <input style={{ marginTop: '2rem' }} placeholder="nuovo nome" onChange={(event) => { seteditedDepartmentLabel(event.target.value) }} />
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                        <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => { editDepartment() }}>Conferma</Button>
+                                    </div>
+                                </Box>
+                            </Modal>
+                        </div>
                     </div>
             }
         </div >
