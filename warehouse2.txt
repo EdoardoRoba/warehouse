@@ -36,6 +36,7 @@ carica documento pdf, excel, ecc
 calendario appuntamenti - che si collega alla scheda del cliente
 
 
+qr code ex: https://my-warehouse-app-heroku.herokuapp.com/api/tool/6214fa647668206a71c645c5
 
 
 
