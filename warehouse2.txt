@@ -10,7 +10,7 @@ git push heroku master
 ----------
 
 password idroaltech.bot (gmail): idroaltech.bot8794
-password idroaltech.bot (app): owgjqqmbvuzkprtw
+password idroaltech.bot (app): owgjqqmbvuzkprtw (qvysuihwjoiaawuj)
 password portale "admin": idroaltech:idroaltech === edoroba.8794
 password portale "basic": magazzino.000
 password portale "tecnico": tecnico.000

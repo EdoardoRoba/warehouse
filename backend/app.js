@@ -106,7 +106,8 @@ cron.schedule('00 15 * * 5', () => {
                     service: 'gmail',
                     auth: {
                         user: 'idroaltech.bot@gmail.com',
-                        pass: 'owgjqqmbvuzkprtw'
+                        // pass: 'owgjqqmbvuzkprtw'
+                        pass: 'qvysuihwjoiaawuj'
                     }
                 });
 
@@ -345,7 +346,8 @@ app.put('/api/tool/:id', (req, res, next) => {
                     service: 'gmail',
                     auth: {
                         user: 'idroaltech.bot@gmail.com',
-                        pass: 'owgjqqmbvuzkprtw'
+                        // pass: 'owgjqqmbvuzkprtw'
+                        pass: 'qvysuihwjoiaawuj'
                     }
                 });
 
@@ -353,7 +355,7 @@ app.put('/api/tool/:id', (req, res, next) => {
                     from: 'idroaltech.bot@gmail.com',
                     to: 'roba.edoardo@gmail.com, logistica@idroaltech.it', // info@idroaltech.it',
                     subject: 'NOTIFICA QUANTITA\' LIMITE - ' + label.toUpperCase(),
-                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment).replace("{marca}", t.marca).replace("{code}", t.code)
+                    html: resultEmail.template.replace("{label}", result.label).replace("{label}", result.label).replace("{quantity}", quantity).replace("{lowerBound}", result.lowerBound).replace("{price}", result.price).replace("{department}", result.department).replace("{subDepartment}", result.subDepartment).replace("{marca}", result.marca).replace("{code}", result.code)
                 };
 
                 transporter.sendMail(mailOptions, function (error, info) {
