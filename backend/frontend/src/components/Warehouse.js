@@ -116,10 +116,12 @@ function Warehouse(props) {
 
     const useStyles = makeStyles((theme) => ({
         backdrop: {
-            zIndex: theme.zIndex.drawer + 1,
+            zIndex: 999,
             color: '#fff',
         },
     }));
+
+    const classes = useStyles();
 
     const style = {
         position: 'absolute',

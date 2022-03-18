@@ -35,6 +35,7 @@ import Pagination from '@mui/material/Pagination';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 import SimpleImageSlider from "react-simple-image-slider";
 import FileBase64 from 'react-file-base64';
 import { DataGrid } from '@mui/x-data-grid';
@@ -45,6 +46,7 @@ import { storage } from "../firebase";
 import './Classes.css'
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject } from "firebase/storage";
+import { makeStyles } from '@mui/styles';
 
 function Customers(props) {
 
@@ -111,6 +113,15 @@ function Customers(props) {
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
         { field: 'status', headerName: 'stato', flex: 1 }
     ]
+
+    const useStyles = makeStyles((theme) => ({
+        backdrop: {
+            zIndex: 999,
+            color: '#fff',
+        },
+    }));
+
+    const classes = useStyles();
 
     const style = {
         position: 'absolute',
@@ -246,7 +257,11 @@ function Customers(props) {
                 // console.log("Tools: ", res.data)
                 setCustomers(res.data)
                 setIsLoading(false)
-            })
+            }).catch(error => {
+                // console.log("error")
+                setIsLoading(false)
+                setShowError(true)
+            });
     }
 
     let addCustomer = () => {
@@ -463,8 +478,50 @@ function Customers(props) {
         customer.foto_sopralluogo = customerSelected.foto_sopralluogo
         for (let s of selectedSopralluogo) {
             customer.foto_sopralluogo.push(s.base64)
+
+            // const now = Date.now()
+            // const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
+            // const uploadTask = uploadBytesResumable(storageRef, s)
+            // uploadTask.on("state_changed", (snapshot) => {
+            //     const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+            //     setProgress(progr)
+            //     setIsLoading(false)
+            // }, (error) => console.log("error: ", error),
+            //     () => {
+            //         //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+            //         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+            //             console.log("fileUrl: ", fileUrl)
+
+            //             customer.foto_sopralluogo.push(fileUrl)
+            //             // var newField = {}
+            //             // newField[fieldToEdit] = customerSelected[fieldToEdit]
+            //             // if (newField[fieldToEdit] === undefined) {
+            //             //     newField[fieldToEdit] = [fileUrl]
+            //             // } else {
+            //             //     newField[fieldToEdit].push(fileUrl)
+            //             // }
+            //             axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+            //                 setConfermaUpdate(true)
+            //                 getCustomers()
+            //                 axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+            //                     setIsLoading(false)
+            //                     console.log("customer updated")
+            //                     setCustomerSelected(respp.data)
+            //                 }).catch((error) => {
+            //                     setIsLoading(false)
+            //                     console.log("error")
+            //                     console.log(error)
+            //                 })
+            //             }).catch((error) => {
+            //                 // console.log("error: ", error)
+            //                 setIsLoading(false)
+            //                 setShowError(true)
+            //             });
+            //         })
+            //     }
+            // )
         }
-        // console.log(customer.foto_sopralluogo)
+        console.log(customer.foto_sopralluogo)
         axiosInstance.put("customer/" + customerSelected._id, customer).then(response => {
             // console.log("Fatto!", response)
             setConfermaUpdate(true)
@@ -482,6 +539,7 @@ function Customers(props) {
             setIsLoading(false)
             setShowError(true)
         });
+
     };
 
     const handleSubmissionInstallazione = (e) => {
@@ -594,9 +652,9 @@ function Customers(props) {
                 </div> :
                     <div>
                         {
-                            isLoading ? <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', zIndex: "999" }}>
-                                <CircularProgress style={{ position: 'fixed', marginTop: '3rem' }} />
-                            </div> :
+                            isLoading ? <Backdrop className={classes.backdrop} open>
+                                <CircularProgress color="inherit" />
+                            </Backdrop> :
                                 <div>
                                     <div style={{ zIndex: '-1', width: '100%' }}>
                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
