@@ -16,6 +16,7 @@ const Profile = require('./models/profile')
 const Customer = require('./models/customer')
 const Auth = require('./models/auth')
 const Color = require('./models/color')
+const Images = require('./models/images')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -61,8 +62,8 @@ app.use(cors(corsOptions))
 
 
 
-app.use(express.json({ limit: '500mb' }));
-app.use(express.urlencoded({ limit: '500mb' }));
+app.use(express.json({ limit: '1000mb' }));
+app.use(express.urlencoded({ limit: '1000mb' }));
 app.use(upload())
 
 // Connect to server
@@ -628,6 +629,20 @@ app.get('/api/customer/:id', (req, res) => {
     }).catch((error) => { console.log("error: ", error) })
 })
 
+// DELETE
+app.delete('/api/customer/:id', (req, res) => {
+    const id = req.params.id;
+    Customer.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+
+
 // COLORS
 // POST
 app.post('/api/colorsStatus', (req, res) => {
@@ -649,6 +664,69 @@ app.get('/api/colorsStatus', (req, res) => {
     Color.find().then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
+})
+
+
+// IMAGES
+// POST
+app.post('/api/images', (req, res) => {
+    const images = new Images({
+        customer: req.body.customer,
+        type: req.body.type,
+        images: req.body.images
+    })
+    // console.log("images: ", images)
+    images.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/images', (req, res) => {
+    // it gets all the element in that document
+    if (req.query.type !== undefined) {
+        Images.find({ type: req.query.type, customer: req.query.customer }).then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    }
+})
+
+// PUT
+app.put('/api/images/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    Images.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// GET SINGLE
+app.get('/api/images/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    Images.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// DELETE
+app.delete('/api/images/:id', (req, res) => {
+    const id = req.params.id;
+    Images.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
 })
 
 
