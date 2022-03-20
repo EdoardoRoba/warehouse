@@ -91,6 +91,7 @@ function Customers(props) {
     const [assistenza, setAssistenza] = React.useState("");
     const [status, setStatus] = React.useState("");
     const [note, setNote] = React.useState("");
+    const [genericError, setGenericError] = React.useState("");
     const [pagamenti_testo, setPagamenti_testo] = React.useState("");
     const [auths, setAuths] = React.useState([])
     const [openColorsUpdate, setOpenColorsUpdate] = React.useState(false);
@@ -110,11 +111,14 @@ function Customers(props) {
     const [pageAssistenza, setPageAssistenza] = React.useState(1);
     const [imagesToShow, setImagesToShow] = React.useState([]);
     const [imagesId, setImagesId] = React.useState(null);
+    const [url, setUrl] = React.useState("");
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
         { field: 'status', headerName: 'stato', flex: 1 }
     ]
+
+    const imageTypes = ["image/png", "image/jpeg"]
 
     const useStyles = makeStyles((theme) => ({
         backdrop: {
@@ -177,7 +181,7 @@ function Customers(props) {
     }, [customerSelected])
 
     React.useEffect(() => {
-        // console.log("selectedSopralluogo: ", selectedSopralluogo[0].base64)
+        // console.log("selectedSopralluogo: ", selectedSopralluogo)
     }, [selectedSopralluogo])
 
     React.useEffect(() => {
@@ -193,6 +197,13 @@ function Customers(props) {
         }, 5000);
         return () => clearTimeout(timer);
     }, [showError]);
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setGenericError("")
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [genericError]);
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -272,36 +283,6 @@ function Customers(props) {
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
-                axiosInstance.post('images', { customer: nome_cognome, type: "sopralluogo", images: [] })
-                    .then(response => {
-                        setIsLoading(false)
-                        setConfermaAdd(true)
-                        getCustomers()
-                    }).catch(error => {
-                        // console.log("error")
-                        setIsLoading(false)
-                        setShowError(true)
-                    });
-                axiosInstance.post('images', { customer: nome_cognome, type: "fine_installazione", images: [] })
-                    .then(response => {
-                        setIsLoading(false)
-                        setConfermaAdd(true)
-                        getCustomers()
-                    }).catch(error => {
-                        // console.log("error")
-                        setIsLoading(false)
-                        setShowError(true)
-                    });
-                axiosInstance.post('images', { customer: nome_cognome, type: "assistenza", images: [] })
-                    .then(response => {
-                        setIsLoading(false)
-                        setConfermaAdd(true)
-                        getCustomers()
-                    }).catch(error => {
-                        // console.log("error")
-                        setIsLoading(false)
-                        setShowError(true)
-                    });
             }).catch(error => {
                 // console.log("error")
                 setIsLoading(false)
@@ -482,154 +463,277 @@ function Customers(props) {
 
     const deleteImage = (ph, phType) => {
         setIsLoading(true)
-        var new_ph_array = imagesToShow.filter((p) => p !== ph)
+        var new_ph_array = customerSelected[phType].filter((p) => p !== ph)
         var newField = {}
-        newField.images = new_ph_array
-        axiosInstance.put("images/" + imagesId, newField).then((resp) => {
-            // axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
-            //     console.log("foto eliminata!")
-            //     setIsLoading(false)
-            //     setCustomerSelected(respp.data)
-            //     setOpenSopralluogo(false)
-            //     setOpenInstallazione(false)
-            //     setOpenAssistenza(false)
-            //     setPageSopralluogo(1)
-            //     setPageInstallazione(1)
-            //     setPageAssistenza(1)
-            // }).catch((error) => {
-            //     setIsLoading(false)
-            //     console.log("error")
-            //     console.log(error)
-            // })
-            setIsLoading(false)
-            getImages(phType)
-        }).catch((error) => {
-            console.log("error")
-            console.log(error)
-            setIsLoading(false)
-        })
-    }
-
-    const getImages = (type) => {
-        setIsLoading(true)
-        axiosInstance.get('images', { params: { type: type, customer: customerSelected.nome_cognome } })
-            .then(response => {
-                // console.log("images: ", response)
-                setImagesToShow(response.data[0].images)
+        newField[phType] = new_ph_array
+        let phRef = ref(storage, ph);
+        deleteObject(phRef)
+            .then(() => {
+                console.log("Firebase clean!")
+                var new_pdf_array = customerSelected[phType].filter((p) => p !== ph)
+                var newField = {}
+                newField[phType] = new_pdf_array
+                axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+                    axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                        console.log("foto eliminata!")
+                        setIsLoading(false)
+                        setCustomerSelected(respp.data)
+                        setOpenSopralluogo(false)
+                        setOpenInstallazione(false)
+                        setOpenAssistenza(false)
+                        setPageSopralluogo(1)
+                        setPageInstallazione(1)
+                        setPageAssistenza(1)
+                    }).catch((error) => {
+                        setIsLoading(false)
+                        console.log("error")
+                        console.log(error)
+                    })
+                }).catch((error) => {
+                    console.log("error")
+                    console.log(error)
+                    setIsLoading(false)
+                })
+            })
+            .catch((err) => {
+                console.log(err);
                 setIsLoading(false)
-                setImagesId(response.data[0]._id)
-            }).catch(error => {
-                setIsLoading(false)
-                setShowError(true)
             });
     }
+
+    // const getImages = (type) => {
+    //     setIsLoading(true)
+    //     axiosInstance.get('images', { params: { type: type, customer: customerSelected.nome_cognome } })
+    //         .then(response => {
+    //             // console.log("images: ", response)
+    //             setImagesToShow(response.data[0].images)
+    //             setIsLoading(false)
+    //             setImagesId(response.data[0]._id)
+    //         }).catch(error => {
+    //             setIsLoading(false)
+    //             setShowError(true)
+    //         });
+    // }
 
     const handleSubmissionSopralluogo = (e) => {
         var imgs = {}
         imgs.images = imagesToShow
-        for (let s of selectedSopralluogo) {
-            // customer.foto_sopralluogo.push(s.base64)
-            imgs.images.push(s.base64)
+        var customer = {}
+        customer.foto_sopralluogo = customerSelected.foto_sopralluogo
+        if (imageTypes.includes(selectedSopralluogo[0].type)) {
+            for (let s of selectedSopralluogo) {
+                // customer.foto_sopralluogo.push(s.base64)
+                // imgs.images.push(s.base64)
 
-            // const now = Date.now()
-            // const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
-            // const uploadTask = uploadBytesResumable(storageRef, s)
-            // uploadTask.on("state_changed", (snapshot) => {
-            //     const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-            //     setProgress(progr)
-            //     setIsLoading(false)
-            // }, (error) => console.log("error: ", error),
-            //     () => {
-            //         //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-            //         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-            //             console.log("fileUrl: ", fileUrl)
-            // const image = new Image();
-            // image.onload = () => {
-            //     setSrc(fileUrl)
-            // };
-            // image.src = fileUrl;
-            // console.log("image", image)
-            // customer.foto_sopralluogo.push(image)
-            // customer.foto_sopralluogo.push(fileUrl)
-            // var newField = {}
-            // newField[fieldToEdit] = customerSelected[fieldToEdit]
-            // if (newField[fieldToEdit] === undefined) {
-            //     newField[fieldToEdit] = [fileUrl]
-            // } else {
-            //     newField[fieldToEdit].push(fileUrl)
-            // }
-            // axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-            //     setConfermaUpdate(true)
-            //     getCustomers()
-            //     axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-            //         setIsLoading(false)
-            //         console.log("customer updated")
-            //         setCustomerSelected(respp.data)
-            //     }).catch((error) => {
-            //         setIsLoading(false)
-            //         console.log("error")
-            //         console.log(error)
-            //     })
-            // }).catch((error) => {
-            //     // console.log("error: ", error)
-            //     setIsLoading(false)
-            //     setShowError(true)
-            // });
-            //         })
-            //     }
-            // )
+                const now = Date.now()
+                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
+                const uploadTask = uploadBytesResumable(storageRef, s)
+                uploadTask.on("state_changed", (snapshot) => {
+                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setProgress(progr)
+                }, (error) => console.log("error: ", error),
+                    () => {
+                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                            console.log("fileUrl: ", fileUrl)
+                            customer.foto_sopralluogo.push(fileUrl)
+                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                                setConfermaUpdate(true)
+                                getCustomers()
+                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                    setIsLoading(false)
+                                    console.log("customer updated")
+                                    setCustomerSelected(respp.data)
+                                }).catch((error) => {
+                                    setIsLoading(false)
+                                    console.log("error")
+                                    console.log(error)
+                                })
+                            }).catch((error) => {
+                                // console.log("error: ", error)
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                        })
+                    }
+                )
+            }
+        } else {
+            setGenericError("Tipo file non riconosciuto.")
         }
-        axiosInstance.put("images/" + imagesId, imgs).then(response => {
-            // console.log("Fatto!", response)
-            setConfermaUpdate(true)
-            getImages("sopralluogo")
-            setIsLoading(false)
-        }).catch((error) => {
-            // console.log("error: ", error)
-            setIsLoading(false)
-            setShowError(true)
-        });
+
+
+
+
+
+        // for (let s of selectedSopralluogo) {
+        //     // customer.foto_sopralluogo.push(s.base64)
+        //     imgs.images.push(s.base64)
+
+        //     const now = Date.now()
+        //     const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
+        //     // storageRef.put(s).on('state_changed', (snap) => {
+        //     //     let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+        //     //     setProgress(percentage);
+        //     // }, (err) => {
+        //     //     setShowError(true)
+        //     // }, async () => {
+        //     //     const urll = await storageRef.getDownloadURL();
+        //     //     setUrl(urll);
+        //     // });
+        //     const uploadTask = uploadBytesResumable(storageRef, s)
+        //     uploadTask.on("state_changed", (snapshot) => {
+        //         const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        //         setProgress(progr)
+        //         setIsLoading(false)
+        //     }, (error) => console.log("error: ", error),
+        //         () => {
+        //             //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+        //             getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+        //                 console.log("fileUrl: ", fileUrl)
+        //                 // const image = new Image();
+        //                 // image.onload = () => {
+        //                 //     setSrc(fileUrl)
+        //                 // };
+        //                 // image.src = fileUrl;
+        //                 // console.log("image", image)
+        //                 // customer.foto_sopralluogo.push(image)
+        //                 customer.foto_sopralluogo.push(fileUrl)
+        //                 // var newField = {}
+        //                 // newField[fieldToEdit] = customerSelected[fieldToEdit]
+        //                 // if (newField[fieldToEdit] === undefined) {
+        //                 //     newField[fieldToEdit] = [fileUrl]
+        //                 // } else {
+        //                 //     newField[fieldToEdit].push(fileUrl)
+        //                 // }
+        //                 // axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+        //                 //     setConfermaUpdate(true)
+        //                 //     getCustomers()
+        //                 //     axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+        //                 //         setIsLoading(false)
+        //                 //         console.log("customer updated")
+        //                 //         setCustomerSelected(respp.data)
+        //                 //     }).catch((error) => {
+        //                 //         setIsLoading(false)
+        //                 //         console.log("error")
+        //                 //         console.log(error)
+        //                 //     })
+        //                 // }).catch((error) => {
+        //                 //     // console.log("error: ", error)
+        //                 //     setIsLoading(false)
+        //                 //     setShowError(true)
+        //                 // });
+        //             })
+        //         }
+        //     )
+        // }
+        // axiosInstance.put("images/" + imagesId, imgs).then(response => {
+        //     // console.log("Fatto!", response)
+        //     setConfermaUpdate(true)
+        //     getImages("sopralluogo")
+        //     setIsLoading(false)
+        // }).catch((error) => {
+        //     // console.log("error: ", error)
+        //     setIsLoading(false)
+        //     setShowError(true)
+        // });
 
     };
 
     const handleSubmissionInstallazione = (e) => {
         var imgs = {}
         imgs.images = imagesToShow
-        for (let s of selectedInstallazione) {
-            // customer.foto_sopralluogo.push(s.base64)
-            imgs.images.push(s.base64)
+        var customer = {}
+        customer.foto_fine_installazione = customerSelected.foto_fine_installazione
+        if (imageTypes.includes(selectedInstallazione[0].type)) {
+            for (let s of selectedInstallazione) {
+                // customer.foto_fine_installazione.push(s.base64)
+                // imgs.images.push(s.base64)
+
+                const now = Date.now()
+                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/fine_installazione/' + now + "_" + s.name)
+                const uploadTask = uploadBytesResumable(storageRef, s)
+                uploadTask.on("state_changed", (snapshot) => {
+                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setProgress(progr)
+                }, (error) => console.log("error: ", error),
+                    () => {
+                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                            console.log("fileUrl: ", fileUrl)
+                            customer.foto_fine_installazione.push(fileUrl)
+                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                                setConfermaUpdate(true)
+                                getCustomers()
+                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                    setIsLoading(false)
+                                    console.log("customer updated")
+                                    setCustomerSelected(respp.data)
+                                }).catch((error) => {
+                                    setIsLoading(false)
+                                    console.log("error")
+                                    console.log(error)
+                                })
+                            }).catch((error) => {
+                                // console.log("error: ", error)
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                        })
+                    }
+                )
+            }
+        } else {
+            setGenericError("Tipo file non riconosciuto.")
         }
-        // console.log(customer.foto_fine_installazione)
-        axiosInstance.put("images/" + imagesId, imgs).then(response => {
-            // console.log("Fatto!", response)
-            setConfermaUpdate(true)
-            getImages("fine_installazione")
-            setIsLoading(false)
-        }).catch((error) => {
-            // console.log("error: ", error)
-            setIsLoading(false)
-            setShowError(true)
-        });
     };
 
     const handleSubmissionAssistenza = (e) => {
         var imgs = {}
         imgs.images = imagesToShow
-        for (let s of selectedAssistenza) {
-            // customer.foto_sopralluogo.push(s.base64)
-            imgs.images.push(s.base64)
+        var customer = {}
+        customer.foto_assistenza = customerSelected.foto_assistenza
+        if (imageTypes.includes(selectedAssistenza[0].type)) {
+            for (let s of selectedAssistenza) {
+                // customer.foto_assistenza.push(s.base64)
+                // imgs.images.push(s.base64)
+
+                const now = Date.now()
+                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/assistenza/' + now + "_" + s.name)
+                const uploadTask = uploadBytesResumable(storageRef, s)
+                uploadTask.on("state_changed", (snapshot) => {
+                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setProgress(progr)
+                }, (error) => console.log("error: ", error),
+                    () => {
+                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                            console.log("fileUrl: ", fileUrl)
+                            customer.foto_assistenza.push(fileUrl)
+                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                                setConfermaUpdate(true)
+                                getCustomers()
+                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                    setIsLoading(false)
+                                    console.log("customer updated")
+                                    setCustomerSelected(respp.data)
+                                }).catch((error) => {
+                                    setIsLoading(false)
+                                    console.log("error")
+                                    console.log(error)
+                                })
+                            }).catch((error) => {
+                                // console.log("error: ", error)
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                        })
+                    }
+                )
+            }
+        } else {
+            setGenericError("Tipo file non riconosciuto.")
         }
-        // console.log(customer.foto_assistenza)
-        axiosInstance.put("images/" + imagesId, imgs).then(response => {
-            // console.log("Fatto!", response)
-            setConfermaUpdate(true)
-            getImages("fine_installazione")
-            setIsLoading(false)
-        }).catch((error) => {
-            // console.log("error: ", error)
-            setIsLoading(false)
-            setShowError(true)
-        });
     };
 
     const downloadImage = (image, filename) => {
@@ -752,7 +856,7 @@ function Customers(props) {
                                                         </div>
                                                     </AccordionDetails>
                                                 </Accordion>
-
+                                                <img src={url} />
                                                 <Accordion
                                                     expanded={openAccordionManual || false}
                                                     onChange={handleChangeAccordionManual}
@@ -821,6 +925,9 @@ function Customers(props) {
                                         }
                                         {
                                             (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Upload fallito. Controlla connessione e formato dei dati.</Alert>
+                                        }
+                                        {
+                                            (genericError === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">{genericError}</Alert>
                                         }
                                         <Accordion
                                             expanded={openAccordionScheda || false}
@@ -1369,13 +1476,17 @@ function Customers(props) {
                                                                         </Typography>
                                                                         <div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                                <FileBase64
+                                                                                {/* <FileBase64
                                                                                     multiple={true}
                                                                                     onDone={(event) => {
                                                                                         setSelectedSopralluogo(event)
                                                                                         setIsSopralluogoPicked(true)
                                                                                     }}
-                                                                                />
+                                                                                /> */}
+                                                                                <input type="file" multiple onChange={(event) => {
+                                                                                    setSelectedSopralluogo(event.target.files)
+                                                                                    setIsSopralluogoPicked(true)
+                                                                                }} />
                                                                             </div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                                 <Button disabled={!isSopralluogoPicked} onClick={(event) => {
@@ -1386,7 +1497,6 @@ function Customers(props) {
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                             <Button onClick={(event) => {
-                                                                                getImages("sopralluogo")
                                                                                 setOpenSopralluogo(event)
                                                                                 setPageSopralluogo(1)
                                                                             }}
@@ -1399,13 +1509,17 @@ function Customers(props) {
                                                                         </Typography>
                                                                         <div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                                <FileBase64
+                                                                                {/* <FileBase64
                                                                                     multiple={true}
                                                                                     onDone={(event) => {
                                                                                         setSelectedInstallazione(event)
                                                                                         setIsInstallazionePicked(true)
                                                                                     }}
-                                                                                />
+                                                                                /> */}
+                                                                                <input type="file" multiple onChange={(event) => {
+                                                                                    setSelectedInstallazione(event.target.files)
+                                                                                    setIsInstallazionePicked(true)
+                                                                                }} />
                                                                             </div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                                 <Button disabled={!isInstallazionePicked} onClick={(event) => {
@@ -1416,7 +1530,6 @@ function Customers(props) {
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                             <Button onClick={(event) => {
-                                                                                getImages("fine_installazione")
                                                                                 setOpenInstallazione(event)
                                                                                 setPageInstallazione(1)
                                                                             }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
@@ -1428,13 +1541,17 @@ function Customers(props) {
                                                                         </Typography>
                                                                         <div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                                <FileBase64
+                                                                                {/* <FileBase64
                                                                                     multiple={true}
                                                                                     onDone={(event) => {
                                                                                         setSelectedAssistenza(event)
                                                                                         setIsAssistenzaPicked(true)
                                                                                     }}
-                                                                                />
+                                                                                /> */}
+                                                                                <input type="file" multiple onChange={(event) => {
+                                                                                    setSelectedAssistenza(event.target.files)
+                                                                                    setIsAssistenzaPicked(true)
+                                                                                }} />
                                                                             </div>
                                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                                 <Button disabled={!isAssistenzaPicked} onClick={(event) => {
@@ -1445,7 +1562,6 @@ function Customers(props) {
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                             <Button onClick={(event) => {
-                                                                                getImages("assistenza")
                                                                                 setOpenAssistenza(event)
                                                                                 setPageAssistenza(1)
                                                                             }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
@@ -1467,36 +1583,32 @@ function Customers(props) {
                                         customerSelected === null ? "" : <div>
                                             <Modal
                                                 open={openSopralluogo}
-                                                onClose={() => {
-                                                    setOpenSopralluogo(false)
-                                                    setImagesToShow([])
-                                                }}
+                                                onClose={() => { setOpenSopralluogo(false) }}
                                                 aria-labelledby="modal-modal-label"
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', overflowX: 'auto' }}>
                                                     {
-                                                        imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                                             <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
                                                             {
-                                                                imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                     <div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                                            {/* {imagesToShow[pageSopralluogo - 1]} */}
-                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={imagesToShow[pageSopralluogo - 1]} alt="Logo" />
+                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                                             <IconButton onClick={() => {
-                                                                                deleteImage(imagesToShow[pageSopralluogo - 1], "sopralluogo")
+                                                                                deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
                                                                                 setIsLoading(true)
                                                                             }}>
                                                                                 <DeleteIcon />
                                                                             </IconButton>
-                                                                            <IconButton onClick={() => { downloadImage(imagesToShow[pageSopralluogo - 1], customerSelected.nome_cognome.replace(" ", "_") + "_sopralluogo_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                                            <IconButton onClick={() => { downloadImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], customerSelected.nome_cognome.replace(" ", "_") + "_sopralluogo_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                                                 <GetAppIcon />
                                                                             </IconButton>
                                                                         </div>
-                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={imagesToShow.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
+                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
                                                                     </div>
                                                             }
                                                         </div>
@@ -1505,35 +1617,32 @@ function Customers(props) {
                                             </Modal>
                                             <Modal
                                                 open={openInstallazione}
-                                                onClose={() => {
-                                                    setOpenInstallazione(false)
-                                                    setImagesToShow([])
-                                                }}
+                                                onClose={() => { setOpenInstallazione(false) }}
                                                 aria-labelledby="modal-modal-label"
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
                                                     {
-                                                        imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                                             <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
                                                             {
-                                                                imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                     <div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={imagesToShow[pageInstallazione - 1]} alt="Logo" />
+                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                                             <IconButton onClick={() => {
-                                                                                deleteImage(imagesToShow[pageInstallazione - 1], "fine_installazione")
+                                                                                deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
                                                                                 setIsLoading(true)
                                                                             }}>
                                                                                 <DeleteIcon />
                                                                             </IconButton>
-                                                                            <IconButton onClick={() => { downloadImage(imagesToShow[pageInstallazione - 1], customerSelected.nome_cognome.replace(" ", "_") + "_fine_installazione_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                                            <IconButton onClick={() => { downloadImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], customerSelected.nome_cognome.replace(" ", "_") + "_fine_installazione_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                                                 <GetAppIcon />
                                                                             </IconButton>
                                                                         </div>
-                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={imagesToShow.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
+                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
                                                                     </div>
                                                             }
                                                         </div>
@@ -1543,35 +1652,32 @@ function Customers(props) {
                                             </Modal>
                                             <Modal
                                                 open={openAssistenza}
-                                                onClose={() => {
-                                                    setOpenAssistenza(false)
-                                                    setImagesToShow([])
-                                                }}
+                                                onClose={() => { setOpenAssistenza(false) }}
                                                 aria-labelledby="modal-modal-label"
                                                 aria-describedby="modal-modal-description"
                                             >
                                                 <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
                                                     {
-                                                        imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                        customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
                                                             <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
                                                             {
-                                                                imagesToShow.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                     <div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={imagesToShow[pageAssistenza - 1]} alt="Logo" />
+                                                                            <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                                             <IconButton onClick={() => {
-                                                                                deleteImage(imagesToShow[pageAssistenza - 1], "assistenza")
+                                                                                deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
                                                                                 setIsLoading(true)
                                                                             }}>
                                                                                 <DeleteIcon />
                                                                             </IconButton>
-                                                                            <IconButton onClick={() => { downloadImage(imagesToShow[pageAssistenza - 1], customerSelected.nome_cognome.replace(" ", "_") + "_assistenza_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
+                                                                            <IconButton onClick={() => { downloadImage(customerSelected.foto_assistenza[pageAssistenza - 1], customerSelected.nome_cognome.replace(" ", "_") + "_assistenza_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                                                 <GetAppIcon />
                                                                             </IconButton>
                                                                         </div>
-                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={imagesToShow.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
+                                                                        <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
                                                                     </div>
                                                             }
                                                         </div>

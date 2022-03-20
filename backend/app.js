@@ -667,69 +667,6 @@ app.get('/api/colorsStatus', (req, res) => {
 })
 
 
-// IMAGES
-// POST
-app.post('/api/images', (req, res) => {
-    const images = new Images({
-        customer: req.body.customer,
-        type: req.body.type,
-        images: req.body.images
-    })
-    // console.log("images: ", images)
-    images.save().then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        console.log("error:", error)
-    })
-})
-
-// GET
-app.get('/api/images', (req, res) => {
-    // it gets all the element in that document
-    if (req.query.type !== undefined) {
-        Images.find({ type: req.query.type, customer: req.query.customer }).then((result) => {
-            res.send(result);
-        }).catch((error) => { console.log("error: ", error) })
-    }
-})
-
-// PUT
-app.put('/api/images/:id', (req, res, next) => {
-    const id = req.params.id;
-    const body = req.body;
-    Images.findByIdAndUpdate(
-        { _id: id },
-        body
-    ).then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        console.log("error: ", error)
-    })
-})
-
-// GET SINGLE
-app.get('/api/images/:id', (req, res) => {
-    const id = req.params.id;
-    // console.log(id)
-    // it gets all the element in that document
-    Images.findById(id).then((result) => {
-        res.send(result);
-    }).catch((error) => { console.log("error: ", error) })
-})
-
-// DELETE
-app.delete('/api/images/:id', (req, res) => {
-    const id = req.params.id;
-    Images.deleteOne(
-        { _id: id }
-    ).then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        console.log("error: ", error)
-    })
-})
-
-
 
 // COMMENT WHEN RUNNING LOCALLY
 // app.get('*', (req, res) => {
