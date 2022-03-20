@@ -45,8 +45,9 @@ import { storage } from "../firebase";
 // import { firebase } from "firebase/compat/app";
 import './Classes.css'
 import axios from "axios";
-import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject, uploadString } from "firebase/storage";
 import { makeStyles } from '@mui/styles';
+import { allCustomers } from "../allCustomers"
 
 function Customers(props) {
 
@@ -146,6 +147,74 @@ function Customers(props) {
         userIsAuthenticated()
         getCustomers()
         getStatusColors()
+        // console.log(allCustomers)
+        // for (let cust of allCustomers) {
+        //     console.log(.nome_cognome)
+        // var customer = {}
+        // var phsss = []
+        // customer.foto_fine_installazione = []
+        // console.log(allCustomers[7].foto_fine_installazione)
+        // for (let sop of allCustomers[7].foto_fine_installazione) {
+        //     const now = Date.now()
+        //     const storageRef = ref(storage, '/files/' + allCustomers[7].nome_cognome + '/fine_installazione/' + now + "_")
+        //     uploadString(storageRef, sop, 'data_url').then((snapshot) => {
+        //         getDownloadURL(snapshot.ref).then((fileUrl) => {
+        //             console.log("fileUrl: ", fileUrl)
+        //             phsss.push(fileUrl)
+        //             // console.log("phssss: ", phsss)
+        //             customer.foto_fine_installazione.push(fileUrl)
+        //             if (customer.foto_fine_installazione.length === allCustomers[7].foto_fine_installazione.length) {
+        //                 // console.log("customer: ", customer)
+        //                 axiosInstance.put("customer/" + allCustomers[7]._id, customer).then((resp) => {
+        //                     // axiosInstance.put("customer/" + allCustomers[0]._id, customer).then((respp) => {
+        //                     console.log("done!")
+        //                     console.log(resp)
+        //                     // }).catch((error) => {
+        //                     //     // console.log("error: ", error)
+        //                     //     setIsLoading(false)
+        //                     //     setShowError(true)
+        //                     // });
+        //                     setIsLoading(false)
+        //                 }).catch((error) => {
+        //                     // console.log("error: ", error)
+        //                     setIsLoading(false)
+        //                     setShowError(true)
+        //                 });
+        //             }
+        //             // console.log("customer: ", customer)
+        //             // axiosInstance.put("customer/" + allCustomers[0]._id, customer).then((resp) => {
+        //             //     console.log("done!")
+        //             //     console.log(allCustomers[0].nome_cognome)
+        //             // }).catch((error) => {
+        //             //     // console.log("error: ", error)
+        //             //     setIsLoading(false)
+        //             //     setShowError(true)
+        //             // });
+        //         })
+        //     })
+        // }
+        // }
+        // let s = allCustomers[0].foto_sopralluogo[0]
+        // const now = Date.now()
+        // const storageRef = ref(storage, '/files/prova/ciao.jpg')
+        // uploadString(storageRef, s, 'data_url').then((snapshot) => {
+        //     console.log("done!")
+        //     getDownloadURL(snapshot.ref).then((fileUrl) => {
+        //         console.log("fileUrl: ", fileUrl)
+        //     })
+        // })
+        // const uploadTask = uploadString(storageRef, s, 'data_url')
+        // uploadTask.on("state_changed", (snapshot) => {
+        //     const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+        //     setProgress(progr)
+        // }, (error) => console.log("error: ", error),
+        //     () => {
+        //         //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+        //         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+        //             console.log("fileUrl: ", fileUrl)
+        //         })
+        //     }
+        // )
     }, [])
 
     React.useEffect(() => {
