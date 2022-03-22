@@ -1,5 +1,5 @@
 // import axios from "axios";
-import { axiosInstance } from "../config.js"
+import { axiosInstance, refFirestore } from "../config.js"
 import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 import * as React from "react";
 import { db } from '../firebase-config'
@@ -128,6 +128,8 @@ function Customers(props) {
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
         { field: 'status', headerName: 'stato', flex: 1 }
     ]
+
+    var JSZip = require("jszip");
 
     const imageTypes = ["image/png", "image/jpeg"]
 
@@ -828,8 +830,75 @@ function Customers(props) {
         }
     };
 
-    const downloadImage = (image, filename) => {
-        saveAs(image, filename + ".png")
+    const downloadImage = async (image, filename) => {
+        let blob = await fetch(image).then((r) => r.blob());
+        saveAs(blob, filename + ".jpg")
+    }
+
+    const convertToBase64 = (u) => {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    // return reader.result
+                    resolve(reader.result)
+                }
+                reader.readAsDataURL(xhr.response);
+            };
+            xhr.open('GET', u);
+            xhr.responseType = 'blob';
+            xhr.send();
+        })
+
+    }
+
+    const downloadFolder = async (urlss, typology) => {
+        var is = []
+        setIsLoading(true)
+        for (let u of urlss) {
+            // console.log(urlss)
+            let pp = await convertToBase64(u)
+            is.push(pp)
+        }
+        // console.log("finito", is)
+        // const timer = setTimeout(() => {
+        //     console.log("finito", is)
+        print64(is, typology)
+        //     clearTimeout(timer)
+        // }, 5000);
+
+
+
+        // zip.generateAsync({ type: "blob" }).then(content => {
+        //     saveAs(content, customer.replaceAll(" ", "_") + "_" + typology + ".zip");
+        // });
+
+
+        // const folder = refFirestore + customer.replaceAll(" ", "%20") + "%2F" + typology
+        // let blob = await fetch(folder).then((r) => r.blob());
+        // saveAs(blob, customer.replaceAll(" ", "_") + "_" + typology + ".zip")
+        // https://firebasestorage.googleapis.com/v0/b/magazzino-2a013.appspot.com/o/files%2Ftizio%20caio%2Fsopralluogo%2F1647786582758_arance.jpg?alt=media&token=f74260c5-b676-48c1-bfb4-148db33a1e73
+    }
+
+    const print64 = (images, typology) => {
+        if (images.length === customerSelected["foto_" + typology].length) {
+            let zip = new JSZip();
+            // console.log('fatto!', images)
+            for (let i = 0; i < images.length; i++) {
+                // let files = customerSelected.foto_sopralluogo;
+                // for (let file = 0; file < customerSelected.foto_sopralluogo.length; file++) {
+                // Zip file with the file name.
+                zip.file((i + 1).toString() + ".jpg", images[i].split(",")[1], { base64: true });
+                // }
+            }
+            zip.generateAsync({ type: "blob" })
+                .then(function (content) {
+                    // see FileSaver.js
+                    saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
+                    setIsLoading(false)
+                });
+        }
     }
 
     const handleChangeAccordion = () => {
@@ -1553,18 +1622,23 @@ function Customers(props) {
                                                 </div>
                                                 <div style={{ justifyContent: 'left', textAlign: 'left', marginTop: '5rem' }}>
                                                     <div style={{ marginRight: '3rem', marginBottom: '4rem', overflowX: 'auto' }}>
-                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                            FOTO SOPRALLUOGO
-                                                        </Typography>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                                FOTO SOPRALLUOGO
+                                                            </Typography>
+                                                            <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
+                                                                <GetAppIcon />
+                                                            </IconButton>
+                                                        </div>
                                                         <div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 {/* <FileBase64
-                                                                                    multiple={true}
-                                                                                    onDone={(event) => {
-                                                                                        setSelectedSopralluogo(event)
-                                                                                        setIsSopralluogoPicked(true)
-                                                                                    }}
-                                                                                /> */}
+                                                                        multiple={true}
+                                                                        onDone={(event) => {
+                                                                            setSelectedSopralluogo(event)
+                                                                            setIsSopralluogoPicked(true)
+                                                                        }}
+                                                                    /> */}
                                                                 <input type="file" multiple onChange={(event) => {
                                                                     setSelectedSopralluogo(event.target.files)
                                                                     setIsSopralluogoPicked(true)
@@ -1582,13 +1656,18 @@ function Customers(props) {
                                                                 setOpenSopralluogo(event)
                                                                 setPageSopralluogo(1)
                                                             }}
-                                                                variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                                variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
                                                         </div>
                                                     </div>
                                                     <div style={{ marginRight: '3rem', marginBottom: '4rem', overflowX: 'auto' }}>
-                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                            FOTO FINE INSTALLAZIONE
-                                                        </Typography>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                                FOTO FINE INSTALLAZIONE
+                                                            </Typography>
+                                                            <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
+                                                                <GetAppIcon />
+                                                            </IconButton>
+                                                        </div>
                                                         <div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 {/* <FileBase64
@@ -1614,22 +1693,27 @@ function Customers(props) {
                                                             <Button onClick={(event) => {
                                                                 setOpenInstallazione(event)
                                                                 setPageInstallazione(1)
-                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
                                                         </div>
                                                     </div>
                                                     <div style={{ marginRight: '3rem', marginBottom: '4rem', overflowX: 'auto' }}>
-                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                            FOTO ASSISTENZA
-                                                        </Typography>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                                FOTO ASSISTENZA
+                                                            </Typography>
+                                                            <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
+                                                                <GetAppIcon />
+                                                            </IconButton>
+                                                        </div>
                                                         <div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 {/* <FileBase64
-                                                                                    multiple={true}
-                                                                                    onDone={(event) => {
-                                                                                        setSelectedAssistenza(event)
-                                                                                        setIsAssistenzaPicked(true)
-                                                                                    }}
-                                                                                /> */}
+                                                                        multiple={true}
+                                                                        onDone={(event) => {
+                                                                            setSelectedAssistenza(event)
+                                                                            setIsAssistenzaPicked(true)
+                                                                        }}
+                                                                    /> */}
                                                                 <input type="file" multiple onChange={(event) => {
                                                                     setSelectedAssistenza(event.target.files)
                                                                     setIsAssistenzaPicked(true)
@@ -1646,7 +1730,7 @@ function Customers(props) {
                                                             <Button onClick={(event) => {
                                                                 setOpenAssistenza(event)
                                                                 setPageAssistenza(1)
-                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri foto</Button>
+                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
                                                         </div>
                                                     </div>
                                                 </div>

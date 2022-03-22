@@ -1,3 +1,8 @@
+cors firestore: C:\Users\edoar\AppData\Local\Google\Cloud SDK:
+gsutil cors get gs://magazzino-2a013.appspot.com
+gsutil cors set cors.json gs://magazzino-2a013.appspot.com
+cors.json è definito nel path sopra
+
 to build:
 backend: uncomment the lines containing "__dirname" and cors, change "const feUrl"
 frontend: axiosInstance is ok. change baseURL
