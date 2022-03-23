@@ -30,10 +30,8 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - cerca prodotto per codice: univoco (wait)
-- reparti e sotto-reparti grassetto, prodotto no, quantità/quantità min distingui caratteri
 - dare i permessi ad installatori per vedere clienti specifici
 - email catalogo: drop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
-- aprire tutto schermo le foto
 
 
 gestione cliente
@@ -41,16 +39,10 @@ carica documento pdf, excel, ecc
 calendario appuntamenti - che si collega alla scheda del cliente
 
 
-qr code ex: https://my-warehouse-app-heroku.herokuapp.com/api/tool/6214fa647668206a71c645c5
 
 
 
 
-
-var link = document.createElement("a")
-            link.href = window.URL.createObjectURL(blob)
-            link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
-            link.click()
 
 
 

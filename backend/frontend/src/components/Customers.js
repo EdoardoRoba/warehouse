@@ -898,11 +898,13 @@ function Customers(props) {
             zip.generateAsync({ type: "blob" })
                 .then(function (content) {
                     // see FileSaver.js
-                    // saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
-                    var link = document.createElement("a")
-                    link.href = window.URL.createObjectURL(content)
-                    link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
-                    link.click()
+                    saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
+
+                    // var link = document.createElement("a")
+                    // link.href = window.URL.createObjectURL(content)
+                    // link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
+                    // link.click()
+
                     setIsLoading(false)
                 });
         }
