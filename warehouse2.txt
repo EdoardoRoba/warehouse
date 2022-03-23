@@ -47,7 +47,10 @@ qr code ex: https://my-warehouse-app-heroku.herokuapp.com/api/tool/6214fa6476682
 
 
 
-
+var link = document.createElement("a")
+            link.href = window.URL.createObjectURL(blob)
+            link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
+            link.click()
 
 
 

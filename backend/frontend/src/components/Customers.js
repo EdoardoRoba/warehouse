@@ -858,13 +858,16 @@ function Customers(props) {
         setIsLoading(true)
         for (let u of urlss) {
             // console.log(urlss)
-            let pp = await convertToBase64(u)
-            is.push(pp)
+            // let pp = await convertToBase64(u)
+            is.push(convertToBase64(u))
         }
+        is = await Promise.allSettled(is)
+        let isOk = is.filter((e) => e.status === "fulfilled").map((e) => e.value)
+        let isNotOk = is.filter((e) => e.status !== "fulfilled").map((e) => e.value)
         // console.log("finito", is)
         // const timer = setTimeout(() => {
         //     console.log("finito", is)
-        print64(is, typology)
+        print64(isOk, typology)
         //     clearTimeout(timer)
         // }, 5000);
 
@@ -895,7 +898,11 @@ function Customers(props) {
             zip.generateAsync({ type: "blob" })
                 .then(function (content) {
                     // see FileSaver.js
-                    saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
+                    // saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
+                    var link = document.createElement("a")
+                    link.href = window.URL.createObjectURL(content)
+                    link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
+                    link.click()
                     setIsLoading(false)
                 });
         }
