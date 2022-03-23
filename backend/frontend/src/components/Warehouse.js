@@ -695,7 +695,17 @@ function Warehouse(props) {
 
     const exportToCSV = () => { // csvData, fileName
         // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
-        var csvData = tools
+        var csvData = []
+        for (let t of tools) {
+            var toolForCsv = {}
+            toolForCsv.reparto = t.department
+            toolForCsv.sottoreparto = t.subDepartment
+            toolForCsv.attrezzo = t.label
+            toolForCsv.codice = t.code
+            toolForCsv.quantita = t.quantity
+            toolForCsv.quantita_minima = t.lowerBound
+            csvData.push(toolForCsv)
+        }
         let fileName = "prodotti_in_magazzino"
         const ws = XLSX.utils.json_to_sheet(csvData);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
@@ -706,7 +716,19 @@ function Warehouse(props) {
 
     const exportToCSVAlert = () => { // csvData, fileName
         // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
-        var csvData = tools.filter((t) => t.quantity < t.lowerBound)
+        var csvData = []
+        for (let t of tools) {
+            if (t.quantity < t.lowerBound) {
+                var toolForCsv = {}
+                toolForCsv.reparto = t.department
+                toolForCsv.sottoreparto = t.subDepartment
+                toolForCsv.attrezzo = t.label
+                toolForCsv.codice = t.code
+                toolForCsv.quantita = t.quantity
+                toolForCsv.quantita_minima = t.lowerBound
+                csvData.push(toolForCsv)
+            }
+        }
         let fileName = "prodotti_sotto_soglia_minima"
         const ws = XLSX.utils.json_to_sheet(csvData);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
