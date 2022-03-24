@@ -47,7 +47,7 @@ function Login(props) {
 
     React.useEffect(() => {
         setLoading(false)
-        userIsAuthenticated()
+        userIsAuthenticated(false)
     }, []);
 
     React.useEffect(() => {
@@ -92,7 +92,7 @@ function Login(props) {
             });
     }
 
-    const userIsAuthenticated = () => {
+    const userIsAuthenticated = (flagReload) => {
         // axiosInstance.get("authenticated", {
         //     headers: {
         //         "x-access-token": localStorage.getItem("token"),
@@ -116,6 +116,9 @@ function Login(props) {
                 }).then(response => {
                     // console.log(response.data)
                     setUserIsAuthenticatedFlag(true)
+                    if (flagReload) {
+                        window.location.reload(true)
+                    }
                 }).catch(error => {
                     console.log(error)
                     setUserIsAuthenticatedFlag(false)
@@ -191,7 +194,7 @@ function Login(props) {
                 }
             </div>
             {
-                !loggedIn ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button onClick={userIsAuthenticated} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Continua</Link></Button></div>
+                !loggedIn ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button onClick={() => { userIsAuthenticated(true) }} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Continua</Link></Button></div>
             }
         </div>
     );
