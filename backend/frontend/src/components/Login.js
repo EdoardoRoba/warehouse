@@ -36,6 +36,7 @@ import './Classes.css'
 
 function Login(props) {
 
+    const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(false)
     const [showPassword, setShowPassword] = React.useState(false)
     const [password, setPassword] = React.useState("")
     const [username, setUsername] = React.useState("")
@@ -46,6 +47,7 @@ function Login(props) {
 
     React.useEffect(() => {
         setLoading(false)
+        userIsAuthenticated()
     }, []);
 
     React.useEffect(() => {
@@ -91,69 +93,95 @@ function Login(props) {
     }
 
     const userIsAuthenticated = () => {
-        axiosInstance.get("authenticated", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-                "profile": localStorage.getItem("profile"),
-                "auths": localStorage.getItem("auths")
+        // axiosInstance.get("authenticated", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //         "profile": localStorage.getItem("profile"),
+        //         "auths": localStorage.getItem("auths")
+        //     }
+        // }).then(response => {
+        //     console.log(response.data)
+        // }).catch(error => {
+        //     setShowError(true)
+        //     console.log(error)
+        // });
+        if (localStorage.getItem("auths") !== null) {
+            if (localStorage.getItem("auths").includes("warehouse")) {
+                axiosInstance.get("authenticated", {
+                    headers: {
+                        "x-access-token": localStorage.getItem("token"),
+                        "profile": localStorage.getItem("profile"),
+                        "auths": localStorage.getItem("auths")
+                    }
+                }).then(response => {
+                    // console.log(response.data)
+                    setUserIsAuthenticatedFlag(true)
+                }).catch(error => {
+                    console.log(error)
+                    setUserIsAuthenticatedFlag(false)
+                });
+            } else {
+                setUserIsAuthenticatedFlag(false)
             }
-        }).then(response => {
-            console.log(response.data)
-        }).catch(error => {
-            setShowError(true)
-            console.log(error)
-        });
-        window.location.reload(true);
+        } else {
+            setUserIsAuthenticatedFlag(false)
+        }
     }
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '10rem' }}>
-                <Card style={{ width: '40%' }} sx={{ minWidth: 275 }}>
-                    <CardContent>
-                        <Typography style={{ marginBottom: '3rem' }} variant="h3" component="div">
-                            Login
-                        </Typography>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                            <TextField
-                                required
-                                id="outlined-required"
-                                label="username"
-                                onChange={(event) => { setUsername(event.target.value) }}
-                            />
-                            {/* <TextField
+            {
+                !userIsAuthenticatedFlag ? <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '10rem' }}>
+                    <Card style={{ width: '40%' }} sx={{ minWidth: 275 }}>
+                        <CardContent>
+                            <Typography style={{ marginBottom: '3rem' }} variant="h3" component="div">
+                                Login
+                            </Typography>
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <TextField
+                                    required
+                                    id="outlined-required"
+                                    label="username"
+                                    onChange={(event) => { setUsername(event.target.value) }}
+                                />
+                                {/* <TextField
                             id="outlined-password-input"
                             label="Password"
                             type="password"
                             autoComplete="current-password"
                         /> */}
-                            <FormControl sx={{ width: '25ch' }} variant="outlined">
-                                <InputLabel htmlFor="outlined-adornment-password">password</InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(event) => { setPassword(event.target.value) }}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {!showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    label="Password"
-                                />
-                            </FormControl>
-                        </div>
-                        <Button onClick={login} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}>Conferma</Button>
-                    </CardContent>
-                </Card>
-            </div >
+                                <FormControl sx={{ width: '25ch' }} variant="outlined">
+                                    <InputLabel htmlFor="outlined-adornment-password">password</InputLabel>
+                                    <OutlinedInput
+                                        id="outlined-adornment-password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        onChange={(event) => { setPassword(event.target.value) }}
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={handleClickShowPassword}
+                                                    onMouseDown={handleMouseDownPassword}
+                                                    edge="end"
+                                                >
+                                                    {!showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                        label="Password"
+                                    />
+                                </FormControl>
+                            </div>
+                            <Button onClick={login} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}>Conferma</Button>
+                        </CardContent>
+                    </Card>
+                </div > : <div>
+                    <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="success"><h1>UTENTE GIA' AUTORIZZATO!</h1></Alert>
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Vai al magazzino</Link></Button></div>
+                </div>
+            }
+
             <div>
                 {
                     (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Errore. Utente o password non corretti.</Alert>

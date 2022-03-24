@@ -31,7 +31,6 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 warehouse:
 - cerca prodotto per codice: univoco (wait)
 - dare i permessi ad installatori per vedere clienti specifici
-- email catalogo: drop _id, __v, createdAt, updatedAt; in ordine le colonne: reparto, sottoreparto, nome attrezzo, codice, quantità, minimo
 
 
 gestione cliente
