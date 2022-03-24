@@ -47,6 +47,10 @@ const customerSchema = new Schema({
         type: Array,
         required: false
     },
+    pdf_sopralluogo: {
+        type: Array,
+        required: false
+    },
     data_installazione: {
         type: String,
         required: false
@@ -56,6 +60,10 @@ const customerSchema = new Schema({
         required: false
     },
     installatore: {
+        type: String,
+        required: false
+    },
+    tecnico: {
         type: String,
         required: false
     },
@@ -83,8 +91,12 @@ const customerSchema = new Schema({
         type: Array,
         required: false
     },
+    isAssisted: {
+        type: Boolean,
+        required: false
+    },
     assistenza: {
-        type: String,
+        type: Array,
         required: false
     },
     foto_assistenza: {

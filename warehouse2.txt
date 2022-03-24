@@ -31,6 +31,9 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 warehouse:
 - cerca prodotto per codice: univoco (wait)
 - dare i permessi ad installatori per vedere clienti specifici
+- aggiungi a frontend "tecnico"
+- rivoluziona scheda cliente
+- reload quando elimini: togli
 
 
 gestione cliente
