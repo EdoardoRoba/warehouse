@@ -170,6 +170,9 @@ function CustomerCard(customerPassed) {
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
+        maxHeight: '80%',
+        overflowY: 'auto',
+        overflowX: 'auto'
     };
 
     React.useEffect(() => {
@@ -1000,38 +1003,38 @@ function CustomerCard(customerPassed) {
     }
 
     return (
-        <div>
+        <div style={{ marginTop: '4rem', width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
             {
                 customerSelected === null ? "" :
-                    <div style={{ marginTop: '4rem', overflowX: 'auto', width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                    <div sx={{ marginTop: '4rem', overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                             <Typography variant="h4" component="div">
                                 {customerSelected.nome_cognome.toUpperCase()}
                             </Typography>
                             {
-                                auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
                                     onClick={() => {
                                         setFieldToEdit("nome_cognome")
                                         setOpenEditStatus(true)
                                     }}>
-                                    <EditIcon style={{ fontSize: "15px" }} />
+                                    <EditIcon sx={{ fontSize: "15px" }} />
                                 </IconButton></Tooltip>
                             }
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                             <div>
-                                <Tooltip style={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
+                                <Tooltip sx={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
                                     <IconButton>
-                                        <AiFillInfoCircle style={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
+                                        <AiFillInfoCircle sx={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
                                     </IconButton>
                                 </Tooltip>
                                 {
-                                    auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                    auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
                                         onClick={() => {
                                             setFieldToEdit("status")
                                             setOpenEditStatus(true)
                                         }}>
-                                        <EditIcon style={{ fontSize: "15px" }} />
+                                        <EditIcon sx={{ fontSize: "15px" }} />
                                     </IconButton></Tooltip>
                                 }
                             </div>
@@ -1040,126 +1043,86 @@ function CustomerCard(customerPassed) {
                             isLoading ? <Backdrop className={classes.backdrop} open>
                                 <CircularProgress color="inherit" />
                             </Backdrop> : <div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     <div>
-                                        <Tooltip style={{ marginRight: '1rem' }} title={"note"}>
+                                        <Tooltip sx={{ marginRight: '1rem' }} title={"note"}>
                                             <IconButton onClick={() => {
                                                 setOpenNote(true)
                                             }}>
-                                                <NotesIcon style={{ fontSize: 'xx-large' }} />
+                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
                                             </IconButton>
                                         </Tooltip>
                                         {
-                                            auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
                                                 onClick={() => {
                                                     setFieldToEdit("note")
                                                     setOpenEditField(true)
                                                 }}>
-                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                <EditIcon sx={{ fontSize: "15px" }} />
                                             </IconButton></Tooltip>
                                         }
                                     </div>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto', width: '100%' }}>
-                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto', width: '100%' }}>
+                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
-                                            <Typography style={{ fontSize: 24 }} sx={{ fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                 Informazioni cliente
                                             </Typography>
                                             <Typography variant="body2">
-                                                <ApartmentIcon style={{ marginBottom: '2rem' }} />
+                                                <ApartmentIcon sx={{ marginBottom: '2rem' }} />
                                             </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                 company
                                             </Typography>
-                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                 {customerSelected.company.toUpperCase()}
                                             </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                 indirizzo
                                             </Typography>
-                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                 {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia}
                                             </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                 telefono
                                             </Typography>
-                                            <Typography style={{ fontSize: 18 }} variant="body2">
+                                            <Typography sx={{ fontSize: 18 }} variant="body2">
                                                 {customerSelected.telefono}
                                             </Typography>
-                                        </CardContent>
-                                    </Card>
-                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                        <CardContent>
-                                            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                Contratto
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                <DescriptionIcon style={{ marginBottom: '1rem' }} />
-                                            </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                 bonus
                                             </Typography>
-                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                {customerSelected.bonus}
+                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                {customerSelected.bonus} {bull} {customerSelected.termico_elettrico}
                                                 {
                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                         onClick={() => {
                                                             setFieldToEdit("bonus")
                                                             setOpenEditField(true)
                                                         }}>
-                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                    </IconButton>
-                                                }
-                                            </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                termico/elettrico
-                                            </Typography>
-                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                {customerSelected.termico_elettrico}
-                                                {
-                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                        onClick={() => {
-                                                            setFieldToEdit("termico_elettrico")
-                                                            setOpenEditField(true)
-                                                        }}>
-                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                    </IconButton>
-                                                }
-                                            </Typography>
-                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                computo
-                                            </Typography>
-                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                {customerSelected.computo}
-                                                {
-                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                        onClick={() => {
-                                                            setFieldToEdit("computo")
-                                                            setOpenEditField(true)
-                                                        }}>
-                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                        <EditIcon sx={{ fontSize: "15px" }} />
                                                     </IconButton>
                                                 }
                                             </Typography>
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                 Sopralluogo
                                             </Typography>
                                             <Typography variant="body2">
-                                                <SettingsIcon style={{ marginBottom: '2rem' }} />
+                                                <SettingsIcon sx={{ marginBottom: '2rem' }} />
                                             </Typography>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data sopralluogo
                                                     </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.data_sopralluogo}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
@@ -1167,16 +1130,16 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("data_sopralluogo")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
                                                 </div>
-                                                <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         tecnico
                                                     </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.tecnico}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
@@ -1184,13 +1147,13 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("tecnico")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
                                                 </div>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         pdf
                                                     </Typography>
                                                     {
@@ -1200,13 +1163,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.pdf_sopralluogo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "pdf_sopralluogo")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1219,15 +1182,15 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("pdf_sopralluogo")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                <div style={{ marginTop: '3rem', overflowX: 'auto' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)" }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                                <div sx={{ marginTop: '3rem', overflowX: 'auto' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
@@ -1239,12 +1202,12 @@ function CustomerCard(customerPassed) {
                                                                     setAskDeleteAll(true)
                                                                     setTypeToDeleteAll("sopralluogo")
                                                                 }}>
-                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                         }
                                                     </div>
                                                     <div>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                             {/* <FileBase64
                                                                             multiple={true}
                                                                             onDone={(event) => {
@@ -1257,40 +1220,40 @@ function CustomerCard(customerPassed) {
                                                                 setIsSopralluogoPicked(true)
                                                             }} />
                                                         </div>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                             <Button disabled={!isSopralluogoPicked} onClick={(event) => {
                                                                 handleSubmissionSopralluogo(event)
                                                                 setIsLoading(true)
-                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                            }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                         </div>
                                                     </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                         <Button onClick={(event) => {
                                                             setOpenSopralluogo(event)
                                                             setPageSopralluogo(1)
                                                         }}
-                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
+                                                            variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                 Installazione
                                             </Typography>
                                             <Typography variant="body2">
-                                                <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
+                                                <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
                                             </Typography>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
                                                 <div>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data fine installazione
                                                     </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.data_installazione}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
@@ -1298,16 +1261,16 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("data_installazione")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
                                                 </div>
-                                                <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         installatore
                                                     </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.installatore}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
@@ -1315,16 +1278,16 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("installatore")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
                                                 </div>
                                                 <div>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         trasferta
                                                     </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.trasferta}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
@@ -1332,15 +1295,15 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("trasferta")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         collaudo
                                                     </Typography>
                                                     {
@@ -1350,13 +1313,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.collaudo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "collaudo")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1369,12 +1332,12 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("collaudo")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         di.co
                                                     </Typography>
                                                     {
@@ -1384,13 +1347,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.di_co.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "di_co")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1403,12 +1366,12 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("di_co")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         check list
                                                     </Typography>
                                                     {
@@ -1418,13 +1381,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.check_list.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "check_list")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1437,14 +1400,14 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("check_list")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         fgas
                                                     </Typography>
                                                     {
@@ -1454,13 +1417,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.fgas.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "fgas")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1473,12 +1436,12 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("fgas")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
-                                                <div style={{ marginRight: '5rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ marginRight: '5rem' }}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         prova fumi
                                                     </Typography>
                                                     {
@@ -1488,13 +1451,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.prova_fumi.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "prova_fumi")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1507,15 +1470,15 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("prova_fumi")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                <div style={{ overflowX: 'auto' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)" }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                                <div sx={{ overflowX: 'auto' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
@@ -1527,12 +1490,12 @@ function CustomerCard(customerPassed) {
                                                                     setAskDeleteAll(true)
                                                                     setTypeToDeleteAll("fine_installazione")
                                                                 }}>
-                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                         }
                                                     </div>
                                                     <div>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                             {/* <FileBase64
                                                                             multiple={true}
                                                                             onDone={(event) => {
@@ -1545,18 +1508,18 @@ function CustomerCard(customerPassed) {
                                                                 setIsInstallazionePicked(true)
                                                             }} />
                                                         </div>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                             <Button disabled={!isInstallazionePicked} onClick={(event) => {
                                                                 handleSubmissionInstallazione(event)
                                                                 setIsLoading(true)
-                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                            }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                         </div>
                                                     </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                         <Button onClick={(event) => {
                                                             setOpenInstallazione(event)
                                                             setPageInstallazione(1)
-                                                        }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
+                                                        }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1564,18 +1527,18 @@ function CustomerCard(customerPassed) {
                                     </Card>
                                 </div>
                                 {
-                                    auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                    auths["customers"] !== "*" ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                             <CardContent>
                                                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                     Pagamenti
                                                 </Typography>
                                                 <Typography variant="body2">
-                                                    <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
+                                                    <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
                                                 </Typography>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                    <div style={{ marginRight: '5rem' }}>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                                    <div sx={{ marginRight: '5rem' }}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             pagamenti (pdf)
                                                         </Typography>
                                                         {
@@ -1585,13 +1548,13 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.pagamenti_pdf.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "pagamenti_pdf")
                                                                                     setIsLoading(true)
                                                                                 }}>
-                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                                 </IconButton>
                                                                             </div>
                                                                         })
@@ -1604,15 +1567,15 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("pagamenti_pdf")
                                                                     setOpenLoadPdf(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </div>
                                                     <div>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             pagamenti (testo)
                                                         </Typography>
-                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                        <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                             {customerSelected.pagamenti_testo}
                                                             {
                                                                 auths["customers"] !== "*" ? "" : <IconButton
@@ -1620,7 +1583,7 @@ function CustomerCard(customerPassed) {
                                                                         setFieldToEdit("pagamenti_testo")
                                                                         setOpenEditField(true)
                                                                     }}>
-                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                    <EditIcon sx={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                             }
                                                         </Typography>
@@ -1631,29 +1594,29 @@ function CustomerCard(customerPassed) {
                                     </div>
                                 }
                                 {
-                                    !customerSelected.isAssisted ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                    !customerSelected.isAssisted ? <div sx={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
                                         <IconButton onClick={() => {
                                             assistCustomer(true)
                                         }}>
                                             <AddCircleIcon />
                                         </IconButton>
-                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                             aggiungi assistenza
-                                        </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                        </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                             <CardContent>
                                                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                     Assistenza
                                                 </Typography>
                                                 <Typography variant="body2">
-                                                    <SettingsIcon style={{ marginBottom: '2rem' }} />
+                                                    <SettingsIcon sx={{ marginBottom: '2rem' }} />
                                                 </Typography>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                    {/* <div style={{ marginRight: '2rem' }}>
-                                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                                    {/* <div sx={{ marginRight: '2rem' }}>
+                                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                                 assistenza
                                                                             </Typography>
-                                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                                                 {customerSelected.assistenza}
                                                                                 {
                                                                                     auths["customers"] !== "*" ? "" : <IconButton
@@ -1661,13 +1624,13 @@ function CustomerCard(customerPassed) {
                                                                                             setFieldToEdit("assistenza")
                                                                                             setOpenEditField(true)
                                                                                         }}>
-                                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                                        <EditIcon sx={{ fontSize: "15px" }} />
                                                                                     </IconButton>
                                                                                 }
                                                                             </Typography>
                                                                         </div> */}
-                                                    <div style={{ marginRight: '2rem' }}>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    <div sx={{ marginRight: '2rem' }}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             assistenza (pdf)
                                                         </Typography>
                                                         {
@@ -1677,13 +1640,13 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.assistenza.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "assistenza")
                                                                                     setIsLoading(true)
                                                                                 }}>
-                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                                 </IconButton>
                                                                             </div>
                                                                         })
@@ -1696,13 +1659,13 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("assistenza")
                                                                     setOpenLoadPdf(true)
                                                                 }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </div>
-                                                    <div style={{ overflowX: 'auto' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                            <Typography style={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)" }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                    <div sx={{ overflowX: 'auto' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
                                                                 foto
                                                             </Typography>
                                                             <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
@@ -1714,12 +1677,12 @@ function CustomerCard(customerPassed) {
                                                                         setAskDeleteAll(true)
                                                                         setTypeToDeleteAll("assistenza")
                                                                     }}>
-                                                                        <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                        <DeleteIcon sx={{ fontSize: "15px" }} />
                                                                     </IconButton>
                                                             }
                                                         </div>
                                                         <div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 {/* <FileBase64
                                                                             multiple={true}
                                                                             onDone={(event) => {
@@ -1732,18 +1695,18 @@ function CustomerCard(customerPassed) {
                                                                     setIsAssistenzaPicked(true)
                                                                 }} />
                                                             </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                                 <Button disabled={!isAssistenzaPicked} onClick={(event) => {
                                                                     handleSubmissionAssistenza(event)
                                                                     setIsLoading(true)
-                                                                }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                             </div>
                                                         </div>
-                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
                                                             <Button onClick={(event) => {
                                                                 setOpenAssistenza(event)
                                                                 setPageAssistenza(1)
-                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
+                                                            }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1778,17 +1741,17 @@ function CustomerCard(customerPassed) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', overflowX: 'auto' }}>
+                        <Box sx={style}>
                             {
-                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
+                                customerSelected.foto_sopralluogo.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
                                     {
-                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
                                                         setIsLoading(true)
@@ -1799,7 +1762,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
                                             </div>
                                     }
                                 </div>
@@ -1812,17 +1775,17 @@ function CustomerCard(customerPassed) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
+                        <Box sx={style}>
                             {
-                                customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
+                                customerSelected.foto_fine_installazione.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
                                     {
-                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
                                                         setIsLoading(true)
@@ -1833,7 +1796,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
                                             </div>
                                     }
                                 </div>
@@ -1847,17 +1810,17 @@ function CustomerCard(customerPassed) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
+                        <Box sx={style}>
                             {
-                                customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
+                                customerSelected.foto_assistenza.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
                                     {
-                                        customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_assistenza.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
                                                         setIsLoading(true)
@@ -1868,7 +1831,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
                                             </div>
                                     }
                                 </div>
@@ -1883,7 +1846,7 @@ function CustomerCard(customerPassed) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
+                        <Box sx={style}>
                             <CustomerCard customerSelected={customerSelected} />
                         </Box>
                     </Modal>
@@ -1897,14 +1860,14 @@ function CustomerCard(customerPassed) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Aggiorna il campo {fieldToEdit.toUpperCase()}:
                             </Typography>
-                            <TextField style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Nuovo valore:" variant="filled" onChange={(event) => {
+                            <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Nuovo valore:" variant="filled" onChange={(event) => {
                                 setValueToEdit(event.target.value)
                             }} />
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
+                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                <Button sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
                                     editField()
                                     setIsLoading(true)
                                 }}>Conferma</Button>
@@ -1919,13 +1882,13 @@ function CustomerCard(customerPassed) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Carica file pdf {fieldToEdit.toUpperCase()}:
                             </Typography>
                             <div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     <input type="file" name="file" onChange={changeHandlerPDF} /></div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     {isFilePDFPicked ?
                                         <div>
                                             <p>Nome file: {selectedFilePDF.name}</p>
@@ -1936,11 +1899,11 @@ function CustomerCard(customerPassed) {
                                         <p>Seleziona un file per vederne le specifiche</p>
                                     }
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     <Button disabled={!isFilePDFPicked} onClick={(event) => {
                                         handleSubmissionPDF()
                                         setIsLoading(true)
-                                    }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                 </div>
                                 <h1>Uploaded {progress} %</h1>
                             </div>
@@ -1954,15 +1917,14 @@ function CustomerCard(customerPassed) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Aggiorna il campo {fieldToEdit.toUpperCase()}:
                             </Typography>
                             <Autocomplete
                                 disablePortal
-                                style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginRight: 'auto', marginLeft: 'auto' }}
+                                sx={{ width: 300, marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginRight: 'auto', marginLeft: 'auto' }}
                                 id="combo-box-demo"
                                 options={possibleStatuses}
-                                sx={{ width: 300 }}
                                 renderInput={(params) => <TextField {...params} label="stato" />}
                                 onChange={(event, value) => {
                                     if (value !== null) {
@@ -1971,12 +1933,12 @@ function CustomerCard(customerPassed) {
                                 }}
                             />
                             {
-                                (valueToEdit === "" || valueToEdit === null || valueToEdit === undefined) ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <AiFillInfoCircle style={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
+                                (valueToEdit === "" || valueToEdit === null || valueToEdit === undefined) ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                    <AiFillInfoCircle sx={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
                                 </div>
                             }
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button style={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
+                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                <Button sx={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
                                     editStatus()
                                     setIsLoading(true)
                                 }}>Conferma</Button>
@@ -1992,14 +1954,14 @@ function CustomerCard(customerPassed) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style}>
-                            <Typography style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 <p>Inserisci <em>{typeToDeleteAll.replace("fine_", "")}</em> per confermare:</p>
                             </Typography>
-                            <TextField style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Digita qui:" variant="filled" onChange={(event) => {
+                            <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Digita qui:" variant="filled" onChange={(event) => {
                                 setCheckTypologyToDelete(event.target.value)
                             }} />
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button disabled={checkTypologyToDelete !== typeToDeleteAll.replace("fine_", "")} style={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
+                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                <Button disabled={checkTypologyToDelete !== typeToDeleteAll.replace("fine_", "")} sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
                                     deleteAllImages()
                                     setIsLoading(true)
                                 }}>Conferma</Button>
