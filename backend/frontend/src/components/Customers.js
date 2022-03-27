@@ -52,6 +52,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { SketchPicker } from 'react-color';
 import { saveAs } from 'file-saver'
 import { storage } from "../firebase";
+import * as XLSX from 'xlsx';
 // import { firebase } from "firebase/compat/app";
 import './Classes.css'
 import axios from "axios";
@@ -137,6 +138,8 @@ function Customers(props) {
     var JSZip = require("jszip");
 
     const imageTypes = ["image/png", "image/jpeg"]
+    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const fileExtension = '.xlsx';
 
     const bull = (
         <Box
@@ -915,6 +918,27 @@ function Customers(props) {
         }
     };
 
+    const downloadCustomers = () => { // csvData, fileName
+        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
+        // var csvData = []
+        // for (let c of customers) {
+        //     var customerForCsv = {}
+        //     customerForCsv.company = c.company
+        //     customerForCsv.nome_cognome = c.nome
+        //     customerForCsv.attrezzo = c.label
+        //     customerForCsv.codice = c.code
+        //     customerForCsv.quantita = c.quantity
+        //     customerForCsv.quantita_minima = c.lowerBound
+        //     csvData.push(customerForCsv)
+        // }
+        let fileName = "clienti"
+        const ws = XLSX.utils.json_to_sheet(customers);
+        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        const data = new Blob([excelBuffer], { type: fileType });
+        saveAs(data, fileName + fileExtension);
+    }
+
     const downloadImage = async (image, filename) => {
         let blob = await fetch(image).then((r) => r.blob());
         saveAs(blob, filename + ".jpg")
@@ -1181,6 +1205,14 @@ function Customers(props) {
                                         {
                                             (genericError === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">{genericError}</Alert>
                                         }
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
+                                            <Tooltip style={{ marginRight: '1rem' }} title="Scarica Excel di tutti i clienti">
+                                                <IconButton
+                                                    onClick={() => { downloadCustomers() }}>
+                                                    <GetAppIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </div>
                                         <Accordion
                                             expanded={openAccordionScheda || false}
                                             onChange={handleChangeAccordionScheda}
