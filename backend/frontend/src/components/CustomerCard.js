@@ -1838,15 +1838,15 @@ function CustomerCard(customerPassed) {
                     >
                         <Box sx={style}>
                             {
-                                customerSelected.foto_sopralluogo.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
+                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
                                     {
-                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
-                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
                                                         setIsLoading(true)
@@ -1857,7 +1857,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
+                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
                                             </div>
                                     }
                                 </div>
@@ -1872,15 +1872,15 @@ function CustomerCard(customerPassed) {
                     >
                         <Box sx={style}>
                             {
-                                customerSelected.foto_fine_installazione.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
+                                customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
                                     {
-                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
-                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
                                                         setIsLoading(true)
@@ -1891,7 +1891,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
+                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
                                             </div>
                                     }
                                 </div>
@@ -1907,15 +1907,15 @@ function CustomerCard(customerPassed) {
                     >
                         <Box sx={style}>
                             {
-                                customerSelected.foto_assistenza.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
+                                customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
                                     {
-                                        customerSelected.foto_assistenza.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                        customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
-                                                    <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
                                                         setIsLoading(true)
@@ -1926,7 +1926,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
+                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
                                             </div>
                                     }
                                 </div>
