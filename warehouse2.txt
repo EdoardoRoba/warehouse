@@ -29,11 +29,16 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- cerca prodotto per codice: univoco (wait)
-- dare i permessi ad installatori per vedere clienti specifici
-- aggiungi a frontend "tecnico"
-- rivoluziona scheda cliente
-- reload quando elimini: togli
+- dare i permessi ad installatori per vedere clienti specifici - on hold
+- responsive!!!!!!!!!!!!!!
+- rivoluziona scheda cliente: computo in "Installazione" per primo; merge box info e contratto; note su tutte le box (note assistenza, pagamenti, ecc)
+
+
+APP:
+- sotto cliente: indirizzo, comune, prov, company, num telefono
+- vedere i pdf (+ caricare) tutti, no pagamenti
+- note e computo visibili e modificabili
+- qr code: installatore (tecnico) solo togli, gli altri togli/aggiungi
 
 
 gestione cliente

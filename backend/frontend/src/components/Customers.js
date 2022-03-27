@@ -59,6 +59,7 @@ import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject, uploadString } from "firebase/storage";
 import { makeStyles } from '@mui/styles';
 import { allCustomers } from "../allCustomers"
+import CustomerCard from "./CustomerCard.js";
 
 function Customers(props) {
 
@@ -86,6 +87,7 @@ function Customers(props) {
     const [openSopralluogo, setOpenSopralluogo] = React.useState(false);
     const [openInstallazione, setOpenInstallazione] = React.useState(false);
     const [openAssistenza, setOpenAssistenza] = React.useState(false);
+    const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
     const [company, setCompany] = React.useState("");
     const [nome_cognome, setNome_cognome] = React.useState("");
     const [telefono, setTelefono] = React.useState("");
@@ -176,74 +178,6 @@ function Customers(props) {
         userIsAuthenticated()
         getCustomers()
         getStatusColors()
-        // console.log(allCustomers)
-        // for (let cust of allCustomers) {
-        //     console.log(.nome_cognome)
-        // var customer = {}
-        // var phsss = []
-        // customer.foto_fine_installazione = []
-        // console.log(allCustomers[7].foto_fine_installazione)
-        // for (let sop of allCustomers[7].foto_fine_installazione) {
-        //     const now = Date.now()
-        //     const storageRef = ref(storage, '/files/' + allCustomers[7].nome_cognome + '/fine_installazione/' + now + "_")
-        //     uploadString(storageRef, sop, 'data_url').then((snapshot) => {
-        //         getDownloadURL(snapshot.ref).then((fileUrl) => {
-        //             console.log("fileUrl: ", fileUrl)
-        //             phsss.push(fileUrl)
-        //             // console.log("phssss: ", phsss)
-        //             customer.foto_fine_installazione.push(fileUrl)
-        //             if (customer.foto_fine_installazione.length === allCustomers[7].foto_fine_installazione.length) {
-        //                 // console.log("customer: ", customer)
-        //                 axiosInstance.put("customer/" + allCustomers[7]._id, customer).then((resp) => {
-        //                     // axiosInstance.put("customer/" + allCustomers[0]._id, customer).then((respp) => {
-        //                     console.log("done!")
-        //                     console.log(resp)
-        //                     // }).catch((error) => {
-        //                     //     // console.log("error: ", error)
-        //                     //     setIsLoading(false)
-        //                     //     setShowError(true)
-        //                     // });
-        //                     setIsLoading(false)
-        //                 }).catch((error) => {
-        //                     // console.log("error: ", error)
-        //                     setIsLoading(false)
-        //                     setShowError(true)
-        //                 });
-        //             }
-        //             // console.log("customer: ", customer)
-        //             // axiosInstance.put("customer/" + allCustomers[0]._id, customer).then((resp) => {
-        //             //     console.log("done!")
-        //             //     console.log(allCustomers[0].nome_cognome)
-        //             // }).catch((error) => {
-        //             //     // console.log("error: ", error)
-        //             //     setIsLoading(false)
-        //             //     setShowError(true)
-        //             // });
-        //         })
-        //     })
-        // }
-        // }
-        // let s = allCustomers[0].foto_sopralluogo[0]
-        // const now = Date.now()
-        // const storageRef = ref(storage, '/files/prova/ciao.jpg')
-        // uploadString(storageRef, s, 'data_url').then((snapshot) => {
-        //     console.log("done!")
-        //     getDownloadURL(snapshot.ref).then((fileUrl) => {
-        //         console.log("fileUrl: ", fileUrl)
-        //     })
-        // })
-        // const uploadTask = uploadString(storageRef, s, 'data_url')
-        // uploadTask.on("state_changed", (snapshot) => {
-        //     const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        //     setProgress(progr)
-        // }, (error) => console.log("error: ", error),
-        //     () => {
-        //         //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-        //         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-        //             console.log("fileUrl: ", fileUrl)
-        //         })
-        //     }
-        // )
     }, [])
 
     React.useEffect(() => {
@@ -1235,7 +1169,10 @@ function Customers(props) {
                                                             getRowId={(row) => row._id}
                                                             pageSize={5}
                                                             rowsPerPageOptions={[5]}
-                                                            onRowClick={(event, value) => { setCustomerSelected(event.row) }}
+                                                            onRowClick={(event, value) => {
+                                                                setCustomerSelected(event.row)
+                                                                setOpenCustomerCard(true)
+                                                            }}
                                                         />
                                                     </div>
 
@@ -1245,744 +1182,745 @@ function Customers(props) {
                                                 </div>
                                             </AccordionDetails>
                                         </Accordion>
-                                        {customerSelected === null ? "" :
+                                        {// {customerSelected === null ? "" : }
                                             // <Card style={{ marginTop: '1rem', overflowX: 'auto', width: "90%", display: 'flex', justifyContent: 'center', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
-                                            <div style={{ marginTop: '4rem', overflowX: 'auto', width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                                    <Typography variant="h4" component="div">
-                                                        {customerSelected.nome_cognome.toUpperCase()}
-                                                    </Typography>
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("nome_cognome")
-                                                                setOpenEditStatus(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton></Tooltip>
-                                                    }
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                                    <div>
-                                                        <Tooltip style={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
-                                                            <IconButton>
-                                                                <AiFillInfoCircle style={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("status")
-                                                                    setOpenEditStatus(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton></Tooltip>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                                    <div>
-                                                        <Tooltip style={{ marginRight: '1rem' }} title={"note"}>
-                                                            <IconButton onClick={() => {
-                                                                setOpenNote(true)
-                                                            }}>
-                                                                <NotesIcon style={{ fontSize: 'xx-large' }} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton></Tooltip>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto', width: '100%' }}>
-                                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                        <CardContent>
-                                                            <Typography style={{ fontSize: 24 }} sx={{ fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                Informazioni cliente
-                                                            </Typography>
-                                                            <Typography variant="body2">
-                                                                <ApartmentIcon style={{ marginBottom: '2rem' }} />
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                company
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.company.toUpperCase()}
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                indirizzo
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia}
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                telefono
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18 }} variant="body2">
-                                                                {customerSelected.telefono}
-                                                            </Typography>
-                                                        </CardContent>
-                                                    </Card>
-                                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                        <CardContent>
-                                                            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                Contratto
-                                                            </Typography>
-                                                            <Typography variant="body2">
-                                                                <DescriptionIcon style={{ marginBottom: '1rem' }} />
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                bonus
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.bonus}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("bonus")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                termico/elettrico
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.termico_elettrico}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("termico_elettrico")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                computo
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.computo}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("computo")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                        <CardContent>
-                                                            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                Sopralluogo
-                                                            </Typography>
-                                                            <Typography variant="body2">
-                                                                <SettingsIcon style={{ marginBottom: '2rem' }} />
-                                                            </Typography>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                                <div>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        data sopralluogo
-                                                                    </Typography>
-                                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                        {customerSelected.data_sopralluogo}
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("data_sopralluogo")
-                                                                                    setOpenEditField(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </Typography>
-                                                                </div>
-                                                                <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        tecnico
-                                                                    </Typography>
-                                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                        {customerSelected.tecnico}
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("tecnico")
-                                                                                    setOpenEditField(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </Typography>
-                                                                </div>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        pdf
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.pdf_sopralluogo.length === 0 || customerSelected.pdf_sopralluogo === "" || customerSelected.pdf_sopralluogo === null || customerSelected.pdf_sopralluogo === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.pdf_sopralluogo.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "pdf_sopralluogo")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("pdf_sopralluogo")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                                <div style={{ marginTop: '3rem', overflowX: 'auto' }}>
-                                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)" }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                                            foto
-                                                                        </Typography>
-                                                                        <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
-                                                                            <GetAppIcon />
-                                                                        </IconButton>
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" :
-                                                                                <IconButton onClick={() => {
-                                                                                    setAskDeleteAll(true)
-                                                                                    setTypeToDeleteAll("sopralluogo")
-                                                                                }}>
-                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                </IconButton>
-                                                                        }
-                                                                    </div>
-                                                                    <div>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                            {/* <FileBase64
-                                                                        multiple={true}
-                                                                        onDone={(event) => {
-                                                                            setSelectedSopralluogo(event)
-                                                                            setIsSopralluogoPicked(true)
-                                                                        }}
-                                                                    /> */}
-                                                                            <input type="file" multiple onChange={(event) => {
-                                                                                setSelectedSopralluogo(event.target.files)
-                                                                                setIsSopralluogoPicked(true)
-                                                                            }} />
-                                                                        </div>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                            <Button disabled={!isSopralluogoPicked} onClick={(event) => {
-                                                                                handleSubmissionSopralluogo(event)
-                                                                                setIsLoading(true)
-                                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                        <Button onClick={(event) => {
-                                                                            setOpenSopralluogo(event)
-                                                                            setPageSopralluogo(1)
-                                                                        }}
-                                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                                    <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                        <CardContent>
-                                                            <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                Fine installazione
-                                                            </Typography>
-                                                            <Typography variant="body2">
-                                                                <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
-                                                            </Typography>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                                <div>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        data fine installazione
-                                                                    </Typography>
-                                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                        {customerSelected.data_installazione}
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("data_installazione")
-                                                                                    setOpenEditField(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </Typography>
-                                                                </div>
-                                                                <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        installatore
-                                                                    </Typography>
-                                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                        {customerSelected.installatore}
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("installatore")
-                                                                                    setOpenEditField(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </Typography>
-                                                                </div>
-                                                                <div>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        trasferta
-                                                                    </Typography>
-                                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                        {customerSelected.trasferta}
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("trasferta")
-                                                                                    setOpenEditField(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </Typography>
-                                                                </div>
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        collaudo
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.collaudo.length === 0 || customerSelected.collaudo === "" || customerSelected.collaudo === null || customerSelected.collaudo === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.collaudo.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "collaudo")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("collaudo")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        di.co
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.di_co.length === 0 || customerSelected.di_co === "" || customerSelected.di_co === null || customerSelected.di_co === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.di_co.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "di_co")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("di_co")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        check list
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.check_list.length === 0 || customerSelected.check_list === "" || customerSelected.check_list === null || customerSelected.check_list === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.check_list.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "check_list")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("check_list")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        fgas
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.fgas.length === 0 || customerSelected.fgas === "" || customerSelected.fgas === null || customerSelected.fgas === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.fgas.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "fgas")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("fgas")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                                <div style={{ marginRight: '5rem' }}>
-                                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                        prova fumi
-                                                                    </Typography>
-                                                                    {
-                                                                        customerSelected.prova_fumi.length === 0 || customerSelected.prova_fumi === "" || customerSelected.prova_fumi === null || customerSelected.prova_fumi === undefined ? "" :
-                                                                            <Typography variant="h7" component="div">
-                                                                                {
-                                                                                    customerSelected.prova_fumi.map(pf => {
-                                                                                        return <div>
-                                                                                            <IconButton>
-                                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                            </IconButton>
-                                                                                            <IconButton onClick={() => {
-                                                                                                deletePdf(pf, "prova_fumi")
-                                                                                                setIsLoading(true)
-                                                                                            }}>
-                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                            </IconButton>
-                                                                                        </div>
-                                                                                    })
-                                                                                }
-                                                                            </Typography>
-                                                                    }
-                                                                    {
-                                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                                            onClick={() => {
-                                                                                setFieldToEdit("prova_fumi")
-                                                                                setOpenLoadPdf(true)
-                                                                            }}>
-                                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                                <div style={{ overflowX: 'auto' }}>
-                                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                        <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                                            foto
-                                                                        </Typography>
-                                                                        <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
-                                                                            <GetAppIcon />
-                                                                        </IconButton>
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" :
-                                                                                <IconButton onClick={() => {
-                                                                                    setAskDeleteAll(true)
-                                                                                    setTypeToDeleteAll("fine_installazione")
-                                                                                }}>
-                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                </IconButton>
-                                                                        }
-                                                                    </div>
-                                                                    <div>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                            {/* <FileBase64
-                                                                        multiple={true}
-                                                                        onDone={(event) => {
-                                                                            setSelectedInstallazione(event)
-                                                                            setIsInstallazionePicked(true)
-                                                                        }}
-                                                                    /> */}
-                                                                            <input type="file" multiple onChange={(event) => {
-                                                                                setSelectedInstallazione(event.target.files)
-                                                                                setIsInstallazionePicked(true)
-                                                                            }} />
-                                                                        </div>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                            <Button disabled={!isInstallazionePicked} onClick={(event) => {
-                                                                                handleSubmissionInstallazione(event)
-                                                                                setIsLoading(true)
-                                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                        <Button onClick={(event) => {
-                                                                            setOpenInstallazione(event)
-                                                                            setPageInstallazione(1)
-                                                                        }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                                {
-                                                    auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                            <CardContent>
-                                                                <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                    Pagamenti
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
-                                                                </Typography>
-                                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                                    <div style={{ marginRight: '5rem' }}>
-                                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                            pagamenti (pdf)
-                                                                        </Typography>
-                                                                        {
-                                                                            customerSelected.pagamenti_pdf.length === 0 || customerSelected.pagamenti_pdf === "" || customerSelected.pagamenti_pdf === null || customerSelected.pagamenti_pdf === undefined ? "" :
-                                                                                <Typography variant="h7" component="div">
-                                                                                    {
-                                                                                        customerSelected.pagamenti_pdf.map(pf => {
-                                                                                            return <div>
-                                                                                                <IconButton>
-                                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                                </IconButton>
-                                                                                                <IconButton onClick={() => {
-                                                                                                    deletePdf(pf, "pagamenti_pdf")
-                                                                                                    setIsLoading(true)
-                                                                                                }}>
-                                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                                </IconButton>
-                                                                                            </div>
-                                                                                        })
-                                                                                    }
-                                                                                </Typography>
-                                                                        }
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("pagamenti_pdf")
-                                                                                    setOpenLoadPdf(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </div>
-                                                                    <div>
-                                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                            pagamenti (testo)
-                                                                        </Typography>
-                                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                            {customerSelected.pagamenti_testo}
-                                                                            {
-                                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                                    onClick={() => {
-                                                                                        setFieldToEdit("pagamenti_testo")
-                                                                                        setOpenEditField(true)
-                                                                                    }}>
-                                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                                </IconButton>
-                                                                            }
-                                                                        </Typography>
-                                                                    </div>
-                                                                </div>
-                                                            </CardContent>
-                                                        </Card>
-                                                    </div>
-                                                }
-                                                {
-                                                    !customerSelected.isAssisted ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
-                                                        <IconButton onClick={() => {
-                                                            assistCustomer(true)
-                                                        }}>
-                                                            <AddCircleIcon />
-                                                        </IconButton>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                            aggiungi assistenza
-                                                        </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
-                                                            <CardContent>
-                                                                <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                                    Assistenza
-                                                                </Typography>
-                                                                <Typography variant="body2">
-                                                                    <SettingsIcon style={{ marginBottom: '2rem' }} />
-                                                                </Typography>
-                                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                                    {/* <div style={{ marginRight: '2rem' }}>
-                                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                            assistenza
-                                                                        </Typography>
-                                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                            {customerSelected.assistenza}
-                                                                            {
-                                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                                    onClick={() => {
-                                                                                        setFieldToEdit("assistenza")
-                                                                                        setOpenEditField(true)
-                                                                                    }}>
-                                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                                </IconButton>
-                                                                            }
-                                                                        </Typography>
-                                                                    </div> */}
-                                                                    <div style={{ marginRight: '2rem' }}>
-                                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                            assistenza (pdf)
-                                                                        </Typography>
-                                                                        {
-                                                                            customerSelected.assistenza.length === 0 || customerSelected.assistenza === "" || customerSelected.assistenza === null || customerSelected.assistenza === undefined ? "" :
-                                                                                <Typography variant="h7" component="div">
-                                                                                    {
-                                                                                        customerSelected.assistenza.map(pf => {
-                                                                                            return <div>
-                                                                                                <IconButton>
-                                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                                                </IconButton>
-                                                                                                <IconButton onClick={() => {
-                                                                                                    deletePdf(pf, "assistenza")
-                                                                                                    setIsLoading(true)
-                                                                                                }}>
-                                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                                </IconButton>
-                                                                                            </div>
-                                                                                        })
-                                                                                    }
-                                                                                </Typography>
-                                                                        }
-                                                                        {
-                                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                                onClick={() => {
-                                                                                    setFieldToEdit("assistenza")
-                                                                                    setOpenLoadPdf(true)
-                                                                                }}>
-                                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        }
-                                                                    </div>
-                                                                    <div style={{ overflowX: 'auto' }}>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                            <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
-                                                                                FOTO ASSISTENZA
-                                                                            </Typography>
-                                                                            <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
-                                                                                <GetAppIcon />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                                {/* <FileBase64
-                                                                        multiple={true}
-                                                                        onDone={(event) => {
-                                                                            setSelectedAssistenza(event)
-                                                                            setIsAssistenzaPicked(true)
-                                                                        }}
-                                                                    /> */}
-                                                                                <input type="file" multiple onChange={(event) => {
-                                                                                    setSelectedAssistenza(event.target.files)
-                                                                                    setIsAssistenzaPicked(true)
-                                                                                }} />
-                                                                            </div>
-                                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                                <Button disabled={!isAssistenzaPicked} onClick={(event) => {
-                                                                                    handleSubmissionAssistenza(event)
-                                                                                    setIsLoading(true)
-                                                                                }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
-                                                                            <Button onClick={(event) => {
-                                                                                setOpenAssistenza(event)
-                                                                                setPageAssistenza(1)
-                                                                            }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </CardContent>
-                                                        </Card>
-                                                    </div>
-                                                }
-                                            </div>
+                                            // <CustomerCard customerSelected={customerSelected} />
+                                            // <div style={{ marginTop: '4rem', overflowX: 'auto', width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                            //         <Typography variant="h4" component="div">
+                                            //             {customerSelected.nome_cognome.toUpperCase()}
+                                            //         </Typography>
+                                            //         {
+                                            //             auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                            //                 onClick={() => {
+                                            //                     setFieldToEdit("nome_cognome")
+                                            //                     setOpenEditStatus(true)
+                                            //                 }}>
+                                            //                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //             </IconButton></Tooltip>
+                                            //         }
+                                            //     </div>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                            //         <div>
+                                            //             <Tooltip style={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
+                                            //                 <IconButton>
+                                            //                     <AiFillInfoCircle style={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
+                                            //                 </IconButton>
+                                            //             </Tooltip>
+                                            //             {
+                                            //                 auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                            //                     onClick={() => {
+                                            //                         setFieldToEdit("status")
+                                            //                         setOpenEditStatus(true)
+                                            //                     }}>
+                                            //                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                 </IconButton></Tooltip>
+                                            //             }
+                                            //         </div>
+                                            //     </div>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                            //         <div>
+                                            //             <Tooltip style={{ marginRight: '1rem' }} title={"note"}>
+                                            //                 <IconButton onClick={() => {
+                                            //                     setOpenNote(true)
+                                            //                 }}>
+                                            //                     <NotesIcon style={{ fontSize: 'xx-large' }} />
+                                            //                 </IconButton>
+                                            //             </Tooltip>
+                                            //             {
+                                            //                 auths["customers"] !== "*" ? "" : <Tooltip style={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                            //                     onClick={() => {
+                                            //                         setFieldToEdit("note")
+                                            //                         setOpenEditField(true)
+                                            //                     }}>
+                                            //                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                 </IconButton></Tooltip>
+                                            //             }
+                                            //         </div>
+                                            //     </div>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto', width: '100%' }}>
+                                            //         <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //             <CardContent>
+                                            //                 <Typography style={{ fontSize: 24 }} sx={{ fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                     Informazioni cliente
+                                            //                 </Typography>
+                                            //                 <Typography variant="body2">
+                                            //                     <ApartmentIcon style={{ marginBottom: '2rem' }} />
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     company
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                     {customerSelected.company.toUpperCase()}
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     indirizzo
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                     {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia}
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     telefono
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18 }} variant="body2">
+                                            //                     {customerSelected.telefono}
+                                            //                 </Typography>
+                                            //             </CardContent>
+                                            //         </Card>
+                                            //         <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //             <CardContent>
+                                            //                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                     Contratto
+                                            //                 </Typography>
+                                            //                 <Typography variant="body2">
+                                            //                     <DescriptionIcon style={{ marginBottom: '1rem' }} />
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     bonus
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                     {customerSelected.bonus}
+                                            //                     {
+                                            //                         auths["customers"] !== "*" ? "" : <IconButton
+                                            //                             onClick={() => {
+                                            //                                 setFieldToEdit("bonus")
+                                            //                                 setOpenEditField(true)
+                                            //                             }}>
+                                            //                             <EditIcon style={{ fontSize: "15px" }} />
+                                            //                         </IconButton>
+                                            //                     }
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     termico/elettrico
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                     {customerSelected.termico_elettrico}
+                                            //                     {
+                                            //                         auths["customers"] !== "*" ? "" : <IconButton
+                                            //                             onClick={() => {
+                                            //                                 setFieldToEdit("termico_elettrico")
+                                            //                                 setOpenEditField(true)
+                                            //                             }}>
+                                            //                             <EditIcon style={{ fontSize: "15px" }} />
+                                            //                         </IconButton>
+                                            //                     }
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                     computo
+                                            //                 </Typography>
+                                            //                 <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                     {customerSelected.computo}
+                                            //                     {
+                                            //                         auths["customers"] !== "*" ? "" : <IconButton
+                                            //                             onClick={() => {
+                                            //                                 setFieldToEdit("computo")
+                                            //                                 setOpenEditField(true)
+                                            //                             }}>
+                                            //                             <EditIcon style={{ fontSize: "15px" }} />
+                                            //                         </IconButton>
+                                            //                     }
+                                            //                 </Typography>
+                                            //             </CardContent>
+                                            //         </Card>
+                                            //     </div>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                            //         <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //             <CardContent>
+                                            //                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                     Sopralluogo
+                                            //                 </Typography>
+                                            //                 <Typography variant="body2">
+                                            //                     <SettingsIcon style={{ marginBottom: '2rem' }} />
+                                            //                 </Typography>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            //                     <div>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             data sopralluogo
+                                            //                         </Typography>
+                                            //                         <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                             {customerSelected.data_sopralluogo}
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("data_sopralluogo")
+                                            //                                         setOpenEditField(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </Typography>
+                                            //                     </div>
+                                            //                     <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             tecnico
+                                            //                         </Typography>
+                                            //                         <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                             {customerSelected.tecnico}
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("tecnico")
+                                            //                                         setOpenEditField(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </Typography>
+                                            //                     </div>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             pdf
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.pdf_sopralluogo.length === 0 || customerSelected.pdf_sopralluogo === "" || customerSelected.pdf_sopralluogo === null || customerSelected.pdf_sopralluogo === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.pdf_sopralluogo.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "pdf_sopralluogo")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("pdf_sopralluogo")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                 </div>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            //                     <div style={{ marginTop: '3rem', overflowX: 'auto' }}>
+                                            //                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                             <Typography style={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)" }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                            //                                 foto
+                                            //                             </Typography>
+                                            //                             <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
+                                            //                                 <GetAppIcon />
+                                            //                             </IconButton>
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" :
+                                            //                                     <IconButton onClick={() => {
+                                            //                                         setAskDeleteAll(true)
+                                            //                                         setTypeToDeleteAll("sopralluogo")
+                                            //                                     }}>
+                                            //                                         <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                     </IconButton>
+                                            //                             }
+                                            //                         </div>
+                                            //                         <div>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                                 {/* <FileBase64
+                                            //                             multiple={true}
+                                            //                             onDone={(event) => {
+                                            //                                 setSelectedSopralluogo(event)
+                                            //                                 setIsSopralluogoPicked(true)
+                                            //                             }}
+                                            //                         /> */}
+                                            //                                 <input type="file" multiple onChange={(event) => {
+                                            //                                     setSelectedSopralluogo(event.target.files)
+                                            //                                     setIsSopralluogoPicked(true)
+                                            //                                 }} />
+                                            //                             </div>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                                 <Button disabled={!isSopralluogoPicked} onClick={(event) => {
+                                            //                                     handleSubmissionSopralluogo(event)
+                                            //                                     setIsLoading(true)
+                                            //                                 }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                            //                             </div>
+                                            //                         </div>
+                                            //                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                             <Button onClick={(event) => {
+                                            //                                 setOpenSopralluogo(event)
+                                            //                                 setPageSopralluogo(1)
+                                            //                             }}
+                                            //                                 variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
+                                            //                         </div>
+                                            //                     </div>
+                                            //                 </div>
+                                            //             </CardContent>
+                                            //         </Card>
+                                            //     </div>
+                                            //     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                            //         <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //             <CardContent>
+                                            //                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                     Fine installazione
+                                            //                 </Typography>
+                                            //                 <Typography variant="body2">
+                                            //                     <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
+                                            //                 </Typography>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                            //                     <div>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             data fine installazione
+                                            //                         </Typography>
+                                            //                         <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                             {customerSelected.data_installazione}
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("data_installazione")
+                                            //                                         setOpenEditField(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </Typography>
+                                            //                     </div>
+                                            //                     <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             installatore
+                                            //                         </Typography>
+                                            //                         <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                             {customerSelected.installatore}
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("installatore")
+                                            //                                         setOpenEditField(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </Typography>
+                                            //                     </div>
+                                            //                     <div>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             trasferta
+                                            //                         </Typography>
+                                            //                         <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                             {customerSelected.trasferta}
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("trasferta")
+                                            //                                         setOpenEditField(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </Typography>
+                                            //                     </div>
+                                            //                 </div>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             collaudo
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.collaudo.length === 0 || customerSelected.collaudo === "" || customerSelected.collaudo === null || customerSelected.collaudo === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.collaudo.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "collaudo")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("collaudo")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             di.co
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.di_co.length === 0 || customerSelected.di_co === "" || customerSelected.di_co === null || customerSelected.di_co === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.di_co.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "di_co")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("di_co")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             check list
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.check_list.length === 0 || customerSelected.check_list === "" || customerSelected.check_list === null || customerSelected.check_list === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.check_list.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "check_list")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("check_list")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                 </div>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             fgas
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.fgas.length === 0 || customerSelected.fgas === "" || customerSelected.fgas === null || customerSelected.fgas === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.fgas.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "fgas")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("fgas")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                     <div style={{ marginRight: '5rem' }}>
+                                            //                         <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                             prova fumi
+                                            //                         </Typography>
+                                            //                         {
+                                            //                             customerSelected.prova_fumi.length === 0 || customerSelected.prova_fumi === "" || customerSelected.prova_fumi === null || customerSelected.prova_fumi === undefined ? "" :
+                                            //                                 <Typography variant="h7" component="div">
+                                            //                                     {
+                                            //                                         customerSelected.prova_fumi.map(pf => {
+                                            //                                             return <div>
+                                            //                                                 <IconButton>
+                                            //                                                     <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                 </IconButton>
+                                            //                                                 <IconButton onClick={() => {
+                                            //                                                     deletePdf(pf, "prova_fumi")
+                                            //                                                     setIsLoading(true)
+                                            //                                                 }}>
+                                            //                                                     <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                 </IconButton>
+                                            //                                             </div>
+                                            //                                         })
+                                            //                                     }
+                                            //                                 </Typography>
+                                            //                         }
+                                            //                         {
+                                            //                             auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                 onClick={() => {
+                                            //                                     setFieldToEdit("prova_fumi")
+                                            //                                     setOpenLoadPdf(true)
+                                            //                                 }}>
+                                            //                                 <EditIcon style={{ fontSize: "15px" }} />
+                                            //                             </IconButton>
+                                            //                         }
+                                            //                     </div>
+                                            //                 </div>
+                                            //                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            //                     <div style={{ overflowX: 'auto' }}>
+                                            //                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                             <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                            //                                 foto
+                                            //                             </Typography>
+                                            //                             <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
+                                            //                                 <GetAppIcon />
+                                            //                             </IconButton>
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" :
+                                            //                                     <IconButton onClick={() => {
+                                            //                                         setAskDeleteAll(true)
+                                            //                                         setTypeToDeleteAll("fine_installazione")
+                                            //                                     }}>
+                                            //                                         <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                     </IconButton>
+                                            //                             }
+                                            //                         </div>
+                                            //                         <div>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                                 {/* <FileBase64
+                                            //                             multiple={true}
+                                            //                             onDone={(event) => {
+                                            //                                 setSelectedInstallazione(event)
+                                            //                                 setIsInstallazionePicked(true)
+                                            //                             }}
+                                            //                         /> */}
+                                            //                                 <input type="file" multiple onChange={(event) => {
+                                            //                                     setSelectedInstallazione(event.target.files)
+                                            //                                     setIsInstallazionePicked(true)
+                                            //                                 }} />
+                                            //                             </div>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                                 <Button disabled={!isInstallazionePicked} onClick={(event) => {
+                                            //                                     handleSubmissionInstallazione(event)
+                                            //                                     setIsLoading(true)
+                                            //                                 }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                            //                             </div>
+                                            //                         </div>
+                                            //                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                             <Button onClick={(event) => {
+                                            //                                 setOpenInstallazione(event)
+                                            //                                 setPageInstallazione(1)
+                                            //                             }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
+                                            //                         </div>
+                                            //                     </div>
+                                            //                 </div>
+                                            //             </CardContent>
+                                            //         </Card>
+                                            //     </div>
+                                            //     {
+                                            //         auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                            //             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //                 <CardContent>
+                                            //                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                         Pagamenti
+                                            //                     </Typography>
+                                            //                     <Typography variant="body2">
+                                            //                         <PictureAsPdfIcon style={{ marginBottom: '1rem' }} />
+                                            //                     </Typography>
+                                            //                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            //                         <div style={{ marginRight: '5rem' }}>
+                                            //                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                                 pagamenti (pdf)
+                                            //                             </Typography>
+                                            //                             {
+                                            //                                 customerSelected.pagamenti_pdf.length === 0 || customerSelected.pagamenti_pdf === "" || customerSelected.pagamenti_pdf === null || customerSelected.pagamenti_pdf === undefined ? "" :
+                                            //                                     <Typography variant="h7" component="div">
+                                            //                                         {
+                                            //                                             customerSelected.pagamenti_pdf.map(pf => {
+                                            //                                                 return <div>
+                                            //                                                     <IconButton>
+                                            //                                                         <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                     </IconButton>
+                                            //                                                     <IconButton onClick={() => {
+                                            //                                                         deletePdf(pf, "pagamenti_pdf")
+                                            //                                                         setIsLoading(true)
+                                            //                                                     }}>
+                                            //                                                         <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                     </IconButton>
+                                            //                                                 </div>
+                                            //                                             })
+                                            //                                         }
+                                            //                                     </Typography>
+                                            //                             }
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("pagamenti_pdf")
+                                            //                                         setOpenLoadPdf(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </div>
+                                            //                         <div>
+                                            //                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                                 pagamenti (testo)
+                                            //                             </Typography>
+                                            //                             <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                                 {customerSelected.pagamenti_testo}
+                                            //                                 {
+                                            //                                     auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                         onClick={() => {
+                                            //                                             setFieldToEdit("pagamenti_testo")
+                                            //                                             setOpenEditField(true)
+                                            //                                         }}>
+                                            //                                         <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                     </IconButton>
+                                            //                                 }
+                                            //                             </Typography>
+                                            //                         </div>
+                                            //                     </div>
+                                            //                 </CardContent>
+                                            //             </Card>
+                                            //         </div>
+                                            //     }
+                                            //     {
+                                            //         !customerSelected.isAssisted ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                            //             <IconButton onClick={() => {
+                                            //                 assistCustomer(true)
+                                            //             }}>
+                                            //                 <AddCircleIcon />
+                                            //             </IconButton>
+                                            //             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                 aggiungi assistenza
+                                            //             </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                            //             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black" }} style={{ marginRight: "1rem" }}>
+                                            //                 <CardContent>
+                                            //                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                            //                         Assistenza
+                                            //                     </Typography>
+                                            //                     <Typography variant="body2">
+                                            //                         <SettingsIcon style={{ marginBottom: '2rem' }} />
+                                            //                     </Typography>
+                                            //                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            //                         {/* <div style={{ marginRight: '2rem' }}>
+                                            //                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                                 assistenza
+                                            //                             </Typography>
+                                            //                             <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                            //                                 {customerSelected.assistenza}
+                                            //                                 {
+                                            //                                     auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                         onClick={() => {
+                                            //                                             setFieldToEdit("assistenza")
+                                            //                                             setOpenEditField(true)
+                                            //                                         }}>
+                                            //                                         <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                     </IconButton>
+                                            //                                 }
+                                            //                             </Typography>
+                                            //                         </div> */}
+                                            //                         <div style={{ marginRight: '2rem' }}>
+                                            //                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                            //                                 assistenza (pdf)
+                                            //                             </Typography>
+                                            //                             {
+                                            //                                 customerSelected.assistenza.length === 0 || customerSelected.assistenza === "" || customerSelected.assistenza === null || customerSelected.assistenza === undefined ? "" :
+                                            //                                     <Typography variant="h7" component="div">
+                                            //                                         {
+                                            //                                             customerSelected.assistenza.map(pf => {
+                                            //                                                 return <div>
+                                            //                                                     <IconButton>
+                                            //                                                         <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                            //                                                     </IconButton>
+                                            //                                                     <IconButton onClick={() => {
+                                            //                                                         deletePdf(pf, "assistenza")
+                                            //                                                         setIsLoading(true)
+                                            //                                                     }}>
+                                            //                                                         <DeleteIcon style={{ fontSize: "15px" }} />
+                                            //                                                     </IconButton>
+                                            //                                                 </div>
+                                            //                                             })
+                                            //                                         }
+                                            //                                     </Typography>
+                                            //                             }
+                                            //                             {
+                                            //                                 auths["customers"] !== "*" ? "" : <IconButton
+                                            //                                     onClick={() => {
+                                            //                                         setFieldToEdit("assistenza")
+                                            //                                         setOpenLoadPdf(true)
+                                            //                                     }}>
+                                            //                                     <EditIcon style={{ fontSize: "15px" }} />
+                                            //                                 </IconButton>
+                                            //                             }
+                                            //                         </div>
+                                            //                         <div style={{ overflowX: 'auto' }}>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                                 <Typography style={{ marginTop: '1rem', marginBottom: '2rem' }} sx={{ fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                            //                                     FOTO ASSISTENZA
+                                            //                                 </Typography>
+                                            //                                 <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
+                                            //                                     <GetAppIcon />
+                                            //                                 </IconButton>
+                                            //                             </div>
+                                            //                             <div>
+                                            //                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            //                                     {/* <FileBase64
+                                            //                             multiple={true}
+                                            //                             onDone={(event) => {
+                                            //                                 setSelectedAssistenza(event)
+                                            //                                 setIsAssistenzaPicked(true)
+                                            //                             }}
+                                            //                         /> */}
+                                            //                                     <input type="file" multiple onChange={(event) => {
+                                            //                                         setSelectedAssistenza(event.target.files)
+                                            //                                         setIsAssistenzaPicked(true)
+                                            //                                     }} />
+                                            //                                 </div>
+                                            //                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                                     <Button disabled={!isAssistenzaPicked} onClick={(event) => {
+                                            //                                         handleSubmissionAssistenza(event)
+                                            //                                         setIsLoading(true)
+                                            //                                     }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                            //                                 </div>
+                                            //                             </div>
+                                            //                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                            //                                 <Button onClick={(event) => {
+                                            //                                     setOpenAssistenza(event)
+                                            //                                     setPageAssistenza(1)
+                                            //                                 }} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
+                                            //                             </div>
+                                            //                         </div>
+                                            //                     </div>
+                                            //                 </CardContent>
+                                            //             </Card>
+                                            //         </div>
+                                            //     }
+                                            // </div>
                                             // </Card>
                                         }
                                     </div>
@@ -2105,6 +2043,20 @@ function Customers(props) {
                                                     }
                                                 </Box>
                                             </Modal>
+
+
+                                            <Modal
+                                                open={openCustomerCard}
+                                                onClose={() => { setOpenCustomerCard(false) }}
+                                                aria-labelledby="modal-modal-label"
+                                                aria-describedby="modal-modal-description"
+                                            >
+                                                <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto' }}>
+                                                    <CustomerCard customerSelected={customerSelected} />
+                                                </Box>
+                                            </Modal>
+
+
                                             {/* Modal to edit field */}
                                             <Modal
                                                 open={openEditField}
