@@ -103,7 +103,23 @@ const customerSchema = new Schema({
         type: Array,
         required: false
     },
-    note: {
+    note_info: {
+        type: String,
+        required: false
+    },
+    note_sopralluogo: {
+        type: String,
+        required: false
+    },
+    note_installazione: {
+        type: String,
+        required: false
+    },
+    note_assistenza: {
+        type: String,
+        required: false
+    },
+    note_pagamenti: {
         type: String,
         required: false
     },

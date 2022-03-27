@@ -30,8 +30,6 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - dare i permessi ad installatori per vedere clienti specifici - on hold
-- responsive!!!!!!!!!!!!!!
-- rivoluziona scheda cliente: computo in "Installazione" per primo; merge box info e contratto; note su tutte le box (note assistenza, pagamenti, ecc)
 
 
 APP:
@@ -41,8 +39,6 @@ APP:
 - qr code: installatore (tecnico) solo togli, gli altri togli/aggiungi
 
 
-gestione cliente
-carica documento pdf, excel, ecc
 calendario appuntamenti - che si collega alla scheda del cliente
 
 

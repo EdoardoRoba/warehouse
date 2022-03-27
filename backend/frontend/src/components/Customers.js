@@ -105,7 +105,11 @@ function Customers(props) {
     const [collaudo, setCollaudo] = React.useState("");
     const [assistenza, setAssistenza] = React.useState("");
     const [status, setStatus] = React.useState("");
-    const [note, setNote] = React.useState("");
+    const [note_info, setNote_info] = React.useState("");
+    const [note_sopralluogo, setNote_sopralluogo] = React.useState("");
+    const [note_installazione, setNote_installazione] = React.useState("");
+    const [note_assistenza, setNote_assistenza] = React.useState("");
+    const [note_pagamenti, setNote_pagamenti] = React.useState("");
     const [genericError, setGenericError] = React.useState("");
     const [pagamenti_testo, setPagamenti_testo] = React.useState("");
     const [auths, setAuths] = React.useState([])
@@ -315,7 +319,7 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, note: note, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -1119,7 +1123,6 @@ function Customers(props) {
                                                                     renderInput={(params) => <TextField {...params} label="stato" />}
                                                                     onChange={(event, value) => { setStatus(value.label) }}
                                                                 />
-                                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="note" onChange={(event) => { setNote(event.target.value.toLowerCase()) }} />
                                                                 <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
@@ -1150,7 +1153,7 @@ function Customers(props) {
                                         <Accordion
                                             expanded={openAccordionScheda || false}
                                             onChange={handleChangeAccordionScheda}
-                                            style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto', marginTop: '2rem' }}
+                                            style={{ width: '90%', marginLeft: 'auto', marginRight: 'auto', marginTop: '2rem', marginBottom: "3rem" }}
                                         >
                                             <AccordionSummary
                                                 expandIcon={<ExpandMoreIcon />}

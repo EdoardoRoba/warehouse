@@ -129,6 +129,7 @@ function CustomerCard(customerPassed) {
     const [askDeleteAll, setAskDeleteAll] = React.useState(false);
     const [typeToDeleteAll, setTypeToDeleteAll] = React.useState("");
     const [checkTypologyToDelete, setCheckTypologyToDelete] = React.useState("");
+    const [noteType, setNoteType] = React.useState("");
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
@@ -288,6 +289,7 @@ function CustomerCard(customerPassed) {
     }
 
     const handleCloseNote = () => {
+        setNoteType("")
         setOpenNote(false);
     };
 
@@ -1003,23 +1005,23 @@ function CustomerCard(customerPassed) {
     }
 
     return (
-        <div style={{ marginTop: '4rem', width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
+        <div style={{ width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
             {
                 customerSelected === null ? "" :
-                    <div sx={{ marginTop: '4rem', overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }}>
+                    <div sx={{ overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }} style={{ marginTop: '4rem' }}>
                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                             <Typography variant="h4" component="div">
                                 {customerSelected.nome_cognome.toUpperCase()}
+                                {
+                                    auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                        onClick={() => {
+                                            setFieldToEdit("nome_cognome")
+                                            setOpenEditStatus(true)
+                                        }}>
+                                        <EditIcon sx={{ fontSize: "15px" }} />
+                                    </IconButton></Tooltip>
+                                }
                             </Typography>
-                            {
-                                auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                    onClick={() => {
-                                        setFieldToEdit("nome_cognome")
-                                        setOpenEditStatus(true)
-                                    }}>
-                                    <EditIcon sx={{ fontSize: "15px" }} />
-                                </IconButton></Tooltip>
-                            }
                         </div>
                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                             <div>
@@ -1043,31 +1045,33 @@ function CustomerCard(customerPassed) {
                             isLoading ? <Backdrop className={classes.backdrop} open>
                                 <CircularProgress color="inherit" />
                             </Backdrop> : <div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                    <div>
-                                        <Tooltip sx={{ marginRight: '1rem' }} title={"note"}>
-                                            <IconButton onClick={() => {
-                                                setOpenNote(true)
-                                            }}>
-                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        {
-                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                onClick={() => {
-                                                    setFieldToEdit("note")
-                                                    setOpenEditField(true)
-                                                }}>
-                                                <EditIcon sx={{ fontSize: "15px" }} />
-                                            </IconButton></Tooltip>
-                                        }
-                                    </div>
-                                </div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto', width: '100%' }}>
+                                {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                    
+                                </div> */}
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                     <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                Informazioni cliente
+                                                <div>
+                                                    Informazioni cliente
+                                                    <Tooltip sx={{ marginRight: '1rem' }} title={"note informazioni"}>
+                                                        <IconButton onClick={() => {
+                                                            setNoteType("note_info")
+                                                            setOpenNote(true)
+                                                        }}>
+                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                                            onClick={() => {
+                                                                setFieldToEdit("note_info")
+                                                                setOpenEditField(true)
+                                                            }}>
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                        </IconButton></Tooltip>
+                                                    }
+                                                </div>
                                             </Typography>
                                             <Typography variant="body2">
                                                 <ApartmentIcon sx={{ marginBottom: '2rem' }} />
@@ -1108,16 +1112,35 @@ function CustomerCard(customerPassed) {
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                     <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                Sopralluogo
+                                                <div>
+                                                    Sopralluogo
+                                                    <Tooltip sx={{ marginRight: '1rem' }} title={"note sopralluogo"}>
+                                                        <IconButton onClick={() => {
+                                                            setNoteType("note_sopralluogo")
+                                                            setOpenNote(true)
+                                                        }}>
+                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                                            onClick={() => {
+                                                                setFieldToEdit("note_sopralluogo")
+                                                                setOpenEditField(true)
+                                                            }}>
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                        </IconButton></Tooltip>
+                                                    }
+                                                </div>
                                             </Typography>
-                                            <Typography variant="body2">
+                                            {/* <Typography variant="body2">
                                                 <SettingsIcon sx={{ marginBottom: '2rem' }} />
-                                            </Typography>
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
+                                            </Typography> */}
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginTop: "3rem" }}>
                                                 <div>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data sopralluogo
@@ -1188,9 +1211,9 @@ function CustomerCard(customerPassed) {
                                                 </div>
                                             </div>
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                <div sx={{ marginTop: '3rem', overflowX: 'auto' }}>
+                                                <div sx={{ overflowX: 'auto' }} style={{ marginTop: '3rem' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        <Typography sx={{ marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
@@ -1220,14 +1243,14 @@ function CustomerCard(customerPassed) {
                                                                 setIsSopralluogoPicked(true)
                                                             }} />
                                                         </div>
-                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                             <Button disabled={!isSopralluogoPicked} onClick={(event) => {
                                                                 handleSubmissionSopralluogo(event)
                                                                 setIsLoading(true)
                                                             }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                         </div>
                                                     </div>
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                         <Button onClick={(event) => {
                                                             setOpenSopralluogo(event)
                                                             setPageSopralluogo(1)
@@ -1239,17 +1262,51 @@ function CustomerCard(customerPassed) {
                                         </CardContent>
                                     </Card>
                                 </div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                     <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
                                             <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                Installazione
-                                            </Typography>
-                                            <Typography variant="body2">
-                                                <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
-                                            </Typography>
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
                                                 <div>
+                                                    Installazione
+                                                    <Tooltip sx={{ marginRight: '1rem' }} title={"note installazione"}>
+                                                        <IconButton onClick={() => {
+                                                            setNoteType("note_installazione")
+                                                            setOpenNote(true)
+                                                        }}>
+                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                                            onClick={() => {
+                                                                setFieldToEdit("note_installazione")
+                                                                setOpenEditField(true)
+                                                            }}>
+                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                        </IconButton></Tooltip>
+                                                    }
+                                                </div>
+                                            </Typography>
+                                            {/* <Typography variant="body2">
+                                                <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
+                                            </Typography> */}
+                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }} style={{ marginTop: "3rem" }}>
+                                                <div>
+                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        computo
+                                                    </Typography>
+                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                        {customerSelected.computo}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("computo")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data fine installazione
                                                     </Typography>
@@ -1478,7 +1535,7 @@ function CustomerCard(customerPassed) {
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                        <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem', marginBottom: '2rem' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
@@ -1508,14 +1565,14 @@ function CustomerCard(customerPassed) {
                                                                 setIsInstallazionePicked(true)
                                                             }} />
                                                         </div>
-                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                             <Button disabled={!isInstallazionePicked} onClick={(event) => {
                                                                 handleSubmissionInstallazione(event)
                                                                 setIsLoading(true)
                                                             }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                         </div>
                                                     </div>
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                         <Button onClick={(event) => {
                                                             setOpenInstallazione(event)
                                                             setPageInstallazione(1)
@@ -1527,15 +1584,34 @@ function CustomerCard(customerPassed) {
                                     </Card>
                                 </div>
                                 {
-                                    auths["customers"] !== "*" ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
+                                    auths["customers"] !== "*" ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                         <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                             <CardContent>
                                                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                    Pagamenti
+                                                    <div>
+                                                        Pagamenti
+                                                        <Tooltip sx={{ marginRight: '1rem' }} title={"note pagamenti"}>
+                                                            <IconButton onClick={() => {
+                                                                setNoteType("note_pagamenti")
+                                                                setOpenNote(true)
+                                                            }}>
+                                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("note_pagamenti")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                            </IconButton></Tooltip>
+                                                        }
+                                                    </div>
                                                 </Typography>
-                                                <Typography variant="body2">
+                                                {/* <Typography variant="body2">
                                                     <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
-                                                </Typography>
+                                                </Typography> */}
                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                     <div sx={{ marginRight: '5rem' }}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
@@ -1602,15 +1678,34 @@ function CustomerCard(customerPassed) {
                                         </IconButton>
                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                             aggiungi assistenza
-                                        </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem', overflowX: 'auto' }}>
-                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
+                                        </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                             <CardContent>
                                                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                    Assistenza
+                                                    <div>
+                                                        Assistenza
+                                                        <Tooltip sx={{ marginRight: '1rem' }} title={"note assistenza"}>
+                                                            <IconButton onClick={() => {
+                                                                setNoteType("note_assistenza")
+                                                                setOpenNote(true)
+                                                            }}>
+                                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("note_assistenza")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                            </IconButton></Tooltip>
+                                                        }
+                                                    </div>
                                                 </Typography>
-                                                <Typography variant="body2">
+                                                {/* <Typography variant="body2">
                                                     <SettingsIcon sx={{ marginBottom: '2rem' }} />
-                                                </Typography>
+                                                </Typography> */}
                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                     {/* <div sx={{ marginRight: '2rem' }}>
                                                                             <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
@@ -1665,7 +1760,7 @@ function CustomerCard(customerPassed) {
                                                     </div>
                                                     <div sx={{ overflowX: 'auto' }}>
                                                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                            <Typography sx={{ marginTop: '1rem', marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} color="text.primary" gutterBottom>
+                                                            <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem', marginBottom: '2rem' }} color="text.primary" gutterBottom>
                                                                 foto
                                                             </Typography>
                                                             <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
@@ -1695,14 +1790,14 @@ function CustomerCard(customerPassed) {
                                                                     setIsAssistenzaPicked(true)
                                                                 }} />
                                                             </div>
-                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                                 <Button disabled={!isAssistenzaPicked} onClick={(event) => {
                                                                     handleSubmissionAssistenza(event)
                                                                     setIsLoading(true)
                                                                 }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
                                                             </div>
                                                         </div>
-                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1.5rem' }}>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
                                                             <Button onClick={(event) => {
                                                                 setOpenAssistenza(event)
                                                                 setPageAssistenza(1)
@@ -1721,12 +1816,12 @@ function CustomerCard(customerPassed) {
             }
             {
                 customerSelected === null ? "" : <Dialog onClose={handleCloseNote} open={openNote}>
-                    <DialogTitle>Note:</DialogTitle>
+                    <DialogTitle>{noteType.toUpperCase().replace("_", " ")}:</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             {
-                                customerSelected.note === "" ? <h4>Vuoto</h4> : <div>
-                                    {customerSelected.note}
+                                customerSelected[noteType] === "" || customerSelected[noteType] === null || customerSelected[noteType] === undefined ? <h4>Vuoto</h4> : <div>
+                                    {customerSelected[noteType]}
                                 </div>
                             }
                         </DialogContentText>
@@ -1748,10 +1843,10 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_sopralluogo.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
                                                     <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
                                                         setIsLoading(true)
@@ -1762,7 +1857,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
                                             </div>
                                     }
                                 </div>
@@ -1782,10 +1877,10 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_fine_installazione.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
                                                     <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
                                                         setIsLoading(true)
@@ -1796,7 +1891,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
                                             </div>
                                     }
                                 </div>
@@ -1817,10 +1912,10 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_assistenza.length === 0 ? <h2 sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }}>
                                                     <img sx={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                 </div>
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
                                                         setIsLoading(true)
@@ -1831,7 +1926,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
+                                                <Pagination sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
                                             </div>
                                     }
                                 </div>
@@ -1861,7 +1956,7 @@ function CustomerCard(customerPassed) {
                     >
                         <Box sx={style}>
                             <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
-                                Aggiorna il campo {fieldToEdit.toUpperCase()}:
+                                Aggiorna il campo {fieldToEdit.toUpperCase().replace("_", " ")}:
                             </Typography>
                             <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Nuovo valore:" variant="filled" onChange={(event) => {
                                 setValueToEdit(event.target.value)
