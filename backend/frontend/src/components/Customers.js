@@ -2,40 +2,21 @@
 import { axiosInstance, refFirestore } from "../config.js"
 import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 import * as React from "react";
-import { db } from '../firebase-config'
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { styled } from '@mui/material/styles';
-import Grow from '@mui/material/Grow';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import MenuIcon from '@material-ui/icons/Menu';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import BrushIcon from '@material-ui/icons/Brush';
-import EditIcon from '@material-ui/icons/Edit';
-import ApartmentIcon from '@material-ui/icons/Apartment';
-import DescriptionIcon from '@material-ui/icons/Description';
-import SettingsIcon from '@material-ui/icons/Settings';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
-import NotesIcon from '@material-ui/icons/Notes';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import LinkIcon from '@material-ui/icons/Link';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { AiFillInfoCircle } from "react-icons/ai";
 import Accordion from "@mui/material/Accordion";
@@ -46,8 +27,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
-import SimpleImageSlider from "react-simple-image-slider";
-import FileBase64 from 'react-file-base64';
+// import FileBase64 from 'react-file-base64';
 import { DataGrid } from '@mui/x-data-grid';
 import { SketchPicker } from 'react-color';
 import { saveAs } from 'file-saver'

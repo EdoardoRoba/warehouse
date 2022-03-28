@@ -30,6 +30,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - dare i permessi ad installatori per vedere clienti specifici - on hold
+- pagina Home coi menu
 
 
 APP:

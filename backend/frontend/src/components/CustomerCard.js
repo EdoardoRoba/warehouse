@@ -1,28 +1,14 @@
 import { axiosInstance, refFirestore } from "../config.js"
 import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 import * as React from "react";
-import { db } from '../firebase-config'
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore'
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { styled } from '@mui/material/styles';
-import Grow from '@mui/material/Grow';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MenuIcon from '@material-ui/icons/Menu';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import BrushIcon from '@material-ui/icons/Brush';
+import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit';
 import ApartmentIcon from '@material-ui/icons/Apartment';
-import DescriptionIcon from '@material-ui/icons/Description';
-import SettingsIcon from '@material-ui/icons/Settings';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import NotesIcon from '@material-ui/icons/Notes';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LinkIcon from '@material-ui/icons/Link';
@@ -32,32 +18,23 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { AiFillInfoCircle } from "react-icons/ai";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Pagination from '@mui/material/Pagination';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
-import SimpleImageSlider from "react-simple-image-slider";
-import FileBase64 from 'react-file-base64';
-import { DataGrid } from '@mui/x-data-grid';
-import { SketchPicker } from 'react-color';
 import { saveAs } from 'file-saver'
 import { storage } from "../firebase";
 import * as XLSX from 'xlsx';
 // import { firebase } from "firebase/compat/app";
 import './Classes.css'
-import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject, uploadString } from "firebase/storage";
 import { makeStyles } from '@mui/styles';
-import { allCustomers } from "../allCustomers"
+import DDT from "./DDT.js";
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
 function CustomerCard(customerPassed) {
 
@@ -123,8 +100,6 @@ function CustomerCard(customerPassed) {
     const [pageInstallazione, setPageInstallazione] = React.useState(1);
     const [pageAssistenza, setPageAssistenza] = React.useState(1);
     const [imagesToShow, setImagesToShow] = React.useState([]);
-    const [imagesId, setImagesId] = React.useState(null);
-    const [url, setUrl] = React.useState("");
     const [openNote, setOpenNote] = React.useState(false);
     const [askDeleteAll, setAskDeleteAll] = React.useState(false);
     const [typeToDeleteAll, setTypeToDeleteAll] = React.useState("");
@@ -1048,6 +1023,10 @@ function CustomerCard(customerPassed) {
                                 {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     
                                 </div> */}
+                                {/* <PDFViewer><DDT /></PDFViewer> */}
+                                <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
+                                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+                                </PDFDownloadLink>
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                     <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
@@ -1308,7 +1287,7 @@ function CustomerCard(customerPassed) {
                                                         }
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        data fine installazione
+                                                        data installazione
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.data_installazione}
