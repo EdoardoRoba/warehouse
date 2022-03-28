@@ -181,7 +181,7 @@ function Login(props) {
                     </Card>
                 </div > : <div>
                     <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="success"><h1>UTENTE GIA' AUTORIZZATO!</h1></Alert>
-                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Vai al magazzino</Link></Button></div>
+                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/home"}>Vai alla home</Link></Button></div>
                 </div>
             }
 
@@ -194,7 +194,7 @@ function Login(props) {
                 }
             </div>
             {
-                !loggedIn ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button onClick={() => { userIsAuthenticated(true) }} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}><Link style={{ color: 'white' }} to={"/warehouse"}>Continua</Link></Button></div>
+                !loggedIn ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button onClick={() => { userIsAuthenticated(true) }} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}><Link style={{ color: 'white' }} to={"/home"}>Continua</Link></Button></div>
             }
         </div>
     );

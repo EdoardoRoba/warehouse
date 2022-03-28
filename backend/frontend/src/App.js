@@ -7,6 +7,7 @@ import Warehouse from './components/Warehouse';
 import History from './components/History';
 import Customers from './components/Customers';
 import Employees from './components/Employees';
+import Home from './components/Home';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -202,6 +203,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Login replace to="/login" />} />
         <Route exact path='/login' element={< Login />}></Route>
+        <Route exact path='/home' element={< Home />}></Route>
         {/* </Routes>
       <Routes> */}
         <Route exact path='/warehouse' element={< Warehouse />}></Route>
