@@ -19,7 +19,7 @@ function HistoryPage() {
 
     return (
         <div style={{ display: "flex", justifyContent: 'center', textAlign: 'center', marginTop: '5rem', marginLeft: 'auto', marginRight: 'auto' }}>
-            <Card sx={{ maxWidth: "60%" }}>
+            <Card sx={{ width: "80%", height: "100%" }}>
                 <CardHeader
                     title="Storico"
                     subheader="Consulta lo storico delle transazioni dei prodotti"

@@ -19,7 +19,7 @@ function WarehousePage() {
 
     return (
         <div style={{ display: "flex", justifyContent: 'center', textAlign: 'center', marginTop: '5rem', marginLeft: 'auto', marginRight: 'auto' }}>
-            <Card sx={{ maxWidth: "60%" }}>
+            <Card sx={{ width: "80%", height: "100%" }}>
                 <CardHeader
                     title="Magazzino"
                     subheader="Gestisci i prodotti presenti nel magazzino"

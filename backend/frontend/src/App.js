@@ -50,6 +50,10 @@ function App() {
   React.useEffect(() => {
     var pgs = []
     var pg = {}
+    pg = {}
+    pg['label'] = "Home"
+    pg['id'] = "home"
+    pgs.push(pg)
     if (auths !== null) {
       if (auths.includes("warehouse")) {
         pg = {}

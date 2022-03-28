@@ -6,32 +6,11 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { styled } from '@mui/material/styles';
-import Grow from '@mui/material/Grow';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
-import Tooltip from '@mui/material/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MenuIcon from '@material-ui/icons/Menu';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
-import IconButton from '@mui/material/IconButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TablePagination from '@mui/material/TablePagination';
-import TableFooter from '@mui/material/TableFooter';
-import Paper from '@mui/material/Paper';
-import { DataGrid } from '@mui/x-data-grid';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './Classes.css'
 import { getToolbarUtilityClass } from "@mui/material";
 import WarehousePage from "./HomePages/WarehousePage.js";
@@ -116,8 +95,8 @@ function Home() {
                     <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" onClick={() => { window.location.reload(true) }} style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/login"}>Vai al Login</Link></Button></div>
                 </div> :
-                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '5rem', marginLeft: 'auto', marginRight: 'auto' }}>
-                        <Box sx={{ width: '100%' }}>
+                    <div>
+                        {/* <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '80%' }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
                                 {
                                     auths["customers"] === "*" ? <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -156,7 +135,24 @@ function Home() {
                                 </TabPanel> : ""
                             }
 
-                        </Box >
+                        </Box > */}
+
+                        <Box sx={{ flexGrow: 1, marginBottom: 10 }}>
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                <Grid item xs={12} sm={6}>
+                                    <CustomerPage />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <WarehousePage />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <HistoryPage />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <EmployeesPage />
+                                </Grid>
+                            </Grid>
+                        </Box>
                     </div >
             }
         </div>
