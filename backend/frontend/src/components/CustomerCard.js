@@ -1023,10 +1023,12 @@ function CustomerCard(customerPassed) {
                                 {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     
                                 </div> */}
+
                                 {/* <PDFViewer><DDT /></PDFViewer> */}
-                                <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
+                                {/* <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
                                     {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-                                </PDFDownloadLink>
+                                </PDFDownloadLink> */}
+
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                     <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                         <CardContent>
