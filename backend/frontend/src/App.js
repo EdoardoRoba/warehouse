@@ -7,6 +7,7 @@ import Warehouse from './components/Warehouse';
 import History from './components/History';
 import Customers from './components/Customers';
 import Employees from './components/Employees';
+import MyCalendar from './components/MyCalendar';
 import Home from './components/Home';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -77,6 +78,12 @@ function App() {
         pg = {}
         pg['label'] = "Dipendenti"
         pg['id'] = "employees"
+        pgs.push(pg)
+      }
+      if (auths.includes("calendar")) {
+        pg = {}
+        pg['label'] = "Calendario"
+        pg['id'] = "calendar"
         pgs.push(pg)
       }
       setPages(pgs)
@@ -214,6 +221,7 @@ function App() {
         <Route exact path='/history' element={< History />}></Route>
         <Route exact path='/customers' element={< Customers />}></Route>
         <Route exact path='/employees' element={< Employees />}></Route>
+        <Route exact path='/calendar' element={< MyCalendar />}></Route>
       </Routes>
 
     </Router >

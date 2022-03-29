@@ -17,6 +17,7 @@ import WarehousePage from "./HomePages/WarehousePage.js";
 import HistoryPage from "./HomePages/HistoryPage.js";
 import CustomerPage from "./HomePages/CustomersPage.js";
 import EmployeesPage from "./HomePages/EmployeesPage.js";
+import CalendarPage from "./HomePages/CalendarPage.js";
 
 function Home() {
 
@@ -96,47 +97,6 @@ function Home() {
                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}><Button variant="outlined" onClick={() => { window.location.reload(true) }} style={{ color: 'white', backgroundColor: 'green', marginTop: '8rem' }}><Link style={{ color: 'white' }} to={"/login"}>Vai al Login</Link></Button></div>
                 </div> :
                     <div>
-                        {/* <Box sx={{ width: '100%' }}>
-                            <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '80%' }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
-                                {
-                                    auths["customers"] === "*" ? <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                                        <Tab label="Magazzino" {...a11yProps(0)} />
-                                        <Tab label="Storico" {...a11yProps(1)} />
-                                        <Tab label="Clienti" {...a11yProps(2)} />
-                                        <Tab label="Dipendenti" {...a11yProps(3)} />
-                                    </Tabs> : <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                                        <Tab label="Magazzino" {...a11yProps(0)} />
-                                        <Tab label="Clienti" {...a11yProps(1)} />
-                                    </Tabs>
-                                }
-
-                            </Box>
-                            {
-                                auths["customers"] === "*" ? "" : <Tab label="Dipendenti" {...a11yProps(3)} />
-                            }
-                            <TabPanel value={value} index={0}>
-                                <WarehousePage />
-                            </TabPanel>
-                            {
-                                auths["customers"] === "*" ? <TabPanel value={value} index={1}>
-                                    <HistoryPage />
-                                </TabPanel> : <TabPanel value={value} index={1}>
-                                    <CustomerPage />
-                                </TabPanel>
-                            }
-                            {
-                                auths["customers"] === "*" ? <TabPanel value={value} index={2}>
-                                    <CustomerPage />
-                                </TabPanel> : ""
-                            }
-                            {
-                                auths["customers"] === "*" ? <TabPanel value={value} index={3}>
-                                    <EmployeesPage />
-                                </TabPanel> : ""
-                            }
-
-                        </Box > */}
-
                         <Box sx={{ flexGrow: 1, marginBottom: 10 }}>
                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                 <Grid item xs={12} sm={6}>
@@ -150,6 +110,9 @@ function Home() {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <EmployeesPage />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <CalendarPage />
                                 </Grid>
                             </Grid>
                         </Box>

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 ReactDOM.render(
   <React.StrictMode>
