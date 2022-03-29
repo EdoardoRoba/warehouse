@@ -61,32 +61,7 @@ function Home() {
     }
 
     const userIsAuthenticated = () => {
-        if (localStorage.getItem("auths") !== null) {
-            if (localStorage.getItem("auths").includes("customers")) {
-                axiosInstance.get("authenticated", {
-                    headers: {
-                        "x-access-token": localStorage.getItem("token"),
-                        "profile": localStorage.getItem("profile"),
-                        "auths": localStorage.getItem("auths")
-                    }
-                }).then(response => {
-                    // console.log(response.data)
-                    setUserIsAuthenticatedFlag(true)
-                    var a = {}
-                    for (let au of localStorage.getItem("auths").split(',')) {
-                        a[au.split(":")[0]] = au.split(":")[1]
-                    }
-                    setAuths(a)
-                }).catch(error => {
-                    console.log(error)
-                    setUserIsAuthenticatedFlag(false)
-                });
-            } else {
-                setUserIsAuthenticatedFlag(false)
-            }
-        } else {
-            setUserIsAuthenticatedFlag(false)
-        }
+        setUserIsAuthenticatedFlag(true)
     }
 
     return (

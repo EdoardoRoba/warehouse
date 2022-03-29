@@ -2,11 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const xlsx = require('xlsx')
 const upload = require('express-fileupload')
-var fs = require('fs')
-var excel = require('excel4node');
-const Excel = require('exceljs');
-var excelbuilder = require('msexcel-builder');
-var Workbook = require('xlsx-workbook').Workbook;
 const Structure = require('./models/structure')
 const Tool = require('./models/tool')
 const EmailTemplate = require('./models/emailTemplate')
@@ -16,7 +11,7 @@ const Profile = require('./models/profile')
 const Customer = require('./models/customer')
 const Auth = require('./models/auth')
 const Color = require('./models/color')
-const Images = require('./models/images')
+const Calendar = require('./models/calendar')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -439,6 +434,7 @@ app.post('/api/employee', (req, res) => {
         label: req.body.label,
         name: req.body.name,
         lastName: req.body.lastName,
+        email: req.body.email,
         birth: req.body.birth,
         fiscalCode: req.body.fiscalCode
     })
@@ -666,6 +662,70 @@ app.get('/api/colorsStatus', (req, res) => {
     Color.find().then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
+})
+
+
+
+// CALENDAR
+// POST
+app.post('/api/calendar', (req, res) => {
+    const calendar = new Calendar({
+        start: req.body.start,
+        end: req.body.end,
+        title: req.body.title,
+        employees: req.body.employees,
+        customer: req.body.customer
+    })
+    // console.log("calendar: ", calendar)
+    calendar.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/calendar', (req, res) => {
+    // it gets all the element in that document
+    Calendar.find().then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// GET SINGLE
+app.get('/api/calendar/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    Calendar.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/calendar/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    Calendar.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// DELETE
+app.delete('/api/calendar/:id', (req, res) => {
+    const id = req.params.id;
+    Calendar.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
 })
 
 

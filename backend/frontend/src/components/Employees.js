@@ -34,6 +34,7 @@ function Employees(props) {
     const [deleteEmployeeRecordFlag, setDeleteEmployeeRecordFlag] = React.useState(false);
     const [name, setName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
+    const [email, setEmail] = React.useState("")
     const [birth, setBirth] = React.useState("")
     const [fiscalCode, setFiscalCode] = React.useState("")
     const [employees, setEmployees] = React.useState([])
@@ -171,7 +172,7 @@ function Employees(props) {
     }
 
     let addEmployeeRecord = () => {
-        axiosInstance.post('employee', { name: name.toLowerCase(), lastName: lastName.toLowerCase(), label: name.toLowerCase() + " " + lastName.toLowerCase() }) //, birth: birth, fiscalCode: fiscalCode
+        axiosInstance.post('employee', { name: name.toLowerCase(), lastName: lastName.toLowerCase(), label: name.toLowerCase() + " " + lastName.toLowerCase(), email: email }) //, birth: birth, fiscalCode: fiscalCode
             .then(response => {
                 setConfermaAdd(true)
                 getEmployees()
@@ -238,6 +239,7 @@ function Employees(props) {
                                         <div>
                                             <input placeholder="nome" onChange={(event) => { setName(event.target.value) }} />
                                             <input placeholder="cognome" onChange={(event) => { setLastName(event.target.value) }} />
+                                            <input placeholder="email" onChange={(event) => { setEmail(event.target.value) }} />
                                             {/* <input placeholder="data di nascita (dd/mm/YYYY)" onChange={(event) => { setBirth(event.target.value) }} />
                                 <input placeholder="codice fiscale" onChange={(event) => { setFiscalCode(event.target.value) }} /> */}
                                         </div>
