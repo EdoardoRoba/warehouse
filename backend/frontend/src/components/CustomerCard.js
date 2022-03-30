@@ -14,6 +14,7 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import LinkIcon from '@material-ui/icons/Link';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -993,7 +994,7 @@ function CustomerCard(customerPassed) {
                                             setFieldToEdit("nome_cognome")
                                             setOpenEditStatus(true)
                                         }}>
-                                        <EditIcon sx={{ fontSize: "15px" }} />
+                                        <EditIcon style={{ fontSize: "15px" }} />
                                     </IconButton></Tooltip>
                                 }
                             </Typography>
@@ -1011,7 +1012,7 @@ function CustomerCard(customerPassed) {
                                             setFieldToEdit("status")
                                             setOpenEditStatus(true)
                                         }}>
-                                        <EditIcon sx={{ fontSize: "15px" }} />
+                                        <EditIcon style={{ fontSize: "15px" }} />
                                     </IconButton></Tooltip>
                                 }
                             </div>
@@ -1049,7 +1050,7 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("note_info")
                                                                 setOpenEditField(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton></Tooltip>
                                                     }
                                                 </div>
@@ -1086,7 +1087,7 @@ function CustomerCard(customerPassed) {
                                                             setFieldToEdit("bonus")
                                                             setOpenEditField(true)
                                                         }}>
-                                                        <EditIcon sx={{ fontSize: "15px" }} />
+                                                        <EditIcon style={{ fontSize: "15px" }} />
                                                     </IconButton>
                                                 }
                                             </Typography>
@@ -1113,7 +1114,7 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("note_sopralluogo")
                                                                 setOpenEditField(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton></Tooltip>
                                                     }
                                                 </div>
@@ -1121,8 +1122,9 @@ function CustomerCard(customerPassed) {
                                             {/* <Typography variant="body2">
                                                 <SettingsIcon sx={{ marginBottom: '2rem' }} />
                                             </Typography> */}
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginTop: "3rem" }}>
-                                                <div>
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                {/* <div> */}
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data sopralluogo
                                                     </Typography>
@@ -1134,12 +1136,12 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("data_sopralluogo")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
-                                                </div>
-                                                <div sx={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         tecnico
                                                     </Typography>
@@ -1151,12 +1153,12 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("tecnico")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
-                                                </div>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         pdf
                                                     </Typography>
@@ -1167,13 +1169,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.pdf_sopralluogo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "pdf_sopralluogo")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1186,11 +1188,11 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("pdf_sopralluogo")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                            </div>
+                                                </Grid>
+                                            </Grid>
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }} style={{ marginTop: '3rem' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
@@ -1206,7 +1208,7 @@ function CustomerCard(customerPassed) {
                                                                     setAskDeleteAll(true)
                                                                     setTypeToDeleteAll("sopralluogo")
                                                                 }}>
-                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                         }
                                                     </div>
@@ -1263,7 +1265,7 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("note_installazione")
                                                                 setOpenEditField(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton></Tooltip>
                                                     }
                                                 </div>
@@ -1271,8 +1273,10 @@ function CustomerCard(customerPassed) {
                                             {/* <Typography variant="body2">
                                                 <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
                                             </Typography> */}
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }} style={{ marginTop: "3rem" }}>
-                                                <div>
+                                            {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }} style={{ marginTop: "3rem" }}> */}
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                {/* <div> */}
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         computo
                                                     </Typography>
@@ -1288,6 +1292,8 @@ function CustomerCard(customerPassed) {
                                                             </IconButton>
                                                         }
                                                     </Typography>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         data installazione
                                                     </Typography>
@@ -1299,12 +1305,12 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("data_installazione")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
-                                                </div>
-                                                <div sx={{ marginLeft: '5rem', marginRight: '5rem' }}>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         installatore
                                                     </Typography>
@@ -1316,12 +1322,12 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("installatore")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
-                                                </div>
-                                                <div>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         trasferta
                                                     </Typography>
@@ -1333,14 +1339,16 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("trasferta")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </Typography>
-                                                </div>
-                                            </div>
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                            </Grid>
+                                            {/* </div> */}
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                {/* <div> */}
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         collaudo
                                                     </Typography>
@@ -1351,13 +1359,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.collaudo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "collaudo")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1370,11 +1378,11 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("collaudo")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         di.co
                                                     </Typography>
@@ -1385,13 +1393,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.di_co.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "di_co")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1404,11 +1412,11 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("di_co")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         check list
                                                     </Typography>
@@ -1419,13 +1427,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.check_list.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "check_list")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1438,13 +1446,12 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("check_list")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                            </div>
-                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: "2rem" }}>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                                {/* <div> */}
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         fgas
                                                     </Typography>
@@ -1455,13 +1462,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.fgas.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "fgas")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1474,11 +1481,13 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("fgas")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                                <div sx={{ marginRight: '5rem' }}>
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         prova fumi
                                                     </Typography>
@@ -1489,13 +1498,13 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.prova_fumi.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "prova_fumi")
                                                                                 setIsLoading(true)
                                                                             }}>
-                                                                                <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
                                                                             </IconButton>
                                                                         </div>
                                                                     })
@@ -1508,11 +1517,11 @@ function CustomerCard(customerPassed) {
                                                                 setFieldToEdit("prova_fumi")
                                                                 setOpenLoadPdf(true)
                                                             }}>
-                                                            <EditIcon sx={{ fontSize: "15px" }} />
+                                                            <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton>
                                                     }
-                                                </div>
-                                            </div>
+                                                </Grid>
+                                            </Grid>
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
@@ -1528,7 +1537,7 @@ function CustomerCard(customerPassed) {
                                                                     setAskDeleteAll(true)
                                                                     setTypeToDeleteAll("fine_installazione")
                                                                 }}>
-                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                         }
                                                     </div>
@@ -1585,7 +1594,7 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("note_pagamenti")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton></Tooltip>
                                                         }
                                                     </div>
@@ -1593,8 +1602,9 @@ function CustomerCard(customerPassed) {
                                                 {/* <Typography variant="body2">
                                                     <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
                                                 </Typography> */}
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                    <div sx={{ marginRight: '5rem' }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                    {/* <div> */}
+                                                    <Grid item xs={12} sm={6}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             pagamenti (pdf)
                                                         </Typography>
@@ -1605,13 +1615,13 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.pagamenti_pdf.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "pagamenti_pdf")
                                                                                     setIsLoading(true)
                                                                                 }}>
-                                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                 </IconButton>
                                                                             </div>
                                                                         })
@@ -1624,11 +1634,11 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("pagamenti_pdf")
                                                                     setOpenLoadPdf(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
-                                                    </div>
-                                                    <div>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             pagamenti (testo)
                                                         </Typography>
@@ -1640,12 +1650,12 @@ function CustomerCard(customerPassed) {
                                                                         setFieldToEdit("pagamenti_testo")
                                                                         setOpenEditField(true)
                                                                     }}>
-                                                                    <EditIcon sx={{ fontSize: "15px" }} />
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                             }
                                                         </Typography>
-                                                    </div>
-                                                </div>
+                                                    </Grid>
+                                                </Grid>
                                             </CardContent>
                                         </Card>
                                     </div>
@@ -1679,7 +1689,7 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("note_assistenza")
                                                                     setOpenEditField(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton></Tooltip>
                                                         }
                                                     </div>
@@ -1700,7 +1710,7 @@ function CustomerCard(customerPassed) {
                                                                                             setFieldToEdit("assistenza")
                                                                                             setOpenEditField(true)
                                                                                         }}>
-                                                                                        <EditIcon sx={{ fontSize: "15px" }} />
+                                                                                        <EditIcon style={{ fontSize: "15px" }} />
                                                                                     </IconButton>
                                                                                 }
                                                                             </Typography>
@@ -1716,13 +1726,13 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.assistenza.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon sx={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "assistenza")
                                                                                     setIsLoading(true)
                                                                                 }}>
-                                                                                    <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                 </IconButton>
                                                                             </div>
                                                                         })
@@ -1735,7 +1745,7 @@ function CustomerCard(customerPassed) {
                                                                     setFieldToEdit("assistenza")
                                                                     setOpenLoadPdf(true)
                                                                 }}>
-                                                                <EditIcon sx={{ fontSize: "15px" }} />
+                                                                <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
                                                     </div>
@@ -1753,7 +1763,7 @@ function CustomerCard(customerPassed) {
                                                                         setAskDeleteAll(true)
                                                                         setTypeToDeleteAll("assistenza")
                                                                     }}>
-                                                                        <DeleteIcon sx={{ fontSize: "15px" }} />
+                                                                        <DeleteIcon style={{ fontSize: "15px" }} />
                                                                     </IconButton>
                                                             }
                                                         </div>
