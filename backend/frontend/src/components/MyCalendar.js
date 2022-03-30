@@ -42,6 +42,7 @@ function MyCalendar() {
     const [employeesInvolved, setEmployeesInvolved] = React.useState([])
     const [customerInvolved, setCustomerInvolved] = React.useState([])
     const [customerSelected, setCustomerSelected] = React.useState(null)
+    const [eventSelected, setEventSelected] = React.useState(null)
     const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
 
     const useStyles = makeStyles((theme) => ({
@@ -161,21 +162,26 @@ function MyCalendar() {
         )
         )
         setOpenModal(true)
-        // setIsLoading(true)
-        // axiosInstance.post('calendar', { start: event.start, end: event.end, title: "test" })
-        //     .then(response => {
-        //         getEvents()
-        //         setIsLoading(false)
-        //     }).catch(error => {
-        //         // console.log("error")
-        //         setIsLoading(false)
-        //         setShowError(true)
-        //     });
     }
 
     const addCalendar = () => {
         setIsLoading(true)
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved })
+            .then(response => {
+                getEvents()
+                setIsLoading(false)
+                handleCloseModal()
+            }).catch(error => {
+                // console.log("error")
+                setIsLoading(false)
+                setShowError(true)
+                handleCloseModal()
+            });
+    }
+
+    const updateCalendar = () => {
+        setIsLoading(true)
+        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved })
             .then(response => {
                 getEvents()
                 setIsLoading(false)
@@ -196,12 +202,32 @@ function MyCalendar() {
         setTitleEvent("")
         setCustomerSelected(null)
         getEvents()
+        setEventSelected(null)
         setOpenModal(false)
     }
 
     const onSelectEvent = (e) => {
-        console.log("select event")
-        console.log(e)
+        setEventSelected(e)
+        setSelectedStartTime(new Date(
+            new Date(e.start).getFullYear(),
+            new Date(e.start).getMonth(),
+            new Date(e.start).getDate(),
+            new Date(e.start).getHours(),
+            new Date(e.start).getMinutes()
+        )
+        )
+        setSelectedEndTime(new Date(
+            new Date(e.end).getFullYear(),
+            new Date(e.end).getMonth(),
+            new Date(e.end).getDate(),
+            new Date(e.end).getHours(),
+            new Date(e.end).getMinutes()
+        )
+        )
+        setEmployeesInvolved(e.employees)
+        setCustomerInvolved(e.customer)
+        setTitleEvent(e.title)
+        setOpenModal(true)
     }
 
     return (
@@ -226,7 +252,7 @@ function MyCalendar() {
                                         selectable={true}
                                         onSelectSlot={onSelectSlot}
                                         onSelectEvent={onSelectEvent}
-                                        views={["month", "week", "day"]}
+                                        views={["month"]} // "week", "day"
                                     />
                                 </div >
                         }
@@ -242,31 +268,53 @@ function MyCalendar() {
                 aria-describedby="modal-modal-description"
             >
                 <Card sx={style}>
-                    <CardHeader
-                        title="Aggiungi un nuovo evento"
-                        style={{
-                            marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
-                            color: "white",
-                            // paddingLeft: 5
-                        }}
-                    />
-                    {/* <Typography style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#ffae1b", color: "white" }} id="modal-modal-label" variant="h4" component="h2">
-                        Aggiungi un nuovo evento
-                    </Typography> */}
+                    {
+                        eventSelected === null ? <CardHeader
+                            title="Aggiungi un nuovo evento"
+                            style={{
+                                marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                color: "white",
+                                // paddingLeft: 5
+                            }}
+                        /> : <CardHeader
+                            title="Consulta o aggiorna l'evento"
+                            style={{
+                                marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                color: "white",
+                                // paddingLeft: 5
+                            }}
+                        />
+                    }
+
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                            <TextField
-                                id="standard-search"
-                                label="Titolo dell'evento"
-                                type="search"
-                                variant="standard"
-                                onChange={(e) => {
-                                    setTitleEvent(e.target.value)
-                                }}
-                                xs={12}
-                                sm={6}
-                                style={{ marginTop: "3rem", width: "80%" }}
-                            />
+                            {
+                                eventSelected === null ? <TextField
+                                    id="standard-search"
+                                    label="Titolo dell'evento"
+                                    type="search"
+                                    variant="standard"
+                                    onChange={(e) => {
+                                        setTitleEvent(e.target.value)
+                                    }}
+                                    xs={12}
+                                    sm={6}
+                                    style={{ marginTop: "3rem", width: "80%" }}
+                                /> : <TextField
+                                    id="standard-search"
+                                    label="Titolo dell'evento"
+                                    type="search"
+                                    defaultValue={eventSelected.title}
+                                    variant="standard"
+                                    onChange={(e) => {
+                                        setTitleEvent(e.target.value)
+                                    }}
+                                    xs={12}
+                                    sm={6}
+                                    style={{ marginTop: "3rem", width: "80%" }}
+                                />
+                            }
+
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
                             <TimePicker
@@ -282,59 +330,95 @@ function MyCalendar() {
                                 onChange={(date) => {
                                     setSelectedEndTime(date)
                                 }}
+
                             />
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                            <Autocomplete
-                                multiple
-                                id="tags-standard"
-                                style={{ width: "40%" }}
-                                options={employees}
-                                getOptionLabel={(option) => option.label}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label="Dipendenti coinvolti"
-                                        placeholder="dipendenti coinvolti"
-                                    />
-                                )}
-                                onChange={(event, value) => {
-                                    if (value !== null) {
-                                        setEmployeesInvolved(value)
-                                    }
-                                }}
-                            />
+                            {
+                                eventSelected === null ? <Autocomplete
+                                    multiple
+                                    id="tags-standard"
+                                    style={{ width: "40%" }}
+                                    options={employees}
+                                    getOptionLabel={(option) => option.label}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label="Dipendenti coinvolti"
+                                            placeholder="dipendenti coinvolti"
+                                        />
+                                    )}
+                                    onChange={(event, value) => {
+                                        if (value !== null) {
+                                            setEmployeesInvolved(value)
+                                        }
+                                    }}
+                                /> : <Autocomplete
+                                    multiple
+                                    id="tags-standard"
+                                    style={{ width: "40%" }}
+                                    options={employees}
+                                    defaultValue={eventSelected.employees}
+                                    getOptionLabel={(option) => option.label}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label="Dipendenti coinvolti"
+                                            placeholder="dipendenti coinvolti"
+                                        />
+                                    )}
+                                    onChange={(event, value) => {
+                                        if (value !== null) {
+                                            setEmployeesInvolved(value)
+                                        }
+                                    }}
+                                />
+                            }
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                            <Autocomplete
-                                id="tags-standard"
-                                style={{ width: "40%" }}
-                                options={customers}
-                                getOptionLabel={(option) => option.nome_cognome}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        variant="standard"
-                                        label="Cliente"
-                                        placeholder="cliente"
-                                    />
-                                )}
-                                onChange={(event, value) => {
-                                    if (value !== null) {
-                                        setCustomerInvolved(value.nome_cognome)
-                                    }
-                                }}
-                            />
+                            {
+                                eventSelected === null ? <Autocomplete
+                                    id="tags-standard"
+                                    style={{ width: "40%" }}
+                                    options={customers}
+                                    getOptionLabel={(option) => option.nome_cognome}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="standard"
+                                            label="Cliente"
+                                            placeholder="cliente"
+                                        />
+                                    )}
+                                    onChange={(event, value) => {
+                                        if (value !== null) {
+                                            setCustomerInvolved(value.nome_cognome)
+                                        }
+                                    }}
+                                /> : <TextField
+                                    disabled
+                                    id="standard-disabled"
+                                    label="Cliente selezionato per l'evento"
+                                    defaultValue={eventSelected.customer}
+                                    style={{ fontWeight: "bold" }}
+                                    variant="standard"
+                                />
+                            }
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
-                            <IconButton
-                                disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
-                                onClick={() => { addCalendar() }}>
-                                <AddBoxIcon
-                                    disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
-                                    style={{ color: "green", height: "45px", width: "45px" }} />
-                            </IconButton>
+                            {
+                                eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
+                                    variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }}
+                                    onClick={() => { addCalendar() }}>
+                                    Aggiungi evento
+                                </Button> : <Button
+                                    variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginRight: '1rem' }}
+                                    onClick={() => { updateCalendar() }}>
+                                    Aggiorna evento
+                                </Button>
+                            }
                         </div>
                         {
                             customerSelected === null ? "" : <div>
