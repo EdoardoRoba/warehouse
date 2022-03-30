@@ -22,6 +22,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
 import './Classes.css'
+import CustomerCard from "./CustomerCard.js";
 
 function MyCalendar() {
 
@@ -40,6 +41,8 @@ function MyCalendar() {
     const [selectedEndTime, setSelectedEndTime] = React.useState();
     const [employeesInvolved, setEmployeesInvolved] = React.useState([])
     const [customerInvolved, setCustomerInvolved] = React.useState([])
+    const [customerSelected, setCustomerSelected] = React.useState(null)
+    const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
 
     const useStyles = makeStyles((theme) => ({
         backdrop: {
@@ -191,6 +194,7 @@ function MyCalendar() {
         setEmployeesInvolved([])
         setCustomerInvolved()
         setTitleEvent("")
+        setCustomerSelected(null)
         getEvents()
         setOpenModal(false)
     }
@@ -332,6 +336,20 @@ function MyCalendar() {
                                     style={{ color: "green", height: "45px", width: "45px" }} />
                             </IconButton>
                         </div>
+                        {
+                            customerSelected === null ? "" : <div>
+                                <Modal
+                                    open={openCustomerCard}
+                                    onClose={() => { setOpenCustomerCard(false) }}
+                                    aria-labelledby="modal-modal-label"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                        <CustomerCard customerSelected={customerSelected} />
+                                    </Box>
+                                </Modal>
+                            </div>
+                        }
                     </MuiPickersUtilsProvider>
                 </Card>
             </Modal>

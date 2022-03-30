@@ -1171,7 +1171,6 @@ function Customers(props) {
                                                             }}
                                                         />
                                                     </div>
-
                                                     {
                                                         (!confermaUpdate) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">cliente aggiornato correttamente!</Alert>
                                                     }
