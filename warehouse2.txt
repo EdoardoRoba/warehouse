@@ -30,7 +30,9 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - dare i permessi ad installatori per vedere clienti specifici - on hold
-- pagina Home coi menu
+- search bar clienti
+- cliccando il cliente di un appuntamento vado direttamente nella sezione cliente col cliente aperto (posso anche solo richiamare la customercard)
+- default orario 8-16
 
 
 APP:
@@ -38,6 +40,7 @@ APP:
 - vedere i pdf (+ caricare) tutti, no pagamenti
 - note e computo visibili e modificabili
 - qr code: installatore (tecnico) solo togli, gli altri togli/aggiungi
+- calendario
 
 
 calendario appuntamenti - che si collega alla scheda del cliente

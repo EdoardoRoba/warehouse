@@ -141,8 +141,22 @@ function MyCalendar() {
         // console.log("select slot")
         setSelectedStartDate(event.start)
         setSelectedEndDate(event.end)
-        setSelectedStartTime(event.start)
-        setSelectedEndTime(event.end)
+        setSelectedStartTime(new Date(
+            event.start.getFullYear(),
+            event.start.getMonth(),
+            event.start.getDate(),
+            8,
+            0
+        )
+        )
+        setSelectedEndTime(new Date(
+            event.end.getFullYear(),
+            event.end.getMonth(),
+            event.end.getDate(),
+            16,
+            0
+        )
+        )
         setOpenModal(true)
         // setIsLoading(true)
         // axiosInstance.post('calendar', { start: event.start, end: event.end, title: "test" })

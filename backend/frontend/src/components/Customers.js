@@ -1145,6 +1145,19 @@ function Customers(props) {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div style={{ width: '100%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                                    <Autocomplete
+                                                        disablePortal
+                                                        id="combo-box-demo"
+                                                        options={customers}
+                                                        getOptionLabel={(option) => option.nome_cognome}
+                                                        style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "3rem" }}
+                                                        sx={{ width: 300 }}
+                                                        renderInput={(params) => <TextField {...params} label="clienti" />}
+                                                        onChange={(event, value) => {
+                                                            setCustomerSelected(value)
+                                                            setOpenCustomerCard(true)
+                                                        }}
+                                                    />
                                                     <div style={{ height: 400, width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
                                                         <DataGrid
                                                             rows={customers}
