@@ -198,7 +198,7 @@ function MyCalendar() {
         setSelectedStartTime()
         setSelectedEndTime()
         setEmployeesInvolved([])
-        setCustomerInvolved()
+        setCustomerInvolved(null)
         setTitleEvent("")
         setCustomerSelected(null)
         getEvents()
@@ -227,6 +227,7 @@ function MyCalendar() {
         setEmployeesInvolved(e.employees)
         setCustomerInvolved(e.customer)
         setTitleEvent(e.title)
+        setCustomerSelected(e.customer)
         setOpenModal(true)
     }
 
@@ -254,6 +255,186 @@ function MyCalendar() {
                                         onSelectEvent={onSelectEvent}
                                         views={["month"]} // "week", "day"
                                     />
+                                    <Modal
+                                        open={openModal}
+                                        onClose={() => { handleCloseModal() }}
+                                        aria-labelledby="modal-modal-label"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Card sx={style}>
+                                            {
+                                                eventSelected === null ? <CardHeader
+                                                    title="Aggiungi un nuovo evento"
+                                                    style={{
+                                                        marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                                        color: "white",
+                                                        // paddingLeft: 5
+                                                    }}
+                                                /> : <CardHeader
+                                                    title="Consulta o aggiorna l'evento"
+                                                    style={{
+                                                        marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                                        color: "white",
+                                                        // paddingLeft: 5
+                                                    }}
+                                                />
+                                            }
+
+                                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    {
+                                                        eventSelected === null ? <TextField
+                                                            id="standard-search"
+                                                            label="Titolo dell'evento"
+                                                            type="search"
+                                                            variant="standard"
+                                                            onChange={(e) => {
+                                                                setTitleEvent(e.target.value)
+                                                            }}
+                                                            xs={12}
+                                                            sm={6}
+                                                            style={{ marginTop: "3rem", width: "80%" }}
+                                                        /> : <TextField
+                                                            id="standard-search"
+                                                            label="Titolo dell'evento"
+                                                            type="search"
+                                                            defaultValue={eventSelected.title}
+                                                            variant="standard"
+                                                            onChange={(e) => {
+                                                                setTitleEvent(e.target.value)
+                                                            }}
+                                                            xs={12}
+                                                            sm={6}
+                                                            style={{ marginTop: "3rem", width: "80%" }}
+                                                        />
+                                                    }
+
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                    <TimePicker
+                                                        label="inizio"
+                                                        value={selectedStartTime}
+                                                        onChange={(date) => {
+                                                            setSelectedStartTime(date)
+                                                        }}
+                                                    />
+                                                    <TimePicker
+                                                        label="fine"
+                                                        value={selectedEndTime}
+                                                        onChange={(date) => {
+                                                            setSelectedEndTime(date)
+                                                        }}
+
+                                                    />
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                    {
+                                                        eventSelected === null ? <Autocomplete
+                                                            multiple
+                                                            id="tags-standard"
+                                                            style={{ width: "40%" }}
+                                                            options={employees}
+                                                            getOptionLabel={(option) => option.label}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    variant="standard"
+                                                                    label="Dipendenti coinvolti"
+                                                                    placeholder="dipendenti coinvolti"
+                                                                />
+                                                            )}
+                                                            onChange={(event, value) => {
+                                                                if (value !== null) {
+                                                                    setEmployeesInvolved(value)
+                                                                }
+                                                            }}
+                                                        /> : <Autocomplete
+                                                            multiple
+                                                            id="tags-standard"
+                                                            style={{ width: "40%" }}
+                                                            options={employees}
+                                                            defaultValue={eventSelected.employees}
+                                                            getOptionLabel={(option) => option.label}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    variant="standard"
+                                                                    label="Dipendenti coinvolti"
+                                                                    placeholder="dipendenti coinvolti"
+                                                                />
+                                                            )}
+                                                            onChange={(event, value) => {
+                                                                if (value !== null) {
+                                                                    setEmployeesInvolved(value)
+                                                                }
+                                                            }}
+                                                        />
+                                                    }
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                    {
+                                                        eventSelected === null ? <Autocomplete
+                                                            id="tags-standard"
+                                                            style={{ width: "40%" }}
+                                                            options={customers}
+                                                            getOptionLabel={(option) => option.nome_cognome}
+                                                            renderInput={(params) => (
+                                                                <TextField
+                                                                    {...params}
+                                                                    variant="standard"
+                                                                    label="Cliente"
+                                                                    placeholder="cliente"
+                                                                />
+                                                            )}
+                                                            onChange={(event, value) => {
+                                                                if (value !== null) {
+                                                                    setCustomerInvolved(value)
+                                                                }
+                                                            }}
+                                                        /> : <IconButton onClick={() => {
+                                                            setOpenCustomerCard(true)
+                                                        }}>
+                                                            <TextField
+                                                                disabled
+                                                                id="standard-disabled"
+                                                                label="Cliente selezionato per l'evento"
+                                                                defaultValue={customerInvolved.nome_cognome}
+                                                                style={{ fontWeight: "bold" }}
+                                                                variant="standard"
+                                                            />
+                                                        </IconButton>
+                                                    }
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
+                                                    {
+                                                        eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
+                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }}
+                                                            onClick={() => { addCalendar() }}>
+                                                            Aggiungi evento
+                                                        </Button> : <Button
+                                                            variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginRight: '1rem' }}
+                                                            onClick={() => { updateCalendar() }}>
+                                                            Aggiorna evento
+                                                        </Button>
+                                                    }
+                                                </div>
+                                                {
+                                                    customerSelected === null ? "" : <div>
+                                                        <Modal
+                                                            open={openCustomerCard}
+                                                            onClose={() => { setOpenCustomerCard(false) }}
+                                                            aria-labelledby="modal-modal-label"
+                                                            aria-describedby="modal-modal-description"
+                                                        >
+                                                            <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <CustomerCard customerSelected={customerSelected} />
+                                                            </Box>
+                                                        </Modal>
+                                                    </div>
+                                                }
+                                            </MuiPickersUtilsProvider>
+                                        </Card>
+                                    </Modal>
                                 </div >
                         }
                     </div>
@@ -261,182 +442,6 @@ function MyCalendar() {
             {
                 (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Upload fallito. Controlla connessione e formato dei dati.</Alert>
             }
-            <Modal
-                open={openModal}
-                onClose={() => { handleCloseModal() }}
-                aria-labelledby="modal-modal-label"
-                aria-describedby="modal-modal-description"
-            >
-                <Card sx={style}>
-                    {
-                        eventSelected === null ? <CardHeader
-                            title="Aggiungi un nuovo evento"
-                            style={{
-                                marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
-                                color: "white",
-                                // paddingLeft: 5
-                            }}
-                        /> : <CardHeader
-                            title="Consulta o aggiorna l'evento"
-                            style={{
-                                marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
-                                color: "white",
-                                // paddingLeft: 5
-                            }}
-                        />
-                    }
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                            {
-                                eventSelected === null ? <TextField
-                                    id="standard-search"
-                                    label="Titolo dell'evento"
-                                    type="search"
-                                    variant="standard"
-                                    onChange={(e) => {
-                                        setTitleEvent(e.target.value)
-                                    }}
-                                    xs={12}
-                                    sm={6}
-                                    style={{ marginTop: "3rem", width: "80%" }}
-                                /> : <TextField
-                                    id="standard-search"
-                                    label="Titolo dell'evento"
-                                    type="search"
-                                    defaultValue={eventSelected.title}
-                                    variant="standard"
-                                    onChange={(e) => {
-                                        setTitleEvent(e.target.value)
-                                    }}
-                                    xs={12}
-                                    sm={6}
-                                    style={{ marginTop: "3rem", width: "80%" }}
-                                />
-                            }
-
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                            <TimePicker
-                                label="inizio"
-                                value={selectedStartTime}
-                                onChange={(date) => {
-                                    setSelectedStartTime(date)
-                                }}
-                            />
-                            <TimePicker
-                                label="fine"
-                                value={selectedEndTime}
-                                onChange={(date) => {
-                                    setSelectedEndTime(date)
-                                }}
-
-                            />
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                            {
-                                eventSelected === null ? <Autocomplete
-                                    multiple
-                                    id="tags-standard"
-                                    style={{ width: "40%" }}
-                                    options={employees}
-                                    getOptionLabel={(option) => option.label}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            label="Dipendenti coinvolti"
-                                            placeholder="dipendenti coinvolti"
-                                        />
-                                    )}
-                                    onChange={(event, value) => {
-                                        if (value !== null) {
-                                            setEmployeesInvolved(value)
-                                        }
-                                    }}
-                                /> : <Autocomplete
-                                    multiple
-                                    id="tags-standard"
-                                    style={{ width: "40%" }}
-                                    options={employees}
-                                    defaultValue={eventSelected.employees}
-                                    getOptionLabel={(option) => option.label}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            label="Dipendenti coinvolti"
-                                            placeholder="dipendenti coinvolti"
-                                        />
-                                    )}
-                                    onChange={(event, value) => {
-                                        if (value !== null) {
-                                            setEmployeesInvolved(value)
-                                        }
-                                    }}
-                                />
-                            }
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                            {
-                                eventSelected === null ? <Autocomplete
-                                    id="tags-standard"
-                                    style={{ width: "40%" }}
-                                    options={customers}
-                                    getOptionLabel={(option) => option.nome_cognome}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            variant="standard"
-                                            label="Cliente"
-                                            placeholder="cliente"
-                                        />
-                                    )}
-                                    onChange={(event, value) => {
-                                        if (value !== null) {
-                                            setCustomerInvolved(value.nome_cognome)
-                                        }
-                                    }}
-                                /> : <TextField
-                                    disabled
-                                    id="standard-disabled"
-                                    label="Cliente selezionato per l'evento"
-                                    defaultValue={eventSelected.customer}
-                                    style={{ fontWeight: "bold" }}
-                                    variant="standard"
-                                />
-                            }
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
-                            {
-                                eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
-                                    variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }}
-                                    onClick={() => { addCalendar() }}>
-                                    Aggiungi evento
-                                </Button> : <Button
-                                    variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginRight: '1rem' }}
-                                    onClick={() => { updateCalendar() }}>
-                                    Aggiorna evento
-                                </Button>
-                            }
-                        </div>
-                        {
-                            customerSelected === null ? "" : <div>
-                                <Modal
-                                    open={openCustomerCard}
-                                    onClose={() => { setOpenCustomerCard(false) }}
-                                    aria-labelledby="modal-modal-label"
-                                    aria-describedby="modal-modal-description"
-                                >
-                                    <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                        <CustomerCard customerSelected={customerSelected} />
-                                    </Box>
-                                </Modal>
-                            </div>
-                        }
-                    </MuiPickersUtilsProvider>
-                </Card>
-            </Modal>
         </div>
     );
 }

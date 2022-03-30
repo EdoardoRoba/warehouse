@@ -20,7 +20,7 @@ const calendarSchema = new Schema({
         required: true
     },
     customer: {
-        type: String,
+        type: Object,
         required: true
     }
 }, { timestamps: true });
