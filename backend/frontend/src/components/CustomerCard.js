@@ -156,8 +156,6 @@ function CustomerCard(customerPassed) {
         userIsAuthenticated()
         getStatusColors()
         setCustomerSelected(customerPassed.customerSelected)
-        console.log("ciaooooooooo")
-        console.log(customerPassed.customerSelected)
     }, [])
 
     React.useEffect(() => {

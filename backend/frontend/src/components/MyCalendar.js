@@ -66,7 +66,8 @@ function MyCalendar() {
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
-        padding: "0 !important"
+        padding: "0 !important",
+        overflowY: 'auto'
     };
 
     React.useEffect(() => {
@@ -391,18 +392,17 @@ function MyCalendar() {
                                                                     setCustomerInvolved(value)
                                                                 }
                                                             }}
-                                                        /> : <IconButton onClick={() => {
-                                                            setOpenCustomerCard(true)
-                                                        }}>
-                                                            <TextField
-                                                                disabled
-                                                                id="standard-disabled"
-                                                                label="Cliente selezionato per l'evento"
-                                                                defaultValue={customerInvolved.nome_cognome}
-                                                                style={{ fontWeight: "bold" }}
-                                                                variant="standard"
-                                                            />
-                                                        </IconButton>
+                                                        /> : <div>
+                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                cliente
+                                                            </Typography><IconButton onClick={() => {
+                                                                setOpenCustomerCard(true)
+                                                            }}>
+                                                                <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
+                                                                    {customerInvolved.nome_cognome}
+                                                                </Typography>
+                                                            </IconButton>
+                                                        </div>
                                                     }
                                                 </div>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
