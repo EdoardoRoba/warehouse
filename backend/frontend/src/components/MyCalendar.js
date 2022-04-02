@@ -196,6 +196,7 @@ function MyCalendar() {
     }
 
     const handleCloseModal = () => {
+        setEventSelected(null)
         setSelectedStartTime()
         setSelectedEndTime()
         setEmployeesInvolved([])
@@ -203,7 +204,6 @@ function MyCalendar() {
         setTitleEvent("")
         setCustomerSelected(null)
         getEvents()
-        setEventSelected(null)
         setOpenModal(false)
     }
 
