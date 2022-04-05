@@ -1004,33 +1004,33 @@ function Warehouse(props) {
                                         {
                                             auths["warehouse"] === "installer" ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                                    <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
+                                                    <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={handleChangeAddBook}>
                                                         Aggiungi nuovo prodotto
                                                     </Button>
                                                 </Grid>
                                         }
                                         <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
+                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue' }} onClick={handleChangeGetBook}>
                                                 Trova prodotto
                                             </Button>
                                         </Grid>
                                         {
                                             auths["warehouse"] === "installer" ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                                    <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
+                                                    <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={handleChangeUpdateAddBook}>
                                                         Aumenta quantità prodotto
                                                     </Button>
                                                 </Grid>
                                         }
                                         <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
+                                            <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={handleChangeUpdateRemoveBook}>
                                                 Diminuisci quantità prodotto
                                             </Button>
                                         </Grid>
                                         {
                                             auths["warehouse"] !== "*" ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                                    <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
+                                                    <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={handleChangeUpdateBook}>
                                                         Modifica prodotto
                                                     </Button>
                                                 </Grid>
@@ -1038,7 +1038,7 @@ function Warehouse(props) {
                                         {
                                             auths["warehouse"] === "installer" ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                                    <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
+                                                    <Button style={{ color: 'white', backgroundColor: 'red' }} onClick={handleChangeDeleteBook}>
                                                         Elimina prodotto
                                                     </Button>
                                                 </Grid>
@@ -1073,48 +1073,53 @@ function Warehouse(props) {
                                                 style={{ transformOrigin: '0 0 0' }}
                                                 {...(addBookFlag ? { timeout: 1000 } : {})}
                                             >
-                                                <div style={{ marginTop: '2rem' }}>
-                                                    <div style={{ marginBottom: '1rem' }}>
-                                                        <input style={{ marginRight: '1rem' }} placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
-                                                        <input style={{ marginRight: '1rem' }} placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
-                                                        <input placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
-                                                    </div>
-                                                    <div style={{ marginBottom: '1rem' }}>
-                                                        <input style={{ marginRight: '1rem' }} placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
-                                                        <input style={{ marginRight: '1rem' }} placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
-                                                        <input placeholder="marca" onChange={(event) => { setMarca(event.target.value) }} />
-                                                    </div>
-                                                    <div>
-                                                        <div style={{ display: 'flex', marginTop: '1rem' }}>
-                                                            <Autocomplete
-                                                                disablePortal
-                                                                id="combo-box-demo"
-                                                                options={departments}
-                                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                                                sx={{ width: 300 }}
-                                                                renderInput={(params) => <TextField {...params} label="reparti" />}
-                                                                onChange={(event, value) => {
-                                                                    handleChangeDepMenu(event, value)
-                                                                }}
-                                                            />
-                                                            <Autocomplete
-                                                                disablePortal
-                                                                id="combo-box-demo"
-                                                                disabled={disabledSDMenu}
-                                                                options={subDepartmentsForMenu}
-                                                                style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                                                sx={{ width: 300 }}
-                                                                renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
-                                                                onChange={(event, value) => {
-                                                                    if (value !== null) {
-                                                                        setSubDepartment(value.label)
-                                                                    }
-                                                                }}
-                                                            />
-                                                        </div>
+                                                <div>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}> */}
+                                                        {/* <div style={{ marginBottom: '1rem' }}> */}
+                                                        <input item xs={12} sm={2} style={{ marginRight: '1rem' }} placeholder="prodotto" onChange={(event) => { setLabel(event.target.value) }} />
+                                                        <input item xs={12} sm={2} style={{ marginRight: '1rem' }} placeholder="quantità" onChange={(event) => { setQuantity(event.target.value) }} />
+                                                        <input item xs={12} sm={2} style={{ marginRight: '1rem' }} placeholder="quantità minima" onChange={(event) => { setLowerBound(event.target.value) }} />
+                                                        {/* </div> */}
+                                                        {/* <div style={{ marginBottom: '1rem' }}> */}
+                                                        <input item xs={12} sm={2} style={{ marginRight: '1rem' }} placeholder="prezzo/pz" onChange={(event) => { setPrice(event.target.value) }} />
+                                                        <input item xs={12} sm={2} style={{ marginRight: '1rem' }} placeholder="codice" onChange={(event) => { setCode(event.target.value) }} />
+                                                        <input item xs={12} sm={2} placeholder="marca" onChange={(event) => { setMarca(event.target.value) }} />
+                                                        {/* </div> */}
+                                                        {/* <div> */}
+                                                        {/* <div item xs={12} sm={6} style={{ marginTop: '1rem' }}> */}
+                                                        <Autocomplete
+                                                            disablePortal
+                                                            item xs={12} sm={6}
+                                                            id="combo-box-demo"
+                                                            options={departments}
+                                                            style={{ marginLeft: "auto", marginTop: '1rem' }}
+                                                            sx={{ width: 300 }}
+                                                            renderInput={(params) => <TextField {...params} label="reparti" />}
+                                                            onChange={(event, value) => {
+                                                                handleChangeDepMenu(event, value)
+                                                            }}
+                                                        />
+                                                        <Autocomplete
+                                                            disablePortal
+                                                            id="combo-box-demo"
+                                                            item xs={12} sm={6}
+                                                            disabled={disabledSDMenu}
+                                                            options={subDepartmentsForMenu}
+                                                            style={{ marginRight: 'auto', marginTop: '1rem' }}
+                                                            sx={{ width: 300 }}
+                                                            renderInput={(params) => <TextField {...params} label="sotto-reparti" />}
+                                                            onChange={(event, value) => {
+                                                                if (value !== null) {
+                                                                    setSubDepartment(value.label)
+                                                                }
+                                                            }}
+                                                        />
+                                                        {/* </div> */}
 
-                                                    </div>
-                                                    <div style={{ marginTop: '2rem' }}>
+                                                        {/* </div> */}
+                                                    </Grid>
+                                                    <div item xs={12} sm={12} style={{ marginTop: '2rem' }}>
                                                         <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
                                                             addTool()
                                                             setIsLoading(true)
@@ -1132,11 +1137,13 @@ function Warehouse(props) {
                                                 {...(getBookFlag ? { timeout: 1000 } : {})}
                                             >
                                                 <div style={{ marginTop: '2rem' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}> */}
                                                         <Autocomplete
                                                             disablePortal
                                                             id="combo-box-demo"
                                                             options={tools}
+                                                            item xs={12} sm={6}
                                                             style={{ marginLeft: 'auto', marginRight: "auto" }}
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
@@ -1146,13 +1153,15 @@ function Warehouse(props) {
                                                             disablePortal
                                                             id="combo-box-demo"
                                                             options={tools}
+                                                            item xs={12} sm={6}
                                                             style={{ marginLeft: 'auto', marginRight: "auto" }}
                                                             sx={{ width: 300 }}
                                                             getOptionLabel={option => option.code}
                                                             renderInput={(params) => <TextField {...params} label="prodotti (per codice)" />}
                                                             onChange={(event, value) => { showToolFound(event, value) }}
                                                         />
-                                                    </div>
+                                                        {/* </div> */}
+                                                    </Grid>
                                                     {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
                                                         <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                             <div style={{ marginRight: '3rem' }}>
@@ -1235,7 +1244,8 @@ function Warehouse(props) {
                                                 {...(updateAddBookFlag ? { timeout: 1000 } : {})}
                                             >
                                                 <div style={{ marginTop: '2rem' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                    {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}> */}
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
                                                         {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
                                                     clearTimeout(timerUpd)
                                                     setTimeout(() => {
@@ -1246,6 +1256,7 @@ function Warehouse(props) {
                                                             disablePortal
                                                             id="combo-box-demo"
                                                             options={tools}
+                                                            item xs={12} sm={6}
                                                             style={{ marginLeft: 'auto', marginRight: "2rem" }}
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params} label="prodotti" />}
@@ -1262,9 +1273,11 @@ function Warehouse(props) {
                                                             id="outlined-disabled"
                                                             label="quantità attuale presente"
                                                             value={0}
+                                                            item xs={12} sm={6}
                                                             onChange={(event) => { handleChangeInheritedQuantity(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità attuale presente"
                                                             value={inheritedQuantity}
@@ -1272,12 +1285,14 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedLowerBound === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità minima attuale richiesta"
                                                             value={0}
                                                             onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità minima attuale richiesta"
                                                             value={inheritedLowerBound}
@@ -1285,6 +1300,7 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedLastUpdated === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="ultima modifica"
@@ -1292,17 +1308,20 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             style={{ marginRight: "2rem" }}
                                                             id="outlined-disabled"
                                                             label="ultima modifica"
                                                             value={inheritedLastUpdated}
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         />}
-                                                    </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    </Grid>
+                                                    {/* </div> */}
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '1rem' }}>
                                                         {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             options={employees}
                                                             style={{ marginLeft: 'auto', marginRight: "2rem" }}
@@ -1313,6 +1332,7 @@ function Warehouse(props) {
                                                         />
                                                         <TextField
                                                             id="outlined-number"
+                                                            item xs={12} sm={6}
                                                             label="quantità"
                                                             type="number"
                                                             style={{ width: '30%' }}
@@ -1323,6 +1343,7 @@ function Warehouse(props) {
                                                             inheritedLowerBound === -1 ? <TextField
                                                                 id="outlined-number"
                                                                 label="quantità minima"
+                                                                item xs={12} sm={6}
                                                                 type="number"
                                                                 InputLabelProps={{
                                                                     shrink: true,
@@ -1331,6 +1352,7 @@ function Warehouse(props) {
                                                                 onChange={(event) => { setLowerBound(event.target.value) }}
                                                             /> : <TextField
                                                                 id="outlined-number"
+                                                                item xs={12} sm={6}
                                                                 label="quantità minima"
                                                                 type="number"
                                                                 InputLabelProps={{
@@ -1344,7 +1366,7 @@ function Warehouse(props) {
                                                             />
                                                         }
 
-                                                    </div>
+                                                    </Grid>
                                                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                         <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
                                                             updateBook(toolFound.label, quantity, user, lowerBound)
@@ -1363,7 +1385,8 @@ function Warehouse(props) {
                                                 {...(updateRemoveBookFlag ? { timeout: 1000 } : {})}
                                             >
                                                 <div style={{ marginTop: '2rem' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}> */}
                                                         {/* <input style={{ marginRight: '2rem' }} placeholder="prodotto" onChange={(event) => {
                                                     clearTimeout(timerUpd)
                                                     setTimeout(() => {
@@ -1372,6 +1395,7 @@ function Warehouse(props) {
                                                 }} /> */}
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             options={tools}
                                                             style={{ marginLeft: 'auto', marginRight: "2rem" }}
@@ -1387,12 +1411,14 @@ function Warehouse(props) {
                                                         />
                                                         {inheritedQuantity === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità attuale presente"
                                                             value={0}
                                                             onChange={(event) => { handleChangeInheritedQuantity(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità attuale presente"
                                                             value={inheritedQuantity}
@@ -1400,12 +1426,14 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedLowerBound === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità minima attuale richiesta"
                                                             value={0}
                                                             onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             label="quantità minima attuale richiesta"
                                                             value={inheritedLowerBound}
@@ -1413,6 +1441,7 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedLastUpdated === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="ultima modifica"
@@ -1420,17 +1449,21 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             style={{ marginRight: "2rem" }}
                                                             id="outlined-disabled"
                                                             label="ultima modifica"
                                                             value={inheritedLastUpdated}
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         />}
-                                                    </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        {/* </div> */}
+                                                    </Grid>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}> */}
                                                         {/* <input style={{ marginRight: '2rem' }} placeholder="utente (cognome)" onChange={(event) => { setUser(event.target.value.toLowerCase()) }} /> */}
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             options={employees}
                                                             style={{ marginLeft: 'auto', marginRight: "2rem" }}
@@ -1441,6 +1474,7 @@ function Warehouse(props) {
                                                         />
                                                         <TextField
                                                             id="outlined-number"
+                                                            item xs={12} sm={6}
                                                             label="quantità"
                                                             type="number"
                                                             style={{ width: '30%' }}
@@ -1450,6 +1484,7 @@ function Warehouse(props) {
                                                         {
                                                             inheritedLowerBound === -1 ? <TextField
                                                                 id="outlined-number"
+                                                                item xs={12} sm={6}
                                                                 label="quantità minima"
                                                                 type="number"
                                                                 InputLabelProps={{
@@ -1459,6 +1494,7 @@ function Warehouse(props) {
                                                                 onChange={(event) => { setLowerBound(event.target.value) }}
                                                             /> : <TextField
                                                                 id="outlined-number"
+                                                                item xs={12} sm={6}
                                                                 label="quantità minima"
                                                                 type="number"
                                                                 InputLabelProps={{
@@ -1472,7 +1508,8 @@ function Warehouse(props) {
                                                             />
                                                         }
 
-                                                    </div>
+                                                        {/* </div> */}
+                                                    </Grid>
                                                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                         <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
                                                             updateBook(toolFound.label, quantity, user, lowerBound)
@@ -1491,9 +1528,11 @@ function Warehouse(props) {
                                                 {...(updateBookFlag ? { timeout: 1000 } : {})}
                                             >
                                                 <div style={{ marginTop: '2rem' }}>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}> */}
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             options={tools}
                                                             style={{ marginRight: "2rem" }}
@@ -1509,6 +1548,7 @@ function Warehouse(props) {
                                                         />
                                                         {inheritedLowerBound === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="quantità minima attuale richiesta"
@@ -1516,6 +1556,7 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedLowerBound(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             style={{ marginRight: "2rem" }}
                                                             id="outlined-disabled"
                                                             label="quantità minima attuale richiesta"
@@ -1524,6 +1565,7 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedDepartment === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="reparto attuale"
@@ -1531,6 +1573,7 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedDepartment(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="reparto attuale"
@@ -1539,6 +1582,7 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedSubDepartment === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="sotto-reparto attuale"
@@ -1546,6 +1590,7 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedSubDepartment(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             style={{ marginRight: "2rem" }}
                                                             id="outlined-disabled"
                                                             label="sotto-reparto attuale"
@@ -1554,6 +1599,7 @@ function Warehouse(props) {
                                                         />}
                                                         {inheritedLastUpdated === -1 ? <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             id="outlined-disabled"
                                                             style={{ marginRight: "2rem" }}
                                                             label="ultima modifica"
@@ -1561,25 +1607,28 @@ function Warehouse(props) {
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         /> : <TextField
                                                             disabled
+                                                            item xs={12} sm={6}
                                                             style={{ marginRight: "2rem" }}
                                                             id="outlined-disabled"
                                                             label="ultima modifica"
                                                             value={inheritedLastUpdated}
                                                             onChange={(event) => { handleChangeInheritedLastUpdated(event) }}
                                                         />}
-                                                    </div>
+                                                        {/* </div> */}
+                                                    </Grid>
                                                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                         <h4>da modificare:</h4>
                                                     </div>
-                                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginTop: '2rem' }} justifyContent="center" >
+                                                        {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}> */}
                                                         <input style={{ marginRight: '2rem' }} placeholder="nuovo nome (non obbligatorio)" onChange={(event) => { setLabelToUpdate(event.target.value.toLowerCase()) }} />
                                                         <input style={{ marginRight: '2rem' }} placeholder="marca (non obbligatorio)" onChange={(event) => { setMarcaToUpdate(event.target.value.toLowerCase()) }} />
                                                         <input style={{ marginRight: '2rem' }} placeholder="codice (non obbligatorio)" onChange={(event) => { setCodeToUpdate(event.target.value.toLowerCase()) }} />
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             options={departments}
-                                                            style={{ marginLeft: 'auto', marginRight: "2rem" }}
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params} label="reparti (non obbligatorio)" />}
                                                             onChange={(event, value) => {
@@ -1588,10 +1637,10 @@ function Warehouse(props) {
                                                         />
                                                         <Autocomplete
                                                             disablePortal
+                                                            item xs={12} sm={6}
                                                             id="combo-box-demo"
                                                             disabled={disabledSDMenu}
                                                             options={subDepartmentsForMenu}
-                                                            style={{ marginLeft: 'auto', marginRight: "2rem" }}
                                                             sx={{ width: 300 }}
                                                             renderInput={(params) => <TextField {...params} label="sotto-reparti (non obbligatorio)" />}
                                                             onChange={(event, value) => {
@@ -1604,6 +1653,7 @@ function Warehouse(props) {
                                                             inheritedLowerBound === -1 ? <TextField
                                                                 id="outlined-number"
                                                                 label="quantità minima (non obbligatorio)"
+                                                                item xs={12} sm={6}
                                                                 type="number"
                                                                 InputLabelProps={{
                                                                     shrink: true,
@@ -1613,6 +1663,7 @@ function Warehouse(props) {
                                                             /> : <TextField
                                                                 id="outlined-number"
                                                                 label="quantità minima (non obbligatorio)"
+                                                                item xs={12} sm={6}
                                                                 type="number"
                                                                 InputLabelProps={{
                                                                     shrink: true,
@@ -1625,7 +1676,8 @@ function Warehouse(props) {
                                                             />
                                                         }
 
-                                                    </div>
+                                                        {/* </div> */}
+                                                    </Grid>
                                                     <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                         <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem' }} onClick={() => {
                                                             updateEntireBook(toolFound.label, lowerBound)
