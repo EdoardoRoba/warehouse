@@ -2,6 +2,7 @@
 import { axiosInstance } from "../config.js"
 import * as React from "react";
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import Typography from '@mui/material/Typography';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -18,11 +19,21 @@ const styles = StyleSheet.create({
 
 function DDT(props) {
 
+    const [customerSelected, setCustomerSelected] = React.useState(props.customer);
 
+    // React.useEffect(() => {
+    //     setCustomerSelected(props.customer)
+    // }, [])
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
+                {
+                    (customerSelected === null || customerSelected === undefined) ? "" :
+                        <Text variant="h4" component="div">
+                            {customerSelected.nome_cognome}
+                        </Text>
+                }
                 <View style={styles.section}>
                     <Text>Section #1</Text>
                 </View>

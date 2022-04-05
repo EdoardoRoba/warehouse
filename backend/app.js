@@ -21,14 +21,14 @@ var cron = require('node-cron');
 var cors = require('cors')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -41,19 +41,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 
 
@@ -129,6 +129,67 @@ cron.schedule('00 15 * * 5', () => {
         });
     });
 });
+
+
+// cron.schedule('00 9 * * *', () => {
+//     EmailTemplate.findOne({ use: "weeklyReport" }).then((emailWeeklyReport) => {
+//         EmailTemplate.findOne({ use: "singleToolReport" }).then((emailSingleTool) => {
+//             Tool.find().then((tools) => {
+//                 var listToolEmail = ""
+//                 var allAlertTool = []
+//                 var singleTool = {}
+//                 for (let t of tools) {
+//                     if (t.quantity < t.lowerBound) {
+//                         singleTool = {}
+//                         listToolEmail = listToolEmail + emailSingleTool.template.replace("{label}", t.label).replace("{label}", t.label).replace("{quantity}", t.quantity).replace("{lowerBound}", t.lowerBound).replace("{price}", t.price).replace("{department}", t.department).replace("{subDepartment}", t.subDepartment).replace("{marca}", t.marca).replace("{code}", t.code)
+//                         singleTool.prodotto = t.label
+//                         singleTool.quantita = t.quantity
+//                         singleTool.quantita_minima = t.lowerBound
+//                         singleTool.prezzo = t.price
+//                         singleTool.reparto = t.department
+//                         singleTool.sotto_reparto = t.subDepartment
+//                         singleTool.marca = t.marca
+//                         singleTool.code = t.code
+//                         allAlertTool.push(singleTool)
+//                     }
+//                 }
+//                 const workSheet = xlsx.utils.json_to_sheet(allAlertTool)
+//                 const workBook = xlsx.utils.book_new()
+
+//                 xlsx.utils.book_append_sheet(workBook, workSheet, "report")
+
+//                 let data = xlsx.write(workBook, { type: 'buffer', bookType: 'xlsx', bookSST: false });
+//                 var transporter = nodemailer.createTransport({
+//                     service: 'gmail',
+//                     auth: {
+//                         user: 'idroaltech.bot@gmail.com',
+//                         // pass: 'owgjqqmbvuzkprtw'
+//                         pass: 'qvysuihwjoiaawuj'
+//                     }
+//                 });
+
+//                 var mailOptions = {
+//                     from: 'idroaltech.bot@gmail.com',
+//                     to: 'roba.edoardo@gmail.com, logistica@idroaltech.it',
+//                     subject: 'Report settimanale - catalogo prodotti',
+//                     html: emailWeeklyReport.template.replace("{list of tools}", listToolEmail),
+//                     attachments: {
+//                         filename: "weekly_report.xlsx",
+//                         content: data
+//                     }
+//                 };
+//                 transporter.sendMail(mailOptions, function (error, info) {
+//                     if (error) {
+//                         console.log(error);
+//                     } else {
+//                         res.send('Email sent: ' + info.response)
+//                     }
+//                 });
+//             }).catch((error) => { console.log("error: ", error) })
+
+//         });
+//     });
+// });
 //EMAIL
 // app.post('/api/sendEmail', (req, res) => {
 
@@ -731,6 +792,6 @@ app.delete('/api/calendar/:id', (req, res) => {
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});

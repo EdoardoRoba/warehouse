@@ -997,56 +997,75 @@ function Warehouse(props) {
     
                                     <p>{qrData}</p>
                                 </div> */}
-                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                                            {
-                                                auths["warehouse"] === "installer" ? "" :
+                                    {/* <div rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}> */}
+                                    {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                        <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}> */}
+                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '2rem' }}>
+                                        {
+                                            auths["warehouse"] === "installer" ? "" :
+                                                <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }} onClick={handleChangeAddBook}>
                                                         Aggiungi nuovo prodotto
                                                     </Button>
-                                            }
+                                                </Grid>
+                                        }
+                                        <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                             <Button variant="outlined" style={{ color: 'white', backgroundColor: 'blue', marginRight: '1rem' }} onClick={handleChangeGetBook}>
                                                 Trova prodotto
                                             </Button>
-                                            {
-                                                auths["warehouse"] === "installer" ? "" :
+                                        </Grid>
+                                        {
+                                            auths["warehouse"] === "installer" ? "" :
+                                                <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateAddBook}>
                                                         Aumenta quantità prodotto
                                                     </Button>
-                                            }
+                                                </Grid>
+                                        }
+                                        <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                             <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateRemoveBook}>
                                                 Diminuisci quantità prodotto
                                             </Button>
-                                            {
-                                                auths["warehouse"] !== "*" ? "" :
+                                        </Grid>
+                                        {
+                                            auths["warehouse"] !== "*" ? "" :
+                                                <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button style={{ color: 'white', backgroundColor: '#ffae1b', marginLeft: '1rem', marginRight: '1rem' }} onClick={handleChangeUpdateBook}>
                                                         Modifica prodotto
                                                     </Button>
-                                            }
-                                            {
-                                                auths["warehouse"] === "installer" ? "" :
+                                                </Grid>
+                                        }
+                                        {
+                                            auths["warehouse"] === "installer" ? "" :
+                                                <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button style={{ color: 'white', backgroundColor: 'red', marginLeft: '1rem' }} onClick={handleChangeDeleteBook}>
                                                         Elimina prodotto
                                                     </Button>
-                                            }
-                                        </div>
-                                        <div style={{ width: '10%' }}>
+                                                </Grid>
+                                        }
+                                    </Grid>
+                                    <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                        <Grid>
                                             <Tooltip title="Scarica catalogo prodotti">
                                                 <IconButton
                                                     onClick={() => { exportToCSV() }}>
                                                     <GetAppIcon />
                                                 </IconButton>
                                             </Tooltip>
-                                        </div>
-                                        <div style={{ width: '10%' }}>
+                                        </Grid>
+                                        <Grid>
                                             <Tooltip style={{ marginRight: '1rem' }} title="Scarica catalogo prodotti sotto la soglia minima">
                                                 <IconButton
                                                     onClick={() => { exportToCSVAlert() }}>
                                                     <GetAppIcon style={{ color: 'red' }} />
                                                 </IconButton>
                                             </Tooltip>
-                                        </div>
+                                        </Grid>
                                     </div>
+
+                                    {/* </Grid>
+                                    </Grid> */}
+                                    {/* </div> */}
                                     {
                                         (!addBookFlag ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                             <Grow

@@ -1025,8 +1025,10 @@ function CustomerCard(customerPassed) {
                                     
                                 </div> */}
 
-                                {/* <PDFViewer><DDT /></PDFViewer> */}
-                                {/* <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
+                                {/* <PDFViewer>
+                                    <DDT customer={customerSelected} />
+                                </PDFViewer>
+                                <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
                                     {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
                                 </PDFDownloadLink> */}
 
@@ -1081,7 +1083,7 @@ function CustomerCard(customerPassed) {
                                             </Typography>
                                             <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                 {customerSelected.bonus} {bull} {customerSelected.termico_elettrico}
-                                                {
+                                                {/* {
                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                         onClick={() => {
                                                             setFieldToEdit("bonus")
@@ -1089,7 +1091,7 @@ function CustomerCard(customerPassed) {
                                                         }}>
                                                         <EditIcon style={{ fontSize: "15px" }} />
                                                     </IconButton>
-                                                }
+                                                } */}
                                             </Typography>
                                         </CardContent>
                                     </Card>
