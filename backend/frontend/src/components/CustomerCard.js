@@ -1290,164 +1290,11 @@ function CustomerCard(customerPassed) {
                                                         }
                                                     </Typography>
                                                 </Grid>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        trasferta
-                                                    </Typography>
-                                                    <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.trasferta}
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("trasferta")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton>
-                                                        }
-                                                    </Typography>
-                                                </Grid>
                                             </Grid>
                                             {/* </div> */}
                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                 {/* <div> */}
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        collaudo
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.collaudo.length === 0 || customerSelected.collaudo === "" || customerSelected.collaudo === null || customerSelected.collaudo === undefined ? "" :
-                                                            <Typography variant="h7" component="div">
-                                                                {
-                                                                    customerSelected.collaudo.map(pf => {
-                                                                        return <div>
-                                                                            <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                            </IconButton>
-                                                                            <IconButton onClick={() => {
-                                                                                deletePdf(pf, "collaudo")
-                                                                                setIsLoading(true)
-                                                                            }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                    })
-                                                                }
-                                                            </Typography>
-                                                    }
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("collaudo")
-                                                                setOpenLoadPdf(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        di.co
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.di_co.length === 0 || customerSelected.di_co === "" || customerSelected.di_co === null || customerSelected.di_co === undefined ? "" :
-                                                            <Typography variant="h7" component="div">
-                                                                {
-                                                                    customerSelected.di_co.map(pf => {
-                                                                        return <div>
-                                                                            <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                            </IconButton>
-                                                                            <IconButton onClick={() => {
-                                                                                deletePdf(pf, "di_co")
-                                                                                setIsLoading(true)
-                                                                            }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                    })
-                                                                }
-                                                            </Typography>
-                                                    }
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("di_co")
-                                                                setOpenLoadPdf(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        check list
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.check_list.length === 0 || customerSelected.check_list === "" || customerSelected.check_list === null || customerSelected.check_list === undefined ? "" :
-                                                            <Typography variant="h7" component="div">
-                                                                {
-                                                                    customerSelected.check_list.map(pf => {
-                                                                        return <div>
-                                                                            <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                            </IconButton>
-                                                                            <IconButton onClick={() => {
-                                                                                deletePdf(pf, "check_list")
-                                                                                setIsLoading(true)
-                                                                            }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                    })
-                                                                }
-                                                            </Typography>
-                                                    }
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("check_list")
-                                                                setOpenLoadPdf(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
                                                 {/* <div> */}
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        fgas
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.fgas.length === 0 || customerSelected.fgas === "" || customerSelected.fgas === null || customerSelected.fgas === undefined ? "" :
-                                                            <Typography variant="h7" component="div">
-                                                                {
-                                                                    customerSelected.fgas.map(pf => {
-                                                                        return <div>
-                                                                            <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                            </IconButton>
-                                                                            <IconButton onClick={() => {
-                                                                                deletePdf(pf, "fgas")
-                                                                                setIsLoading(true)
-                                                                            }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                    })
-                                                                }
-                                                            </Typography>
-                                                    }
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("fgas")
-                                                                setOpenLoadPdf(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
                                             </Grid>
                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                 <Grid item xs={12} sm={6}>
@@ -1485,42 +1332,8 @@ function CustomerCard(customerPassed) {
                                                     }
                                                 </Grid>
                                             </Grid>
-                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        prova fumi
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.prova_fumi.length === 0 || customerSelected.prova_fumi === "" || customerSelected.prova_fumi === null || customerSelected.prova_fumi === undefined ? "" :
-                                                            <Typography variant="h7" component="div">
-                                                                {
-                                                                    customerSelected.prova_fumi.map(pf => {
-                                                                        return <div>
-                                                                            <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
-                                                                            </IconButton>
-                                                                            <IconButton onClick={() => {
-                                                                                deletePdf(pf, "prova_fumi")
-                                                                                setIsLoading(true)
-                                                                            }}>
-                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                            </IconButton>
-                                                                        </div>
-                                                                    })
-                                                                }
-                                                            </Typography>
-                                                    }
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("prova_fumi")
-                                                                setOpenLoadPdf(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton>
-                                                    }
-                                                </Grid>
-                                            </Grid>
+                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                            </Grid> */}
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
@@ -1578,7 +1391,7 @@ function CustomerCard(customerPassed) {
                                             <CardContent>
                                                 <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                     <div>
-                                                        Pagamenti
+                                                        Documenti
                                                         <Tooltip sx={{ marginRight: '1rem' }} title={"note pagamenti"}>
                                                             <IconButton onClick={() => {
                                                                 setNoteType("note_pagamenti")
@@ -1603,6 +1416,23 @@ function CustomerCard(customerPassed) {
                                                 </Typography> */}
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                     {/* <div> */}
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            pagamenti (testo)
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            {customerSelected.pagamenti_testo}
+                                                            {
+                                                                auths["customers"] !== "*" ? "" : <IconButton
+                                                                    onClick={() => {
+                                                                        setFieldToEdit("pagamenti_testo")
+                                                                        setOpenEditField(true)
+                                                                    }}>
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                </IconButton>
+                                                            }
+                                                        </Typography>
+                                                    </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             pagamenti (pdf)
@@ -1639,20 +1469,190 @@ function CustomerCard(customerPassed) {
                                                     </Grid>
                                                     <Grid item xs={12} sm={6}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                            pagamenti (testo)
+                                                            trasferta
                                                         </Typography>
                                                         <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                            {customerSelected.pagamenti_testo}
+                                                            {customerSelected.trasferta}
                                                             {
                                                                 auths["customers"] !== "*" ? "" : <IconButton
                                                                     onClick={() => {
-                                                                        setFieldToEdit("pagamenti_testo")
+                                                                        setFieldToEdit("trasferta")
                                                                         setOpenEditField(true)
                                                                     }}>
                                                                     <EditIcon style={{ fontSize: "15px" }} />
                                                                 </IconButton>
                                                             }
                                                         </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            collaudo
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.collaudo.length === 0 || customerSelected.collaudo === "" || customerSelected.collaudo === null || customerSelected.collaudo === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    {
+                                                                        customerSelected.collaudo.map(pf => {
+                                                                            return <div>
+                                                                                <IconButton>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                </IconButton>
+                                                                                <IconButton onClick={() => {
+                                                                                    deletePdf(pf, "collaudo")
+                                                                                    setIsLoading(true)
+                                                                                }}>
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                </IconButton>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("collaudo")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            check list
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.check_list.length === 0 || customerSelected.check_list === "" || customerSelected.check_list === null || customerSelected.check_list === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    {
+                                                                        customerSelected.check_list.map(pf => {
+                                                                            return <div>
+                                                                                <IconButton>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                </IconButton>
+                                                                                <IconButton onClick={() => {
+                                                                                    deletePdf(pf, "check_list")
+                                                                                    setIsLoading(true)
+                                                                                }}>
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                </IconButton>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("check_list")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            fgas
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.fgas.length === 0 || customerSelected.fgas === "" || customerSelected.fgas === null || customerSelected.fgas === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    {
+                                                                        customerSelected.fgas.map(pf => {
+                                                                            return <div>
+                                                                                <IconButton>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                </IconButton>
+                                                                                <IconButton onClick={() => {
+                                                                                    deletePdf(pf, "fgas")
+                                                                                    setIsLoading(true)
+                                                                                }}>
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                </IconButton>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("fgas")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            prova fumi
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.prova_fumi.length === 0 || customerSelected.prova_fumi === "" || customerSelected.prova_fumi === null || customerSelected.prova_fumi === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    {
+                                                                        customerSelected.prova_fumi.map(pf => {
+                                                                            return <div>
+                                                                                <IconButton>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                </IconButton>
+                                                                                <IconButton onClick={() => {
+                                                                                    deletePdf(pf, "prova_fumi")
+                                                                                    setIsLoading(true)
+                                                                                }}>
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                </IconButton>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("prova_fumi")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            di.co
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.di_co.length === 0 || customerSelected.di_co === "" || customerSelected.di_co === null || customerSelected.di_co === undefined ? "" :
+                                                                <Typography variant="h7" component="div">
+                                                                    {
+                                                                        customerSelected.di_co.map(pf => {
+                                                                            return <div>
+                                                                                <IconButton>
+                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                </IconButton>
+                                                                                <IconButton onClick={() => {
+                                                                                    deletePdf(pf, "di_co")
+                                                                                    setIsLoading(true)
+                                                                                }}>
+                                                                                    <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                </IconButton>
+                                                                            </div>
+                                                                        })
+                                                                    }
+                                                                </Typography>
+                                                        }
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("di_co")
+                                                                    setOpenLoadPdf(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
                                                     </Grid>
                                                 </Grid>
                                             </CardContent>
