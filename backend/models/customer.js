@@ -112,7 +112,7 @@ const customerSchema = new Schema({
         required: false
     },
     tecnico_assistenza: {
-        type: Array,
+        type: String,
         required: false
     },
     foto_assistenza: {

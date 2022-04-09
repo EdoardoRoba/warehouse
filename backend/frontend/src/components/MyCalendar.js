@@ -175,12 +175,43 @@ function MyCalendar() {
         setOpenModal(true)
     }
 
+    const handleOpenCustomerCard = () => {
+        axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+            console.log("pdf eliminato!")
+            setCustomerSelected(respp.data)
+            setOpenCustomerCard(true)
+        }).catch((error) => {
+            console.log("error")
+            console.log(error)
+        })
+    }
+
+    const updateCustomer = () => {
+        let newField = {}
+        newField["tecnico_" + type] = employeesInvolved.map((eI) => eI.lastName.toUpperCase()).join("-")
+        if (type === "installazione" && (new Date(selectedStartTime).getDate()) !== (new Date(selectedEndTime).getDate())) {
+            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
+        } else {
+            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
+        }
+        // console.log(newField)
+        axiosInstance.put("customer/" + customerInvolved._id, newField).then((resp) => {
+            console.log("aggiornato!")
+            setIsLoading(false)
+        }).catch((error) => {
+            setIsLoading(false)
+            console.log("error")
+            console.log(error)
+        })
+    }
+
     const addCalendar = () => {
         setIsLoading(true)
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
             .then(response => {
                 getEvents()
                 setIsLoading(false)
+                updateCustomer()
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
@@ -188,7 +219,7 @@ function MyCalendar() {
                 setShowError(true)
                 handleCloseModal()
             });
-        // if (type)
+
     }
 
     const updateCalendar = () => {
@@ -475,7 +506,7 @@ function MyCalendar() {
                                                             <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                 cliente
                                                             </Typography><IconButton onClick={() => {
-                                                                setOpenCustomerCard(true)
+                                                                handleOpenCustomerCard()
                                                             }}>
                                                                 <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
                                                                     {customerInvolved.nome_cognome}
