@@ -174,7 +174,8 @@ function App() {
         !userIsAuthenticatedFlag ? "" : <div>
           <AppBar position="static">
             <Container maxWidth="xl" style={{ marginLeft: '0' }}>
-              <Toolbar disableGutters>
+              {/* disableGutters on the ToolBar */}
+              <Toolbar style={{ display: 'flex', justifyContent: "space-between", width: '100%' }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <IconButton onClick={toggleDrawer}
                     style={{ color: 'white' }}>
@@ -199,8 +200,8 @@ function App() {
                     </Button>
                   ))}
                 </Box>*/}
-                <Button style={{ right: '0' }} color="inherit">
-                  <Tooltip style={{ marginRight: '1rem' }} title="Logout">
+                <Button style={{ marginRight: 'auto' }} color="inherit">
+                  <Tooltip title="Logout">
                     <IconButton onClick={() => { freeCache() }}>
                       <Link style={{ color: 'white' }} to={"/login"}><ExitToAppIcon /></Link>
                     </IconButton>

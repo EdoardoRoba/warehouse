@@ -27,6 +27,10 @@ const customerSchema = new Schema({
         type: String,
         required: false
     },
+    cap: {
+        type: String,
+        required: false
+    },
     bonus: {
         type: String,
         required: false
@@ -37,6 +41,10 @@ const customerSchema = new Schema({
     },
     computo: {
         type: String,
+        required: false
+    },
+    pdf_computo: {
+        type: Array,
         required: false
     },
     data_sopralluogo: {

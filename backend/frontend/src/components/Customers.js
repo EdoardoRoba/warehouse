@@ -74,6 +74,7 @@ function Customers(props) {
     const [indirizzo, setIndirizzo] = React.useState("");
     const [comune, setComune] = React.useState("");
     const [provincia, setProvincia] = React.useState("");
+    const [cap, setCap] = React.useState("");
     const [bonus, setBonus] = React.useState("");
     const [termico_elettrico, setTermico_elettrico] = React.useState("");
     const [computo, setComputo] = React.useState("");
@@ -299,7 +300,7 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -1077,9 +1078,10 @@ function Customers(props) {
                                                                 <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="cap" onChange={(event) => { setCap(event.target.value) }} />
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 <input style={{ margin: '1rem', width: '25%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />

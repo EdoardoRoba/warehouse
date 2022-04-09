@@ -15,6 +15,7 @@ import LinkIcon from '@material-ui/icons/Link';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -70,6 +71,7 @@ function CustomerCard(customerPassed) {
     const [indirizzo, setIndirizzo] = React.useState("");
     const [comune, setComune] = React.useState("");
     const [provincia, setProvincia] = React.useState("");
+    const [cap, setCap] = React.useState("");
     const [bonus, setBonus] = React.useState("");
     const [termico_elettrico, setTermico_elettrico] = React.useState("");
     const [computo, setComputo] = React.useState("");
@@ -195,6 +197,10 @@ function CustomerCard(customerPassed) {
     }, [selectedSopralluogo])
 
     React.useEffect(() => {
+        // console.log("valueToEdit: ", valueToEdit)
+    }, [valueToEdit])
+
+    React.useEffect(() => {
         if (customerSelected !== null) {
             setCustomerSelectedId(customerSelected._id)
         }
@@ -291,51 +297,6 @@ function CustomerCard(customerPassed) {
                 setShowError(true)
             });
     }
-
-    let addCustomer = () => {
-        setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, note: note, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false })
-            .then(response => {
-                setConfermaAdd(true)
-                getCustomers()
-            }).catch(error => {
-                // console.log("error")
-                setIsLoading(false)
-                setShowError(true)
-            });
-    }
-
-    let addStatusColor = () => {
-        axiosInstance.post('colorsStatus', { label: statusToAdd, color: colorToAdd }).then(response => {
-            handleCloseColorsUpdate()
-            getStatusColors()
-        }).catch(error => {
-            // console.log("error")
-            setShowError(true)
-        });
-    }
-
-    const handleSubmission = (e) => {
-        ExcelRenderer(selectedFile, (err, resp) => {
-            if (err) {
-                console.log(err);
-                setShowError(true)
-            }
-            else {
-                axiosInstance.post('newCustomerFile', {
-                    cols: resp.cols,
-                    rows: resp.rows
-                }).then((response) => {
-                    console.log("File uploaded!")
-                    setConfermaAdd(true)
-                    getCustomers()
-                }).catch((e) => {
-                    console.log("Error while uploading file: ", e)
-                    setShowError(true)
-                })
-            }
-        });
-    };
 
     const handleCloseColorsUpdate = () => {
         setOpenColorsUpdate(false)
@@ -1070,7 +1031,7 @@ function CustomerCard(customerPassed) {
                                                 indirizzo
                                             </Typography>
                                             <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia}
+                                                {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia} {bull} {customerSelected.cap}
                                             </Typography>
                                             <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                 telefono
@@ -1481,6 +1442,42 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                             onClick={() => {
                                                                 setFieldToEdit("fgas")
+                                                                setOpenLoadPdf(true)
+                                                            }}>
+                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                        </IconButton>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                <Grid item xs={12} sm={6}>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        computo (pdf)
+                                                    </Typography>
+                                                    {
+                                                        customerSelected.pdf_computo.length === 0 || customerSelected.pdf_computo === "" || customerSelected.pdf_computo === null || customerSelected.pdf_computo === undefined ? "" :
+                                                            <Typography variant="h7" component="div">
+                                                                {
+                                                                    customerSelected.pdf_computo.map(pf => {
+                                                                        return <div>
+                                                                            <IconButton>
+                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                            </IconButton>
+                                                                            <IconButton onClick={() => {
+                                                                                deletePdf(pf, "pdf_computo")
+                                                                                setIsLoading(true)
+                                                                            }}>
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                            </IconButton>
+                                                                        </div>
+                                                                    })
+                                                                }
+                                                            </Typography>
+                                                    }
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                            onClick={() => {
+                                                                setFieldToEdit("pdf_computo")
                                                                 setOpenLoadPdf(true)
                                                             }}>
                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1947,14 +1944,14 @@ function CustomerCard(customerPassed) {
                         aria-labelledby="modal-modal-label"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
-                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                        <Box sx={style} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                            {/* <Typography item xs={12} sm={12} sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Aggiorna il campo {fieldToEdit.toUpperCase().replace("_", " ")}:
-                            </Typography>
-                            <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Nuovo valore:" variant="filled" onChange={(event) => {
+                            </Typography> */}
+                            <TextField label={"Aggiorna il campo " + fieldToEdit.toUpperCase().replace("_", " ") + ":"} item xs={12} sm={12} multiline maxRows={20} defaultValue={customerSelected[fieldToEdit]} style={{ marginBottom: '2rem', marginLeft: 'auto', marginRight: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} id="outlined-basic" variant="outlined" onChange={(event) => {
                                 setValueToEdit(event.target.value)
                             }} />
-                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                            <div item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
                                 <Button sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
                                     editField()
                                     setIsLoading(true)

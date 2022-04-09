@@ -52,6 +52,11 @@ function MyCalendar() {
         },
     }));
 
+    moment.locale('ko', {
+        week: {
+            dow: 1
+        },
+    });
     const localizer = momentLocalizer(moment)
     const classes = useStyles();
 
@@ -262,10 +267,11 @@ function MyCalendar() {
                                         aria-labelledby="modal-modal-label"
                                         aria-describedby="modal-modal-description"
                                     >
-                                        <Card sx={style}>
+                                        <Card container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={style}>
                                             {
                                                 eventSelected === null ? <CardHeader
                                                     title="Aggiungi un nuovo evento"
+                                                    item xs={12} sm={6}
                                                     style={{
                                                         marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
                                                         color: "white",
@@ -273,6 +279,7 @@ function MyCalendar() {
                                                     }}
                                                 /> : <CardHeader
                                                     title="Consulta o aggiorna l'evento"
+                                                    item xs={12} sm={6}
                                                     style={{
                                                         marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
                                                         color: "white",
@@ -311,10 +318,12 @@ function MyCalendar() {
                                                     }
 
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
                                                     <TimePicker
                                                         label="inizio"
                                                         value={selectedStartTime}
+                                                        item xs={12} sm={6}
+                                                        // style={{ width: "90%" }}
                                                         onChange={(date) => {
                                                             setSelectedStartTime(date)
                                                         }}
@@ -322,18 +331,21 @@ function MyCalendar() {
                                                     <TimePicker
                                                         label="fine"
                                                         value={selectedEndTime}
+                                                        item xs={12} sm={6}
+                                                        // style={{ width: "90%" }}
                                                         onChange={(date) => {
                                                             setSelectedEndTime(date)
                                                         }}
 
                                                     />
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
                                                     {
                                                         eventSelected === null ? <Autocomplete
                                                             multiple
                                                             id="tags-standard"
-                                                            style={{ width: "40%" }}
+                                                            // item xs={12} sm={12}
+                                                            style={{ width: "50%" }}
                                                             options={employees}
                                                             getOptionLabel={(option) => option.label}
                                                             renderInput={(params) => (
@@ -352,7 +364,8 @@ function MyCalendar() {
                                                         /> : <Autocomplete
                                                             multiple
                                                             id="tags-standard"
-                                                            style={{ width: "40%" }}
+                                                            // item xs={12} sm={12}
+                                                            style={{ width: "50%" }}
                                                             options={employees}
                                                             defaultValue={eventSelected.employees}
                                                             getOptionLabel={(option) => option.label}
@@ -371,7 +384,7 @@ function MyCalendar() {
                                                             }}
                                                         />
                                                     }
-                                                </div>
+                                                </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
                                                     {
                                                         eventSelected === null ? <Autocomplete
@@ -408,11 +421,11 @@ function MyCalendar() {
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
                                                     {
                                                         eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
-                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginRight: '1rem' }}
+                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
                                                             onClick={() => { addCalendar() }}>
                                                             Aggiungi evento
                                                         </Button> : <Button
-                                                            variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginRight: '1rem' }}
+                                                            variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
                                                             onClick={() => { updateCalendar() }}>
                                                             Aggiorna evento
                                                         </Button>
