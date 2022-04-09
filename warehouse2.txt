@@ -37,7 +37,7 @@ APP:
 - sotto cliente: indirizzo, comune, prov, company, num telefono
 - vedere i pdf (+ caricare) tutti, no pagamenti
 - note e computo visibili e modificabili
-- qr code: installatore (tecnico) solo togli, gli altri togli/aggiungi
+- qr code: tecnico_installazione (tecnico) solo togli, gli altri togli/aggiungi
 - calendario
 
 

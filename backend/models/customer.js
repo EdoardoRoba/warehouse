@@ -63,15 +63,19 @@ const customerSchema = new Schema({
         type: String,
         required: false
     },
+    data_assistenza: {
+        type: String,
+        required: false
+    },
     foto_fine_installazione: {
         type: Array,
         required: false
     },
-    installatore: {
+    tecnico_installazione: {
         type: String,
         required: false
     },
-    tecnico: {
+    tecnico_sopralluogo: {
         type: String,
         required: false
     },
@@ -104,6 +108,10 @@ const customerSchema = new Schema({
         required: false
     },
     assistenza: {
+        type: Array,
+        required: false
+    },
+    tecnico_assistenza: {
         type: Array,
         required: false
     },

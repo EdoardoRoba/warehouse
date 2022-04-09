@@ -38,7 +38,6 @@ import './Classes.css'
 import axios from "axios";
 import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject, uploadString } from "firebase/storage";
 import { makeStyles } from '@mui/styles';
-import { allCustomers } from "../allCustomers"
 import CustomerCard from "./CustomerCard.js";
 
 function Customers(props) {
@@ -80,8 +79,8 @@ function Customers(props) {
     const [computo, setComputo] = React.useState("");
     const [data_sopralluogo, setData_sopralluogo] = React.useState("");
     const [data_installazione, setData_installazione] = React.useState("");
-    const [installatore, setInstallatore] = React.useState("");
-    const [tecnico, setTecnico] = React.useState("");
+    const [tecnico_installazione, setTecnico_installazione] = React.useState("");
+    const [tecnico_sopralluogo, setTecnico_sopralluogo] = React.useState("");
     const [trasferta, setTrasferta] = React.useState("");
     const [collaudo, setCollaudo] = React.useState("");
     const [assistenza, setAssistenza] = React.useState("");
@@ -300,7 +299,7 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, installatore: installatore, tecnico: tecnico, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -1091,9 +1090,9 @@ function Customers(props) {
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 <input style={{ margin: '1rem', width: '25%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico" onChange={(event) => { setTecnico(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico sopralluogo" onChange={(event) => { setTecnico_sopralluogo(event.target.value) }} />
                                                                 <input style={{ margin: '1rem', width: '25%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="installatore" onChange={(event) => { setInstallatore(event.target.value) }} />
+                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico installazione" onChange={(event) => { setTecnico_installazione(event.target.value) }} />
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 {/* <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} /> */}

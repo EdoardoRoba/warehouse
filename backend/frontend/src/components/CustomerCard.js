@@ -77,8 +77,8 @@ function CustomerCard(customerPassed) {
     const [computo, setComputo] = React.useState("");
     const [data_sopralluogo, setData_sopralluogo] = React.useState("");
     const [data_installazione, setData_installazione] = React.useState("");
-    const [installatore, setInstallatore] = React.useState("");
-    const [tecnico, setTecnico] = React.useState("");
+    const [tecnico_installazione, setTecnico_installazione] = React.useState("");
+    const [tecnico_sopralluogo, setTecnico_sopralluogo] = React.useState("");
     const [trasferta, setTrasferta] = React.useState("");
     const [collaudo, setCollaudo] = React.useState("");
     const [assistenza, setAssistenza] = React.useState("");
@@ -1106,14 +1106,14 @@ function CustomerCard(customerPassed) {
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        tecnico
+                                                        tecnico sopralluogo
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.tecnico}
+                                                        {customerSelected.tecnico_sopralluogo}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
                                                                 onClick={() => {
-                                                                    setFieldToEdit("tecnico")
+                                                                    setFieldToEdit("tecnico_sopralluogo")
                                                                     setOpenEditField(true)
                                                                 }}>
                                                                 <EditIcon style={{ fontSize: "15px" }} />
@@ -1275,14 +1275,14 @@ function CustomerCard(customerPassed) {
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        installatore
+                                                        tecnico installazione
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.installatore}
+                                                        {customerSelected.tecnico_installazione}
                                                         {
                                                             auths["customers"] !== "*" ? "" : <IconButton
                                                                 onClick={() => {
-                                                                    setFieldToEdit("installatore")
+                                                                    setFieldToEdit("tecnico_installazione")
                                                                     setOpenEditField(true)
                                                                 }}>
                                                                 <EditIcon style={{ fontSize: "15px" }} />
@@ -1693,28 +1693,8 @@ function CustomerCard(customerPassed) {
                                                         }
                                                     </div>
                                                 </Typography>
-                                                {/* <Typography variant="body2">
-                                                    <SettingsIcon sx={{ marginBottom: '2rem' }} />
-                                                </Typography> */}
-                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                    {/* <div sx={{ marginRight: '2rem' }}>
-                                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                                assistenza
-                                                                            </Typography>
-                                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                                {customerSelected.assistenza}
-                                                                                {
-                                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                                        onClick={() => {
-                                                                                            setFieldToEdit("assistenza")
-                                                                                            setOpenEditField(true)
-                                                                                        }}>
-                                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                                    </IconButton>
-                                                                                }
-                                                                            </Typography>
-                                                                        </div> */}
-                                                    <div sx={{ marginRight: '2rem' }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                    <Grid item xs={12} sm={4}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                             assistenza (pdf)
                                                         </Typography>
@@ -1747,7 +1727,41 @@ function CustomerCard(customerPassed) {
                                                                 <EditIcon style={{ fontSize: "15px" }} />
                                                             </IconButton>
                                                         }
-                                                    </div>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={4}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            data assistenza
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            {customerSelected.data_assistenza}
+                                                            {
+                                                                auths["customers"] !== "*" ? "" : <IconButton
+                                                                    onClick={() => {
+                                                                        setFieldToEdit("data_assistenza")
+                                                                        setOpenEditField(true)
+                                                                    }}>
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                </IconButton>
+                                                            }
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={4}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            tecnico di assistenza
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            {customerSelected.tecnico_assistenza}
+                                                            {
+                                                                auths["customers"] !== "*" ? "" : <IconButton
+                                                                    onClick={() => {
+                                                                        setFieldToEdit("tecnico_assistenza")
+                                                                        setOpenEditField(true)
+                                                                    }}>
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                </IconButton>
+                                                            }
+                                                        </Typography>
+                                                    </Grid>
                                                     <div sx={{ overflowX: 'auto' }}>
                                                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                             <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem', marginBottom: '2rem' }} color="text.primary" gutterBottom>
@@ -1794,7 +1808,7 @@ function CustomerCard(customerPassed) {
                                                             }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </Grid>
                                             </CardContent>
                                         </Card>
                                     </div>

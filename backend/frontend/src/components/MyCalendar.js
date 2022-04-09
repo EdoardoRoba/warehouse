@@ -15,6 +15,8 @@ import Card from '@mui/material/Card';
 import Autocomplete from '@mui/material/Autocomplete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import DateFnsUtils from '@date-io/date-fns';
@@ -35,6 +37,7 @@ function MyCalendar() {
     const [showError, setShowError] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [titleEvent, setTitleEvent] = React.useState("");
+    const [type, setType] = React.useState("");
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [selectedStartTime, setSelectedStartTime] = React.useState();
@@ -44,6 +47,8 @@ function MyCalendar() {
     const [customerSelected, setCustomerSelected] = React.useState(null)
     const [eventSelected, setEventSelected] = React.useState(null)
     const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const openMenu = Boolean(anchorEl);
 
     const useStyles = makeStyles((theme) => ({
         backdrop: {
@@ -172,7 +177,7 @@ function MyCalendar() {
 
     const addCalendar = () => {
         setIsLoading(true)
-        axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved })
+        axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
             .then(response => {
                 getEvents()
                 setIsLoading(false)
@@ -183,11 +188,12 @@ function MyCalendar() {
                 setShowError(true)
                 handleCloseModal()
             });
+        // if (type)
     }
 
     const updateCalendar = () => {
         setIsLoading(true)
-        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved })
+        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
             .then(response => {
                 getEvents()
                 setIsLoading(false)
@@ -207,6 +213,7 @@ function MyCalendar() {
         setEmployeesInvolved([])
         setCustomerInvolved(null)
         setTitleEvent("")
+        setType("")
         setCustomerSelected(null)
         getEvents()
         setOpenModal(false)
@@ -318,7 +325,66 @@ function MyCalendar() {
                                                     }
 
                                                 </div>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                    {
+                                                        eventSelected === null ? <div>
+                                                            <Button
+                                                                id="demo-positioned-button"
+                                                                aria-controls={openMenu ? 'demo-positioned-menu' : undefined}
+                                                                aria-haspopup="true"
+                                                                aria-expanded={openMenu ? 'true' : undefined}
+                                                                onClick={(event) => {
+                                                                    setAnchorEl(event.currentTarget)
+                                                                }}
+                                                            >
+                                                                Tipo di appuntamento
+                                                            </Button>
+                                                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                {type}
+                                                            </Typography>
+                                                        </div> : <div>
+                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                Tipo di appuntamento
+                                                            </Typography>
+                                                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                {eventSelected.type}
+                                                            </Typography>
+                                                        </div>
+                                                    }
+                                                    <Menu
+                                                        id="demo-positioned-menu"
+                                                        aria-labelledby="demo-positioned-button"
+                                                        anchorEl={anchorEl}
+                                                        open={openMenu}
+                                                        onClose={() => {
+                                                            setAnchorEl(null)
+                                                        }}
+                                                        anchorOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'left',
+                                                        }}
+                                                        transformOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'left',
+                                                        }}
+                                                    >
+                                                        <MenuItem onClick={() => {
+                                                            setType("installazione")
+                                                            setAnchorEl(null)
+                                                        }}>Installazione</MenuItem>
+                                                        <MenuItem onClick={() => {
+                                                            setType("sopralluogo")
+                                                            setAnchorEl(null)
+                                                        }}>Sopralluogo</MenuItem>
+                                                        <MenuItem onClick={() => {
+                                                            setType("assistenza")
+                                                            setAnchorEl(null)
+                                                        }}>Assistenza</MenuItem>
+                                                    </Menu>
+                                                </div>
+
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
                                                     <TimePicker
                                                         label="inizio"
                                                         value={selectedStartTime}
@@ -418,9 +484,9 @@ function MyCalendar() {
                                                         </div>
                                                     }
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "8rem" }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "6rem" }}>
                                                     {
-                                                        eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === ""}
+                                                        eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === "" || type === null || type === ""}
                                                             variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
                                                             onClick={() => { addCalendar() }}>
                                                             Aggiungi evento

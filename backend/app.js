@@ -640,8 +640,8 @@ app.post('/api/customer', (req, res) => {
         computo: req.body.computo,
         data_sopralluogo: req.body.data_sopralluogo,
         data_installazione: req.body.data_installazione,
-        installatore: req.body.installatore,
-        tecnico: req.body.tecnico,
+        tecnico_installazione: req.body.tecnico_installazione,
+        tecnico_sopralluogo: req.body.tecnico_sopralluogo,
         isAssisted: req.body.isAssisted,
         trasferta: req.body.trasferta,
         assistenza: req.body.assistenza,
@@ -735,7 +735,8 @@ app.post('/api/calendar', (req, res) => {
         end: req.body.end,
         title: req.body.title,
         employees: req.body.employees,
-        customer: req.body.customer
+        customer: req.body.customer,
+        type: req.body.type
     })
     // console.log("calendar: ", calendar)
     calendar.save().then((result) => {
