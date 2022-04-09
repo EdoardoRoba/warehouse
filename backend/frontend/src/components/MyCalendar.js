@@ -177,7 +177,6 @@ function MyCalendar() {
 
     const handleOpenCustomerCard = () => {
         axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
-            console.log("pdf eliminato!")
             setCustomerSelected(respp.data)
             setOpenCustomerCard(true)
         }).catch((error) => {
@@ -210,7 +209,6 @@ function MyCalendar() {
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
             .then(response => {
                 getEvents()
-                setIsLoading(false)
                 updateCustomer()
                 handleCloseModal()
             }).catch(error => {
@@ -227,7 +225,7 @@ function MyCalendar() {
         axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
             .then(response => {
                 getEvents()
-                setIsLoading(false)
+                updateCustomer()
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
@@ -271,6 +269,7 @@ function MyCalendar() {
         setEmployeesInvolved(e.employees)
         setCustomerInvolved(e.customer)
         setTitleEvent(e.title)
+        setType(e.type)
         setCustomerSelected(e.customer)
         setOpenModal(true)
     }
@@ -508,14 +507,14 @@ function MyCalendar() {
                                                             </Typography><IconButton onClick={() => {
                                                                 handleOpenCustomerCard()
                                                             }}>
-                                                                <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
+                                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
                                                                     {customerInvolved.nome_cognome}
                                                                 </Typography>
                                                             </IconButton>
                                                         </div>
                                                     }
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "6rem" }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
                                                     {
                                                         eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === "" || type === null || type === ""}
                                                             variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
