@@ -137,6 +137,7 @@ function Warehouse(props) {
 
     // whenever the page reloads (renders), the hook "useEffect" is called
     React.useEffect(() => {
+        setIsLoading(true)
         getTools()
         getEmployees()
         getDepartments()
@@ -295,15 +296,19 @@ function Warehouse(props) {
                         a[au.split(":")[0]] = au.split(":")[1]
                     }
                     setAuths(a)
+                    setIsLoading(false)
                 }).catch(error => {
                     console.log(error)
                     setUserIsAuthenticatedFlag(false)
+                    setIsLoading(false)
                 });
             } else {
                 setUserIsAuthenticatedFlag(false)
+                setIsLoading(false)
             }
         } else {
             setUserIsAuthenticatedFlag(false)
+            setIsLoading(false)
         }
     }
 

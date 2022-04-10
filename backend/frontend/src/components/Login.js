@@ -86,6 +86,7 @@ function Login(props) {
                 localStorage.setItem("token", response.data.token)
                 localStorage.setItem("auths", response.data.auths)
                 localStorage.setItem("profile", response.data.profile)
+                localStorage.setItem("user", username)
             }).catch(error => {
                 setShowError(true)
                 console.log(error)

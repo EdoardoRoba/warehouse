@@ -124,7 +124,13 @@ function MyCalendar() {
     }
 
     const getEvents = () => {
-        axiosInstance.get('calendar')
+        let user = ""
+        if (localStorage.getItem("profile") === "admin") {
+            user = "admin"
+        } else {
+            user = localStorage.getItem("user").replaceAll(".", "_")
+        }
+        axiosInstance.get('calendar', { params: { user: user } })
             .then(res => {
                 // console.log("customers: ", res.data)
                 setEvents(res.data)
@@ -189,9 +195,9 @@ function MyCalendar() {
         let newField = {}
         newField["tecnico_" + type] = employeesInvolved.map((eI) => eI.lastName.toUpperCase()).join("-")
         if (type === "installazione" && (new Date(selectedStartTime).getDate()) !== (new Date(selectedEndTime).getDate())) {
-            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
+            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
         } else {
-            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
+            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
         }
         // console.log(newField)
         axiosInstance.put("customer/" + customerInvolved._id, newField).then((resp) => {

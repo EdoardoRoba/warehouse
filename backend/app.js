@@ -748,10 +748,19 @@ app.post('/api/calendar', (req, res) => {
 
 // GET
 app.get('/api/calendar', (req, res) => {
-    // it gets all the element in that document
-    Calendar.find().then((result) => {
-        res.send(result);
-    }).catch((error) => { console.log("error: ", error) })
+    // .findOne({ use: "weeklyReport" })
+    // it gets all the element in that document with employee requested
+    let usr = req.query.user.replace("_", " ").replace("_", " ")
+    // console.log(usr)
+    if (req.query.user === "admin") {
+        Calendar.find().then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    } else {
+        Calendar.find({ "employees.label": usr }).then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    }
 })
 
 // GET SINGLE
