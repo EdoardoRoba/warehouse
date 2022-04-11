@@ -255,17 +255,18 @@ function Customers(props) {
     const checkUserExternal = () => {
         setIsLoading(true)
         if (localStorage.getItem("user") !== "admin") {
-            axiosInstance.get('employeeIsExternal', { params: { user: localStorage.getItem("user").replaceAll(".", " ") } })
+            axiosInstance.get('employeeIsExternal', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: localStorage.getItem("user").replaceAll(".", " ") } }) // { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
                 .then(res => {
                     if (res.data) {
-                        console.log("external true: ", res.data)
                         getCustomers(localStorage.getItem("user").replaceAll(".", " "))
                     } else {
-                        console.log("external false: ", res.data)
                         getCustomers()
                     }
                 }).catch(error => {
                     // console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setIsLoading(false)
                     setShowError(true)
                 });
@@ -275,7 +276,7 @@ function Customers(props) {
     }
 
     const getStatusColors = () => {
-        axiosInstance.get('colorsStatus')
+        axiosInstance.get('colorsStatus', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 var scs = {}
                 var pss = []
@@ -289,7 +290,13 @@ function Customers(props) {
                 }
                 setPossibleStatuses(pss)
                 setStatusColors(scs)
-            })
+            }).catch(error => {
+                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+                setIsLoading(false)
+            });
     }
 
     const handleCloseNote = () => {
@@ -309,25 +316,30 @@ function Customers(props) {
     const getCustomers = (user) => {
         // console.log(user) // undefined
         if (user === undefined) {
-            axiosInstance.get('customer')
+            axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
                 .then(res => {
                     // console.log("customers: ", res.data)
                     setCustomers(res.data)
                     setIsLoading(false)
                 }).catch(error => {
                     // console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setIsLoading(false)
                     setShowError(true)
                 });
         } else {
-            console.log("user") // undefined
-            axiosInstance.get('customer', { params: { user: user } })
+            axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: user } })
                 .then(res => {
                     // console.log("customers: ", res.data)
                     setCustomers(res.data)
                     setIsLoading(false)
                 }).catch(error => {
                     // console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setIsLoading(false)
                     setShowError(true)
                 });
@@ -336,23 +348,29 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
             });
     }
 
     let addStatusColor = () => {
-        axiosInstance.post('colorsStatus', { label: statusToAdd, color: colorToAdd }).then(response => {
+        axiosInstance.post('colorsStatus', { label: statusToAdd, color: colorToAdd }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then(response => {
             handleCloseColorsUpdate()
             getStatusColors()
         }).catch(error => {
             // console.log("error")
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
             setShowError(true)
         });
     }
@@ -367,12 +385,14 @@ function Customers(props) {
                 axiosInstance.post('newCustomerFile', {
                     cols: resp.cols,
                     rows: resp.rows
-                }).then((response) => {
+                }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((response) => {
                     console.log("File uploaded!")
                     setConfermaAdd(true)
                     getCustomers()
-                }).catch((e) => {
-                    console.log("Error while uploading file: ", e)
+                }).catch((error) => {
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setShowError(true)
                 })
             }
@@ -416,20 +436,22 @@ function Customers(props) {
     const editField = () => {
         var newField = {}
         newField[fieldToEdit] = valueToEdit
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((response) => {
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((response) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                 console.log("aggiornato!")
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditField()
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
         }).catch((error) => {
-            console.log("error")
-            console.log(error)
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
             setIsLoading(false)
         })
     }
@@ -437,20 +459,22 @@ function Customers(props) {
     const editStatus = () => {
         var newField = {}
         newField[fieldToEdit] = valueToEdit
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((response) => {
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((response) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                 console.log("aggiornato!")
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditStatus()
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
         }).catch((error) => {
-            console.log("error")
-            console.log(error)
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
             setIsLoading(false)
         })
     }
@@ -477,16 +501,17 @@ function Customers(props) {
                     } else {
                         newField[fieldToEdit].push(fileUrl)
                     }
-                    axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                        axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                             setIsLoading(false)
                             console.log("customer updated")
                             setCustomerSelected(respp.data)
                             handleCloseLoadPdf()
                         }).catch((error) => {
                             setIsLoading(false)
-                            console.log("error")
-                            console.log(error)
+                            if (error.response.status === 401) {
+                                userIsAuthenticated()
+                            }
                         })
                     })
                 })
@@ -502,20 +527,22 @@ function Customers(props) {
                 var new_pdf_array = customerSelected[pdfType].filter((p) => p !== pdf)
                 var newField = {}
                 newField[pdfType] = new_pdf_array
-                axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                    axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+                axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                    axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                         setIsLoading(false)
                         console.log("pdf eliminato!")
                         setCustomerSelected(respp.data)
                     }).catch((error) => {
                         setIsLoading(false)
-                        console.log("error")
-                        console.log(error)
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                     })
                 }).catch((error) => {
                     setIsLoading(false)
-                    console.log("error")
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                 })
             })
             .catch((err) => {
@@ -537,8 +564,8 @@ function Customers(props) {
                 var new_pdf_array = customerSelected[phType].filter((p) => p !== ph)
                 var newField = {}
                 newField[phType] = new_pdf_array
-                axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                    axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                         console.log("foto eliminata!")
                         setIsLoading(false)
                         setCustomerSelected(respp.data)
@@ -550,12 +577,14 @@ function Customers(props) {
                         setPageAssistenza(1)
                     }).catch((error) => {
                         setIsLoading(false)
-                        console.log("error")
-                        console.log(error)
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                     })
                 }).catch((error) => {
-                    console.log("error")
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setIsLoading(false)
                 })
             })
@@ -579,324 +608,13 @@ function Customers(props) {
         })
     }
 
-    const deleteAllImages = async () => {
-        let ok = []
-        const oldPhLen = customerSelected["foto_" + typeToDeleteAll].length
-        for (let i of customerSelected["foto_" + typeToDeleteAll]) {
-            ok.push(deleteImageOnFirebase(i))
-        }
-
-        ok = await Promise.allSettled(ok)
-        let isOk = ok.filter((e) => e.status === "fulfilled").map((e) => e.value)
-        let isNotOk = ok.filter((e) => e.status !== "fulfilled").map((e) => e.value)
-        if (isNotOk.length > 0) {
-            setIsLoading(false)
-            handleCloseAskDeleteAll()
-        }
-
-        if (isOk.length === oldPhLen) {
-            let newField = {}
-            newField["foto_" + typeToDeleteAll] = []
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
-                    setIsLoading(false)
-                    console.log("phs eliminate!")
-                    setCustomerSelected(respp.data)
-                    handleCloseAskDeleteAll()
-                }).catch((error) => {
-                    setIsLoading(false)
-                    console.log("error")
-                    console.log(error)
-                    handleCloseAskDeleteAll()
-                })
-            }).catch((error) => {
-                setIsLoading(false)
-                console.log("error")
-                console.log(error)
-                handleCloseAskDeleteAll()
-            })
-        }
-    }
-
-    const assistCustomer = (flag) => {
-        let newField = {}
-        newField.isAssisted = flag
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-            axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
-                setIsLoading(false)
-                console.log("phs eliminate!")
-                setCustomerSelected(respp.data)
-            }).catch((error) => {
-                setIsLoading(false)
-                console.log("error")
-                console.log(error)
-            })
-        }).catch((error) => {
-            setIsLoading(false)
-            console.log("error")
-            console.log(error)
-        })
-    }
-
-    // const getImages = (type) => {
-    //     setIsLoading(true)
-    //     axiosInstance.get('images', { params: { type: type, customer: customerSelected.nome_cognome } })
-    //         .then(response => {
-    //             // console.log("images: ", response)
-    //             setImagesToShow(response.data[0].images)
-    //             setIsLoading(false)
-    //             setImagesId(response.data[0]._id)
-    //         }).catch(error => {
-    //             setIsLoading(false)
-    //             setShowError(true)
-    //         });
-    // }
-
-    const handleSubmissionSopralluogo = (e) => {
-        var imgs = {}
-        imgs.images = imagesToShow
-        var customer = {}
-        customer.foto_sopralluogo = customerSelected.foto_sopralluogo
-        if (imageTypes.includes(selectedSopralluogo[0].type)) {
-            for (let s of selectedSopralluogo) {
-                // customer.foto_sopralluogo.push(s.base64)
-                // imgs.images.push(s.base64)
-
-                const now = Date.now()
-                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
-                const uploadTask = uploadBytesResumable(storageRef, s)
-                uploadTask.on("state_changed", (snapshot) => {
-                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                    setProgress(progr)
-                }, (error) => console.log("error: ", error),
-                    () => {
-                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-                            console.log("fileUrl: ", fileUrl)
-                            customer.foto_sopralluogo.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-                                setConfermaUpdate(true)
-                                getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-                                    setIsLoading(false)
-                                    console.log("customer updated")
-                                    setCustomerSelected(respp.data)
-                                }).catch((error) => {
-                                    setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
-                                })
-                            }).catch((error) => {
-                                // console.log("error: ", error)
-                                setIsLoading(false)
-                                setShowError(true)
-                            });
-                        })
-                    }
-                )
-            }
-        } else {
-            setGenericError("Tipo file non riconosciuto.")
-        }
-
-
-
-
-
-        // for (let s of selectedSopralluogo) {
-        //     // customer.foto_sopralluogo.push(s.base64)
-        //     imgs.images.push(s.base64)
-
-        //     const now = Date.now()
-        //     const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
-        //     // storageRef.put(s).on('state_changed', (snap) => {
-        //     //     let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
-        //     //     setProgress(percentage);
-        //     // }, (err) => {
-        //     //     setShowError(true)
-        //     // }, async () => {
-        //     //     const urll = await storageRef.getDownloadURL();
-        //     //     setUrl(urll);
-        //     // });
-        //     const uploadTask = uploadBytesResumable(storageRef, s)
-        //     uploadTask.on("state_changed", (snapshot) => {
-        //         const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        //         setProgress(progr)
-        //         setIsLoading(false)
-        //     }, (error) => console.log("error: ", error),
-        //         () => {
-        //             //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-        //             getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-        //                 console.log("fileUrl: ", fileUrl)
-        //                 // const image = new Image();
-        //                 // image.onload = () => {
-        //                 //     setSrc(fileUrl)
-        //                 // };
-        //                 // image.src = fileUrl;
-        //                 // console.log("image", image)
-        //                 // customer.foto_sopralluogo.push(image)
-        //                 customer.foto_sopralluogo.push(fileUrl)
-        //                 // var newField = {}
-        //                 // newField[fieldToEdit] = customerSelected[fieldToEdit]
-        //                 // if (newField[fieldToEdit] === undefined) {
-        //                 //     newField[fieldToEdit] = [fileUrl]
-        //                 // } else {
-        //                 //     newField[fieldToEdit].push(fileUrl)
-        //                 // }
-        //                 // axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-        //                 //     setConfermaUpdate(true)
-        //                 //     getCustomers()
-        //                 //     axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("customer updated")
-        //                 //         setCustomerSelected(respp.data)
-        //                 //     }).catch((error) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("error")
-        //                 //         console.log(error)
-        //                 //     })
-        //                 // }).catch((error) => {
-        //                 //     // console.log("error: ", error)
-        //                 //     setIsLoading(false)
-        //                 //     setShowError(true)
-        //                 // });
-        //             })
-        //         }
-        //     )
-        // }
-        // axiosInstance.put("images/" + imagesId, imgs).then(response => {
-        //     // console.log("Fatto!", response)
-        //     setConfermaUpdate(true)
-        //     getImages("sopralluogo")
-        //     setIsLoading(false)
-        // }).catch((error) => {
-        //     // console.log("error: ", error)
-        //     setIsLoading(false)
-        //     setShowError(true)
-        // });
-
-    };
-
-    const handleSubmissionInstallazione = (e) => {
-        var imgs = {}
-        imgs.images = imagesToShow
-        var customer = {}
-        customer.foto_fine_installazione = customerSelected.foto_fine_installazione
-        if (imageTypes.includes(selectedInstallazione[0].type)) {
-            for (let s of selectedInstallazione) {
-                // customer.foto_fine_installazione.push(s.base64)
-                // imgs.images.push(s.base64)
-
-                const now = Date.now()
-                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/fine_installazione/' + now + "_" + s.name)
-                const uploadTask = uploadBytesResumable(storageRef, s)
-                uploadTask.on("state_changed", (snapshot) => {
-                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                    setProgress(progr)
-                }, (error) => console.log("error: ", error),
-                    () => {
-                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-                            console.log("fileUrl: ", fileUrl)
-                            customer.foto_fine_installazione.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-                                setConfermaUpdate(true)
-                                getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-                                    setIsLoading(false)
-                                    console.log("customer updated")
-                                    setCustomerSelected(respp.data)
-                                }).catch((error) => {
-                                    setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
-                                })
-                            }).catch((error) => {
-                                // console.log("error: ", error)
-                                setIsLoading(false)
-                                setShowError(true)
-                            });
-                        })
-                    }
-                )
-            }
-        } else {
-            setGenericError("Tipo file non riconosciuto.")
-        }
-    };
-
-    const handleSubmissionAssistenza = (e) => {
-        var imgs = {}
-        imgs.images = imagesToShow
-        var customer = {}
-        customer.foto_assistenza = customerSelected.foto_assistenza
-        if (imageTypes.includes(selectedAssistenza[0].type)) {
-            for (let s of selectedAssistenza) {
-                // customer.foto_assistenza.push(s.base64)
-                // imgs.images.push(s.base64)
-
-                const now = Date.now()
-                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/assistenza/' + now + "_" + s.name)
-                const uploadTask = uploadBytesResumable(storageRef, s)
-                uploadTask.on("state_changed", (snapshot) => {
-                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                    setProgress(progr)
-                }, (error) => console.log("error: ", error),
-                    () => {
-                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-                            console.log("fileUrl: ", fileUrl)
-                            customer.foto_assistenza.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-                                setConfermaUpdate(true)
-                                getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-                                    setIsLoading(false)
-                                    console.log("customer updated")
-                                    setCustomerSelected(respp.data)
-                                }).catch((error) => {
-                                    setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
-                                })
-                            }).catch((error) => {
-                                // console.log("error: ", error)
-                                setIsLoading(false)
-                                setShowError(true)
-                            });
-                        })
-                    }
-                )
-            }
-        } else {
-            setGenericError("Tipo file non riconosciuto.")
-        }
-    };
-
     const downloadCustomers = () => { // csvData, fileName
-        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
-        // var csvData = []
-        // for (let c of customers) {
-        //     var customerForCsv = {}
-        //     customerForCsv.company = c.company
-        //     customerForCsv.nome_cognome = c.nome
-        //     customerForCsv.attrezzo = c.label
-        //     customerForCsv.codice = c.code
-        //     customerForCsv.quantita = c.quantity
-        //     customerForCsv.quantita_minima = c.lowerBound
-        //     csvData.push(customerForCsv)
-        // }
         let fileName = "clienti"
         const ws = XLSX.utils.json_to_sheet(customers);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
         saveAs(data, fileName + fileExtension);
-    }
-
-    const downloadImage = async (image, filename) => {
-        let blob = await fetch(image).then((r) => r.blob());
-        saveAs(blob, filename + ".jpg")
     }
 
     const convertToBase64 = (u) => {

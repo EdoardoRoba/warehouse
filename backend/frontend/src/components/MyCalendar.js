@@ -132,32 +132,45 @@ function MyCalendar() {
         } else {
             user = localStorage.getItem("user").replaceAll(".", "_")
         }
-        axiosInstance.get('calendar', { params: { user: user } })
+        axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: user } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
             .then(res => {
                 // console.log("customers: ", res.data)
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
             });
     }
 
     const getEmployees = async () => {
-        axiosInstance.get('employee')
+        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
-            })
+            }).catch(error => {
+                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+            });
     }
 
     const getCustomers = async () => {
-        axiosInstance.get('customer')
+        axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Customers: ", res.data)
                 setCustomers(res.data)
-            })
+            }).catch(error => {
+                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+            });
     }
 
     const onSelectSlot = (event) => {
@@ -184,12 +197,13 @@ function MyCalendar() {
     }
 
     const handleOpenCustomerCard = () => {
-        axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+        axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
             setCustomerSelected(respp.data)
             setOpenCustomerCard(true)
         }).catch((error) => {
-            console.log("error")
-            console.log(error)
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
         })
     }
 
@@ -202,25 +216,28 @@ function MyCalendar() {
             newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
         }
         // console.log(newField)
-        axiosInstance.put("customer/" + customerInvolved._id, newField).then((resp) => {
+        axiosInstance.put("customer/" + customerInvolved._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
             console.log("aggiornato!")
             setIsLoading(false)
         }).catch((error) => {
             setIsLoading(false)
-            console.log("error")
-            console.log(error)
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
         })
     }
 
     const addCalendar = () => {
         setIsLoading(true)
-        axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
+        axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
                 updateCustomer()
                 handleCloseModal()
             }).catch(error => {
-                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
                 handleCloseModal()
@@ -230,13 +247,16 @@ function MyCalendar() {
 
     const updateCalendar = () => {
         setIsLoading(true)
-        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type })
+        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
                 updateCustomer()
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
                 handleCloseModal()
@@ -300,11 +320,14 @@ function MyCalendar() {
             }
             filter.user = user
             filter[type] = valFilter
-            axiosInstance.get('calendar', { params: filter }).then((res) => {
+            axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: filter }).then((res) => { //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
             });
@@ -630,7 +653,7 @@ function MyCalendar() {
                     </div>
             }
             {
-                (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Upload fallito. Controlla connessione e formato dei dati.</Alert>
+                (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Error. Controlla connessione, formato dei dati o ricarica la pagina.</Alert>
             }
         </div>
     );

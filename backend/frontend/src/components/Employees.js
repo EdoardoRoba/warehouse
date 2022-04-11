@@ -184,15 +184,19 @@ function Employees(props) {
     };
 
     const getEmployees = async () => {
-        axiosInstance.get('employee')
+        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     }
 
     const getCustomers = async () => {
-        axiosInstance.get('customer')
+        axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Customers: ", res.data)
                 setCustomers(res.data)
@@ -200,23 +204,29 @@ function Employees(props) {
     }
 
     let addEmployeeRecord = () => {
-        axiosInstance.post('employee', { name: name.toLowerCase(), lastName: lastName.toLowerCase(), label: name.toLowerCase() + " " + lastName.toLowerCase(), email: email, external: checkedCheckbox, visibleCustomers: visibleCustomers }) //, birth: birth, fiscalCode: fiscalCode
+        axiosInstance.post('employee', { name: name.toLowerCase(), lastName: lastName.toLowerCase(), label: name.toLowerCase() + " " + lastName.toLowerCase(), email: email, external: checkedCheckbox, visibleCustomers: visibleCustomers }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, birth: birth, fiscalCode: fiscalCode
             .then(response => {
                 setConfermaAdd(true)
                 getEmployees()
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setShowError(true)
             });
     }
 
     let updateEmployeeRecord = () => {
-        axiosInstance.put('employee/' + employeeFound._id, { visibleCustomers: visibleCustomers }) //, birth: birth, fiscalCode: fiscalCode
+        axiosInstance.put('employee/' + employeeFound._id, { visibleCustomers: visibleCustomers }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, birth: birth, fiscalCode: fiscalCode
             .then(response => {
                 setConfermaAdd(true)
                 getEmployees()
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setShowError(true)
             });
     }
@@ -229,12 +239,15 @@ function Employees(props) {
             }
         })
         if (emplId !== "") {
-            axiosInstance.delete('employee/' + emplId)
+            axiosInstance.delete('employee/' + emplId, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
                 .then(() => {
                     setConfermaDelete(true)
                     getEmployees()
                 }).catch(error => {
                     // console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setShowError(true)
                 });
         } else {

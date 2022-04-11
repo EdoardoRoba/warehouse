@@ -82,17 +82,25 @@ function History(props) {
     }, [showError]);
 
     const getEmployees = async () => {
-        axiosInstance.get('employee')
+        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     }
 
     const getTools = async () => {
-        axiosInstance.get('tool')
+        axiosInstance.get('tool', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 setTools(res.data)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     };
 
@@ -107,9 +115,13 @@ function History(props) {
     };
 
     const getHistory = () => {
-        axiosInstance.get('history')
+        axiosInstance.get('history', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 setHistory(res.data)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     }
 
@@ -149,21 +161,27 @@ function History(props) {
             if (type === "user") {
                 setEmployeeSelected(value.lastName)
                 setToolSelected(null)
-                axiosInstance.get('history', { params: { type: "user", data: value.lastName } })
+                axiosInstance.get('history', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { type: "user", data: value.lastName } }) //
                     .then(response => {
                         setHistoryShown(response.data)
                     }).catch(error => {
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                         setShowError(true)
                     });
             } else {
                 setEmployeeSelected(null)
                 setToolSelected(value.label)
                 console.log(value.label)
-                axiosInstance.get('history', { params: { type: "tool", data: value.label } })
+                axiosInstance.get('history', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { type: "tool", data: value.label } })
                     .then(response => {
                         console.log(response.data)
                         setHistoryShown(response.data)
                     }).catch(error => {
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                         setShowError(true)
                     });
             }

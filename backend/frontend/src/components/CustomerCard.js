@@ -253,7 +253,7 @@ function CustomerCard(customerPassed) {
     };
 
     const getStatusColors = () => {
-        axiosInstance.get('colorsStatus')
+        axiosInstance.get('colorsStatus', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 var scs = {}
                 var pss = []
@@ -267,7 +267,14 @@ function CustomerCard(customerPassed) {
                 }
                 setPossibleStatuses(pss)
                 setStatusColors(scs)
-            })
+            }).catch(error => {
+                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+                setIsLoading(false)
+                setShowError(true)
+            });
     }
 
     const handleCloseNote = () => {
@@ -286,13 +293,16 @@ function CustomerCard(customerPassed) {
     };
 
     const getCustomers = () => {
-        axiosInstance.get('customer')
+        axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("customers: ", res.data)
                 setCustomers(res.data)
                 setIsLoading(false)
             }).catch(error => {
-                // console.log("error")
+                console.log(error)
+                if (error.status === 401) {
+                    console.log("errorrrrrrrrrrrr")
+                }
                 setIsLoading(false)
                 setShowError(true)
             });
@@ -335,16 +345,17 @@ function CustomerCard(customerPassed) {
     const editField = () => {
         var newField = {}
         newField[fieldToEdit] = valueToEdit
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((response) => {
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((response) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                 console.log("aggiornato!")
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditField()
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
         }).catch((error) => {
             console.log("error")
@@ -356,16 +367,17 @@ function CustomerCard(customerPassed) {
     const editStatus = () => {
         var newField = {}
         newField[fieldToEdit] = valueToEdit
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((response) => {
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
+        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((response) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                 console.log("aggiornato!")
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditStatus()
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
         }).catch((error) => {
             console.log("error")
@@ -396,16 +408,17 @@ function CustomerCard(customerPassed) {
                     } else {
                         newField[fieldToEdit].push(fileUrl)
                     }
-                    axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                        axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                             setIsLoading(false)
                             console.log("customer updated")
                             setCustomerSelected(respp.data)
                             handleCloseLoadPdf()
                         }).catch((error) => {
                             setIsLoading(false)
-                            console.log("error")
-                            console.log(error)
+                            if (error.response.status === 401) {
+                                userIsAuthenticated()
+                            }
                         })
                     })
                 })
@@ -421,20 +434,22 @@ function CustomerCard(customerPassed) {
                 var new_pdf_array = customerSelected[pdfType].filter((p) => p !== pdf)
                 var newField = {}
                 newField[pdfType] = new_pdf_array
-                axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                    axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+                axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                    axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                         setIsLoading(false)
                         console.log("pdf eliminato!")
                         setCustomerSelected(respp.data)
                     }).catch((error) => {
                         setIsLoading(false)
-                        console.log("error")
-                        console.log(error)
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                     })
                 }).catch((error) => {
                     setIsLoading(false)
-                    console.log("error")
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                 })
             })
             .catch((err) => {
@@ -456,8 +471,8 @@ function CustomerCard(customerPassed) {
                 var new_pdf_array = customerSelected[phType].filter((p) => p !== ph)
                 var newField = {}
                 newField[phType] = new_pdf_array
-                axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                    axiosInstance.put("customer/" + customerSelected._id, newField).then((respp) => {
+                axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                         console.log("foto eliminata!")
                         setIsLoading(false)
                         setCustomerSelected(respp.data)
@@ -469,12 +484,14 @@ function CustomerCard(customerPassed) {
                         setPageAssistenza(1)
                     }).catch((error) => {
                         setIsLoading(false)
-                        console.log("error")
-                        console.log(error)
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
                     })
                 }).catch((error) => {
-                    console.log("error")
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setIsLoading(false)
                 })
             })
@@ -516,22 +533,24 @@ function CustomerCard(customerPassed) {
         if (isOk.length === oldPhLen) {
             let newField = {}
             newField["foto_" + typeToDeleteAll] = []
-            axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-                axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                     setIsLoading(false)
                     console.log("phs eliminate!")
                     setCustomerSelected(respp.data)
                     handleCloseAskDeleteAll()
                 }).catch((error) => {
                     setIsLoading(false)
-                    console.log("error")
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     handleCloseAskDeleteAll()
                 })
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 handleCloseAskDeleteAll()
             })
         }
@@ -540,15 +559,16 @@ function CustomerCard(customerPassed) {
     const assistCustomer = (flag) => {
         let newField = {}
         newField.isAssisted = flag
-        axiosInstance.put("customer/" + customerSelected._id, newField).then((resp) => {
-            axiosInstance.get("customer/" + customerSelected._id).then((respp) => {
+        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+            axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                 setIsLoading(false)
                 console.log("phs eliminate!")
                 setCustomerSelected(respp.data)
             }).catch((error) => {
                 setIsLoading(false)
-                console.log("error")
-                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
         }).catch((error) => {
             setIsLoading(false)
@@ -593,20 +613,24 @@ function CustomerCard(customerPassed) {
                         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
                             console.log("fileUrl: ", fileUrl)
                             customer.foto_sopralluogo.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                                 setConfermaUpdate(true)
                                 getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
+                                    if (error.response.status === 401) {
+                                        userIsAuthenticated()
+                                    }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
+                                if (error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
                                 setIsLoading(false)
                                 setShowError(true)
                             });
@@ -718,20 +742,24 @@ function CustomerCard(customerPassed) {
                         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
                             console.log("fileUrl: ", fileUrl)
                             customer.foto_fine_installazione.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                                 setConfermaUpdate(true)
                                 getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
+                                    if (error.response.status === 401) {
+                                        userIsAuthenticated()
+                                    }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
+                                if (error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
                                 setIsLoading(false)
                                 setShowError(true)
                             });
@@ -766,20 +794,24 @@ function CustomerCard(customerPassed) {
                         getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
                             console.log("fileUrl: ", fileUrl)
                             customer.foto_assistenza.push(fileUrl)
-                            axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
+                            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
                                 setConfermaUpdate(true)
                                 getCustomers()
-                                axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
+                                axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    console.log("error")
-                                    console.log(error)
+                                    if (error.response.status === 401) {
+                                        userIsAuthenticated()
+                                    }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
+                                if (error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
                                 setIsLoading(false)
                                 setShowError(true)
                             });

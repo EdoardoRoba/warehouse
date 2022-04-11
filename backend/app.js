@@ -19,6 +19,7 @@ const multer = require("multer");
 const path = require('path');
 var cron = require('node-cron');
 var cors = require('cors')
+const middleware = require('./middleware/middleware')
 const jwt = require("jsonwebtoken")
 const app = express();
 const feUrl = "http://localhost:3000"
@@ -30,21 +31,6 @@ const port = process.env.PORT || 8050
 // app.use(express.static(path.join(__dirname, "/frontend/build")));
 // app.use(cors())
 
-// module.exports = (req, res, next) => {
-//     try {
-//         const token = req.headers.authorization.split(" ")[1];
-//         const decodedToken = jwt.verify(
-//             token,
-//             "secret_this_should_be_longer"
-//         ); req.userData = {
-//             email: decodedToken.email,
-//             userId: decodedToken.userId
-//         }; next();
-//     } catch (error) {
-//         res.status(401).json({ message: "Auth failed!" });
-//     }
-// };
-
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
@@ -52,6 +38,7 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Headers", 'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
     next();
 });
+
 
 // app.use(bodyParser.json())
 
@@ -70,7 +57,14 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-
+app.use("/api/auth", middleware)
+app.use("/api/structure", middleware)
+app.use("/api/tool", middleware)
+app.use("/api/history", middleware)
+app.use("/api/employee", middleware)
+app.use("/api/customer", middleware)
+app.use("/api/colorStatus", middleware)
+app.use("/api/calendar", middleware)
 
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ limit: '1000mb' }));
@@ -604,11 +598,11 @@ const verifyJWT = (req, res, next) => {
     const profile = req.headers["profile"]
     const auths = req.headers["auths"] //.split(',')
     if (!token) {
-        res.status(406).send("The user is not authenticated.")
+        res.status(401).send("The user is not authenticated.")
     } else {
         jwt.verify(token, "jwtSecret", (err, decoded) => {
             if (err) {
-                res.status(406).send("The user is not authenticated.")
+                res.status(401).send("The user is not authenticated.")
                 // res.json({ auth: false, message: "You failed to authenticate." })
             } else {
                 Auth.findOne({ code: profile }).then((resAuth) => {
@@ -616,7 +610,7 @@ const verifyJWT = (req, res, next) => {
                         req.userId = decoded.id;
                         next();
                     } else {
-                        res.status(406).send({ message: "permissions changed" })
+                        res.status(401).send({ message: "permissions changed" })
                     }
                 }).catch((error) => { console.log("error: ", error) })
             }
@@ -705,7 +699,6 @@ app.post('/api/customer', (req, res) => {
 app.get('/api/customer', (req, res) => {
     // it gets all the element in that document
     if (req.query !== null && req.query.user !== null && req.query.user !== undefined) {
-        console.log(req.query)
         Employee.findOne({ label: req.query.user }).then((result) => {
             res.send(result.visibleCustomers);
         }).catch((error) => { console.log("error: ", error) })

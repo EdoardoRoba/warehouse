@@ -591,26 +591,34 @@ function Warehouse(props) {
 
     // GET
     const getTools = async () => {
-        axiosInstance.get('tool')
+        axiosInstance.get('tool', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Tools: ", res.data)
                 let ts = res.data
                 ts.sort((a, b) => (a.label.toUpperCase() > b.label.toUpperCase()) ? 1 : -1)
                 setTools(ts)
                 setIsLoading(false)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     };
 
     const getEmployees = async () => {
-        axiosInstance.get('employee')
+        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 // console.log("Employees: ", res.data)
                 setEmployees(res.data)
                 setIsLoading(false)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     }
     const getDepartments = async () => {
-        axiosInstance.get('structure')
+        axiosInstance.get('structure', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
                 var depts = res.data
                 setAllDeps(depts)
@@ -629,18 +637,25 @@ function Warehouse(props) {
                 }
                 setOpenPapers(openDeps)
                 setIsLoading(false)
+            }).catch(error => {
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
             })
     }
 
     // POST
     let addTool = () => {
-        axiosInstance.post('tool', { label: label.toUpperCase(), quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '', code: code, marca: marca })
+        axiosInstance.post('tool', { label: label.toUpperCase(), quantity: quantity, lowerBound: lowerBound, price: price, department: department, subDepartment: subDepartment, lastUser: '', code: code, marca: marca }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 setConfermaAdd(true)
                 getTools()
                 setIsLoading(false)
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setShowError(true)
                 setIsLoading(false)
             });
@@ -760,11 +775,14 @@ function Warehouse(props) {
     }
 
     const editDepartment = () => {
-        axiosInstance.put("structure/" + departmentToUpdate._id, { label: editedDepartmentLabel }).then(response => {
+        axiosInstance.put("structure/" + departmentToUpdate._id, { label: editedDepartmentLabel }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then(response => {
             console.log("Reparto aggiornato!")
             handleCloseEditDeps()
             setIsLoading(false)
         }).catch(error => {
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
             setShowError(true)
             setIsLoading(false)
         });
@@ -817,7 +835,7 @@ function Warehouse(props) {
                 }
             })
             if (bookId !== "") {
-                axiosInstance.put("tool/" + bookId, newField).then(response => {
+                axiosInstance.put("tool/" + bookId, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then(response => {
                     // console.log("Fatto!", response)
                     setConfermaUpdate(true)
                     getTools()
@@ -828,7 +846,7 @@ function Warehouse(props) {
                     if (updateRemoveBookFlag) {
                         upds = { user: user.toLowerCase(), tool: label, totalQuantity: oldQuantity - parseInt(q), update: -parseInt(q) } //, row: r - 1, column: c
                     }
-                    axiosInstance.post('history/' + label, upds)
+                    axiosInstance.post('history/' + label, upds, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
                         .then(response => {
                             console.log("History added!")
                             setIsLoading(false)
@@ -838,6 +856,9 @@ function Warehouse(props) {
                         });
                 }).catch((error) => {
                     // console.log("error: ", error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setShowError(true)
                     setIsLoading(false)
                 });
@@ -885,7 +906,7 @@ function Warehouse(props) {
             }
         })
         if (bookId !== "") {
-            axiosInstance.put("tool/" + bookId, newField).then(response => {
+            axiosInstance.put("tool/" + bookId, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then(response => {
                 // console.log("Fatto!", response)
                 if (toolInSd !== null) {
                     closeOpenPaper(toolInSd.subDepartment)
@@ -901,6 +922,9 @@ function Warehouse(props) {
                 setIsLoading(false)
             }).catch((error) => {
                 // console.log("error: ", error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
                 setIsLoading(false)
                 setShowError(true)
             });
@@ -922,11 +946,14 @@ function Warehouse(props) {
         } else {
             name = addingDepartment
         }
-        axiosInstance.post('structure', { label: name.toLowerCase(), father: father.toLowerCase() }).then(response => {
+        axiosInstance.post('structure', { label: name.toLowerCase(), father: father.toLowerCase() }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then(response => {
             handleCloseLibraryUpdate()
             setIsLoading(false)
         }).catch(error => {
             // console.log("error")
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
             setShowError(true)
             setIsLoading(false)
         });
@@ -953,13 +980,15 @@ function Warehouse(props) {
             }
         })
         if (bookId !== "") {
-            axiosInstance.delete('tool/' + bookId)
+            axiosInstance.delete('tool/' + bookId, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
                 .then(() => {
                     setConfermaDelete(true)
                     getTools()
                     setIsLoading(false)
                 }).catch(error => {
-                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
                     setShowError(true)
                     setIsLoading(false)
                 });
