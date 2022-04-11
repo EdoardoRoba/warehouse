@@ -30,6 +30,21 @@ const port = process.env.PORT || 8050
 // app.use(express.static(path.join(__dirname, "/frontend/build")));
 // app.use(cors())
 
+// module.exports = (req, res, next) => {
+//     try {
+//         const token = req.headers.authorization.split(" ")[1];
+//         const decodedToken = jwt.verify(
+//             token,
+//             "secret_this_should_be_longer"
+//         ); req.userData = {
+//             email: decodedToken.email,
+//             userId: decodedToken.userId
+//         }; next();
+//     } catch (error) {
+//         res.status(401).json({ message: "Auth failed!" });
+//     }
+// };
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
     res.header("Access-Control-Allow-Credentials", true);
@@ -497,7 +512,9 @@ app.post('/api/employee', (req, res) => {
         lastName: req.body.lastName,
         email: req.body.email,
         birth: req.body.birth,
-        fiscalCode: req.body.fiscalCode
+        fiscalCode: req.body.fiscalCode,
+        external: req.body.external,
+        visibleCustomers: req.body.visibleCustomers
     })
     // console.log("employee: ", employee)
     employee.save().then((result) => {

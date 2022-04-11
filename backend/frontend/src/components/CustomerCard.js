@@ -1086,25 +1086,6 @@ function CustomerCard(customerPassed) {
                                                 <SettingsIcon sx={{ marginBottom: '2rem' }} />
                                             </Typography> */}
                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        note sopralluogo
-                                                    </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.note_sopralluogo}
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note_sopralluogo")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton>
-                                                        }
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                 {/* <div> */}
                                                 <Grid item xs={12} sm={6}>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
@@ -1224,6 +1205,25 @@ function CustomerCard(customerPassed) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                    <Typography display="inline-block" style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        note sopralluogo
+                                                    </Typography>
+                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                        {customerSelected.note_sopralluogo}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("note_sopralluogo")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -1252,25 +1252,6 @@ function CustomerCard(customerPassed) {
                                                     } */}
                                                 </div>
                                             </Typography>
-                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                        note installazione
-                                                    </Typography>
-                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.note_installazione}
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note_installazione")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton>
-                                                        }
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                 {/* <div> */}
                                                 <Grid item xs={12} sm={6}>
@@ -1416,6 +1397,25 @@ function CustomerCard(customerPassed) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                    <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        note installazione
+                                                    </Typography>
+                                                    <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                        {customerSelected.note_installazione}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("note_installazione")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -1448,25 +1448,6 @@ function CustomerCard(customerPassed) {
                                                 {/* <Typography variant="body2">
                                                     <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
                                                 </Typography> */}
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                    <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                            note documenti
-                                                        </Typography>
-                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                            {customerSelected.note_pagamenti}
-                                                            {
-                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                    onClick={() => {
-                                                                        setFieldToEdit("note_pagamenti")
-                                                                        setOpenEditField(true)
-                                                                    }}>
-                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                </IconButton>
-                                                            }
-                                                        </Typography>
-                                                    </Grid>
-                                                </Grid>
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                     {/* <div> */}
                                                     <Grid item xs={12} sm={6}>
@@ -1708,6 +1689,25 @@ function CustomerCard(customerPassed) {
                                                         }
                                                     </Grid>
                                                 </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                    <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            note documenti
+                                                        </Typography>
+                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            {customerSelected.note_pagamenti}
+                                                            {
+                                                                auths["customers"] !== "*" ? "" : <IconButton
+                                                                    onClick={() => {
+                                                                        setFieldToEdit("note_pagamenti")
+                                                                        setOpenEditField(true)
+                                                                    }}>
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                </IconButton>
+                                                            }
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
                                             </CardContent>
                                         </Card>
                                     </div>
@@ -1746,25 +1746,6 @@ function CustomerCard(customerPassed) {
                                                         } */}
                                                     </div>
                                                 </Typography>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                    <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                            note assistenza
-                                                        </Typography>
-                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                            {customerSelected.assistenza}
-                                                            {
-                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                    onClick={() => {
-                                                                        setFieldToEdit("assistenza")
-                                                                        setOpenEditField(true)
-                                                                    }}>
-                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                </IconButton>
-                                                            }
-                                                        </Typography>
-                                                    </Grid>
-                                                </Grid>
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                     <Grid item xs={12} sm={4}>
                                                         <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
@@ -1880,6 +1861,25 @@ function CustomerCard(customerPassed) {
                                                             }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_assistenza.length} foto</Button>
                                                         </div>
                                                     </div>
+                                                </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                    <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                        <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            note assistenza
+                                                        </Typography>
+                                                        <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            {customerSelected.assistenza}
+                                                            {
+                                                                auths["customers"] !== "*" ? "" : <IconButton
+                                                                    onClick={() => {
+                                                                        setFieldToEdit("assistenza")
+                                                                        setOpenEditField(true)
+                                                                    }}>
+                                                                    <EditIcon style={{ fontSize: "15px" }} />
+                                                                </IconButton>
+                                                            }
+                                                        </Typography>
+                                                    </Grid>
                                                 </Grid>
                                             </CardContent>
                                         </Card>

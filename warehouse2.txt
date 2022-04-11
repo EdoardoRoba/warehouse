@@ -31,6 +31,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 warehouse:
 - filtro calendario su clienti e dipendenti
 - dipendenti external
+- layout note
 
 
 
