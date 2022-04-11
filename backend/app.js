@@ -748,12 +748,21 @@ app.post('/api/calendar', (req, res) => {
 
 // GET
 app.get('/api/calendar', (req, res) => {
-    // .findOne({ use: "weeklyReport" })
-    // it gets all the element in that document with employee requested
-    let usr = req.query.user.replace("_", " ").replace("_", " ")
-    // console.log(usr)
+    let filter = {}
+    let usr = ""
+    if (req.query.customer !== null && req.query.customer !== undefined) {
+        filter["customer.nome_cognome"] = req.query.customer
+    }
+    if (req.query.employee !== null && req.query.employee !== undefined) {
+        filter["employees.label"] = req.query.employee
+    }
+    if (req.query.user !== null && req.query.user !== undefined) {
+        // it gets all the element in that document with employee requested
+        usr = req.query.user.replace("_", " ").replace("_", " ")
+        filter.usr = req.query.user
+    }
     if (req.query.user === "admin") {
-        Calendar.find().then((result) => {
+        Calendar.find(filter).then((result) => {
             res.send(result);
         }).catch((error) => { console.log("error: ", error) })
     } else {

@@ -14,7 +14,9 @@ import CardHeader from '@mui/material/CardHeader';
 import Card from '@mui/material/Card';
 import Autocomplete from '@mui/material/Autocomplete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import ReplayIcon from '@material-ui/icons/Replay';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -280,6 +282,35 @@ function MyCalendar() {
         setOpenModal(true)
     }
 
+    const showFilteredCalendar = (value, type) => {
+        if (value !== null) {
+            setIsLoading(true)
+            let user = ""
+            if (localStorage.getItem("profile") === "admin") {
+                user = "admin"
+            } else {
+                user = localStorage.getItem("user").replaceAll(".", "_")
+            }
+            let filter = {}
+            let valFilter = ""
+            if (type === "customer") {
+                valFilter = value.nome_cognome
+            } else {
+                valFilter = value.label
+            }
+            filter.user = user
+            filter[type] = valFilter
+            axiosInstance.get('calendar', { params: filter }).then((res) => {
+                setEvents(res.data)
+                setIsLoading(false)
+            }).catch(error => {
+                // console.log("error")
+                setIsLoading(false)
+                setShowError(true)
+            });
+        }
+    }
+
     return (
         <div>
             {
@@ -293,6 +324,44 @@ function MyCalendar() {
                                 <CircularProgress color="inherit" />
                             </Backdrop> :
                                 <div style={{ marginBottom: "1rem", marginTop: "2rem", width: "90%", marginLeft: "auto", marginRight: "auto" }}>
+                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center">
+                                        <Autocomplete
+                                            disablePortal
+                                            item xs={12} sm={4}
+                                            id="combo-box-demo"
+                                            options={customers}
+                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                            sx={{ width: 300 }}
+                                            getOptionLabel={option => option.nome_cognome.toUpperCase()}
+                                            renderInput={(params) => <TextField {...params} label="filtra per cliente" />}
+                                            onChange={(event, value) => {
+                                                showFilteredCalendar(value, "customer")
+                                            }
+                                            }
+                                        />
+                                        <Autocomplete
+                                            disablePortal
+                                            item xs={12} sm={4}
+                                            id="combo-box-demo"
+                                            options={employees}
+                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                            sx={{ width: 300 }}
+                                            getOptionLabel={option => option.label.toUpperCase()}
+                                            renderInput={(params) => <TextField {...params} label="filtra per cliente" />}
+                                            onChange={(event, value) => {
+                                                showFilteredCalendar(value, "employee")
+                                            }
+                                            }
+                                        />
+                                        <Tooltip item xs={12} sm={4} sx={{ marginRight: '1rem' }} title={"Azzera filtri"}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    getEvents()
+                                                }}>
+                                                <ReplayIcon style={{ fontSize: "30px" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid >
                                     <Calendar
                                         localizer={localizer}
                                         events={events}
@@ -333,7 +402,7 @@ function MyCalendar() {
 
                                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                                 {
-                                                    localStorage.getItem("user") !== "admin" && eventSelected === null ?
+                                                    auths["calendar"] !== "*" && eventSelected === null ?
                                                         <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
                                                         : <div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>

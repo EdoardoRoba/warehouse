@@ -29,8 +29,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- campo note nella box visibile
-- filtro calendario
+- filtro calendario su clienti e dipendenti
 - dipendenti external
 
 

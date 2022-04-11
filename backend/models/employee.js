@@ -26,6 +26,14 @@ const employeeSchema = new Schema({
     email: {
         type: String,
         required: false
+    },
+    external: {
+        type: Boolean,
+        required: false
+    },
+    visibleCustomers: {
+        type: Array,
+        required: false
     }
 }, { timestamps: true });
 
