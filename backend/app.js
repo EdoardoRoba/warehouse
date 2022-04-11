@@ -526,10 +526,38 @@ app.post('/api/employee', (req, res) => {
 
 // GET
 app.get('/api/employee', (req, res) => {
+    // let filter = {}
+    // if (req.query !== null && req.query.visibleCustomers !== null) {
+    //     filter.label = req.query.visibleCustomers
+    // }
     // it gets all the element in that document
     Employee.find().then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
+})
+
+// GET EXTERNAL
+app.get('/api/employeeIsExternal', (req, res) => {
+    let filter = {}
+    filter.label = req.query.user
+    // it gets all the element in that document
+    Employee.findOne(filter).then((result) => {
+        res.send(result.external);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/employee/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    Employee.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
 })
 
 //DELETE
@@ -676,9 +704,16 @@ app.post('/api/customer', (req, res) => {
 // GET
 app.get('/api/customer', (req, res) => {
     // it gets all the element in that document
-    Customer.find().then((result) => {
-        res.send(result);
-    }).catch((error) => { console.log("error: ", error) })
+    if (req.query !== null && req.query.user !== null && req.query.user !== undefined) {
+        console.log(req.query)
+        Employee.findOne({ label: req.query.user }).then((result) => {
+            res.send(result.visibleCustomers);
+        }).catch((error) => { console.log("error: ", error) })
+    } else {
+        Customer.find().then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    }
 })
 
 // PUT

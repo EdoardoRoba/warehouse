@@ -160,7 +160,7 @@ function Customers(props) {
 
     React.useEffect(() => {
         userIsAuthenticated()
-        getCustomers()
+        checkUserExternal()
         getStatusColors()
     }, [])
 
@@ -252,6 +252,28 @@ function Customers(props) {
         setPageAssistenza(value);
     };
 
+    const checkUserExternal = () => {
+        setIsLoading(true)
+        if (localStorage.getItem("user") !== "admin") {
+            axiosInstance.get('employeeIsExternal', { params: { user: localStorage.getItem("user").replaceAll(".", " ") } })
+                .then(res => {
+                    if (res.data) {
+                        console.log("external true: ", res.data)
+                        getCustomers(localStorage.getItem("user").replaceAll(".", " "))
+                    } else {
+                        console.log("external false: ", res.data)
+                        getCustomers()
+                    }
+                }).catch(error => {
+                    // console.log("error")
+                    setIsLoading(false)
+                    setShowError(true)
+                });
+        } else {
+            getCustomers()
+        }
+    }
+
     const getStatusColors = () => {
         axiosInstance.get('colorsStatus')
             .then(res => {
@@ -284,17 +306,32 @@ function Customers(props) {
         setIsSopralluogoPicked(true);
     };
 
-    const getCustomers = () => {
-        axiosInstance.get('customer')
-            .then(res => {
-                // console.log("customers: ", res.data)
-                setCustomers(res.data)
-                setIsLoading(false)
-            }).catch(error => {
-                // console.log("error")
-                setIsLoading(false)
-                setShowError(true)
-            });
+    const getCustomers = (user) => {
+        // console.log(user) // undefined
+        if (user === undefined) {
+            axiosInstance.get('customer')
+                .then(res => {
+                    // console.log("customers: ", res.data)
+                    setCustomers(res.data)
+                    setIsLoading(false)
+                }).catch(error => {
+                    // console.log("error")
+                    setIsLoading(false)
+                    setShowError(true)
+                });
+        } else {
+            console.log("user") // undefined
+            axiosInstance.get('customer', { params: { user: user } })
+                .then(res => {
+                    // console.log("customers: ", res.data)
+                    setCustomers(res.data)
+                    setIsLoading(false)
+                }).catch(error => {
+                    // console.log("error")
+                    setIsLoading(false)
+                    setShowError(true)
+                });
+        }
     }
 
     let addCustomer = () => {

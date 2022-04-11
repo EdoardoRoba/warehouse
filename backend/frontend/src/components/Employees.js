@@ -120,6 +120,10 @@ function Employees(props) {
         setShowQuestionDelete(false)
         setCheckedCheckbox(false)
         setVisibleCustomers([])
+        setShowError(false)
+        setConfermaAdd(false)
+        setConfermaUpdate(false)
+        setConfermaDelete(false)
     };
 
     const handleChangeGetEmployeeRecord = () => {
@@ -135,6 +139,10 @@ function Employees(props) {
         setShowQuestionDelete(false)
         setCheckedCheckbox(false)
         setVisibleCustomers([])
+        setShowError(false)
+        setConfermaAdd(false)
+        setConfermaUpdate(false)
+        setConfermaDelete(false)
     };
 
     const handleChangeUpdateEmployeeRecord = () => {
@@ -150,6 +158,10 @@ function Employees(props) {
         setShowQuestionDelete(false)
         setCheckedCheckbox(false)
         setVisibleCustomers([])
+        setShowError(false)
+        setConfermaAdd(false)
+        setConfermaUpdate(false)
+        setConfermaDelete(false)
     };
 
     const handleChangeDeleteEmployeeRecord = () => {
@@ -165,6 +177,10 @@ function Employees(props) {
         setShowQuestionDelete(false)
         setCheckedCheckbox(false)
         setVisibleCustomers([])
+        setShowError(false)
+        setConfermaAdd(false)
+        setConfermaUpdate(false)
+        setConfermaDelete(false)
     };
 
     const getEmployees = async () => {
