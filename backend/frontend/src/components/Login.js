@@ -141,20 +141,16 @@ function Login(props) {
                             <Typography style={{ marginBottom: '3rem' }} variant="h3" component="div">
                                 Login
                             </Typography>
-                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                            {/* <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}> */}
+                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
                                 <TextField
                                     required
+                                    item xs={12} sm={6}
                                     id="outlined-required"
                                     label="username"
                                     onChange={(event) => { setUsername(event.target.value) }}
                                 />
-                                {/* <TextField
-                            id="outlined-password-input"
-                            label="Password"
-                            type="password"
-                            autoComplete="current-password"
-                        /> */}
-                                <FormControl sx={{ width: '25ch' }} variant="outlined">
+                                <FormControl sx={{ width: '25ch' }} variant="outlined" tem xs={12} sm={6}>
                                     <InputLabel htmlFor="outlined-adornment-password">password</InputLabel>
                                     <OutlinedInput
                                         id="outlined-adornment-password"
@@ -176,7 +172,8 @@ function Login(props) {
                                         label="Password"
                                     />
                                 </FormControl>
-                            </div>
+                            </Grid>
+                            {/* </div> */}
                             <Button onClick={login} variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginTop: '3rem' }}>Conferma</Button>
                         </CardContent>
                     </Card>

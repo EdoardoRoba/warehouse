@@ -332,220 +332,226 @@ function MyCalendar() {
                                             }
 
                                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                    {
-                                                        eventSelected === null ? <TextField
-                                                            id="standard-search"
-                                                            label="Titolo dell'evento"
-                                                            type="search"
-                                                            variant="standard"
-                                                            onChange={(e) => {
-                                                                setTitleEvent(e.target.value)
-                                                            }}
-                                                            xs={12}
-                                                            sm={6}
-                                                            style={{ marginTop: "3rem", width: "80%" }}
-                                                        /> : <TextField
-                                                            id="standard-search"
-                                                            label="Titolo dell'evento"
-                                                            type="search"
-                                                            defaultValue={eventSelected.title}
-                                                            variant="standard"
-                                                            onChange={(e) => {
-                                                                setTitleEvent(e.target.value)
-                                                            }}
-                                                            xs={12}
-                                                            sm={6}
-                                                            style={{ marginTop: "3rem", width: "80%" }}
-                                                        />
-                                                    }
-
-                                                </div>
-
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                                    {
-                                                        eventSelected === null ? <div>
-                                                            <Button
-                                                                id="demo-positioned-button"
-                                                                aria-controls={openMenu ? 'demo-positioned-menu' : undefined}
-                                                                aria-haspopup="true"
-                                                                aria-expanded={openMenu ? 'true' : undefined}
-                                                                onClick={(event) => {
-                                                                    setAnchorEl(event.currentTarget)
-                                                                }}
-                                                            >
-                                                                Tipo di appuntamento
-                                                            </Button>
-                                                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
-                                                                {type}
-                                                            </Typography>
-                                                        </div> : <div>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                Tipo di appuntamento
-                                                            </Typography>
-                                                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
-                                                                {eventSelected.type}
-                                                            </Typography>
-                                                        </div>
-                                                    }
-                                                    <Menu
-                                                        id="demo-positioned-menu"
-                                                        aria-labelledby="demo-positioned-button"
-                                                        anchorEl={anchorEl}
-                                                        open={openMenu}
-                                                        onClose={() => {
-                                                            setAnchorEl(null)
-                                                        }}
-                                                        anchorOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'left',
-                                                        }}
-                                                        transformOrigin={{
-                                                            vertical: 'top',
-                                                            horizontal: 'left',
-                                                        }}
-                                                    >
-                                                        <MenuItem onClick={() => {
-                                                            setType("installazione")
-                                                            setAnchorEl(null)
-                                                        }}>Installazione</MenuItem>
-                                                        <MenuItem onClick={() => {
-                                                            setType("sopralluogo")
-                                                            setAnchorEl(null)
-                                                        }}>Sopralluogo</MenuItem>
-                                                        <MenuItem onClick={() => {
-                                                            setType("assistenza")
-                                                            setAnchorEl(null)
-                                                        }}>Assistenza</MenuItem>
-                                                    </Menu>
-                                                </div>
-
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
-                                                    <TimePicker
-                                                        label="inizio"
-                                                        value={selectedStartTime}
-                                                        item xs={12} sm={6}
-                                                        // style={{ width: "90%" }}
-                                                        onChange={(date) => {
-                                                            setSelectedStartTime(date)
-                                                        }}
-                                                    />
-                                                    <TimePicker
-                                                        label="fine"
-                                                        value={selectedEndTime}
-                                                        item xs={12} sm={6}
-                                                        // style={{ width: "90%" }}
-                                                        onChange={(date) => {
-                                                            setSelectedEndTime(date)
-                                                        }}
-
-                                                    />
-                                                </Grid>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                                                    {
-                                                        eventSelected === null ? <Autocomplete
-                                                            multiple
-                                                            id="tags-standard"
-                                                            // item xs={12} sm={12}
-                                                            style={{ width: "50%" }}
-                                                            options={employees}
-                                                            getOptionLabel={(option) => option.label}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    variant="standard"
-                                                                    label="Dipendenti coinvolti"
-                                                                    placeholder="dipendenti coinvolti"
-                                                                />
-                                                            )}
-                                                            onChange={(event, value) => {
-                                                                if (value !== null) {
-                                                                    setEmployeesInvolved(value)
-                                                                }
-                                                            }}
-                                                        /> : <Autocomplete
-                                                            multiple
-                                                            id="tags-standard"
-                                                            // item xs={12} sm={12}
-                                                            style={{ width: "50%" }}
-                                                            options={employees}
-                                                            defaultValue={eventSelected.employees}
-                                                            getOptionLabel={(option) => option.label}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    variant="standard"
-                                                                    label="Dipendenti coinvolti"
-                                                                    placeholder="dipendenti coinvolti"
-                                                                />
-                                                            )}
-                                                            onChange={(event, value) => {
-                                                                if (value !== null) {
-                                                                    setEmployeesInvolved(value)
-                                                                }
-                                                            }}
-                                                        />
-                                                    }
-                                                </Grid>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                                                    {
-                                                        eventSelected === null ? <Autocomplete
-                                                            id="tags-standard"
-                                                            style={{ width: "40%" }}
-                                                            options={customers}
-                                                            getOptionLabel={(option) => option.nome_cognome}
-                                                            renderInput={(params) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    variant="standard"
-                                                                    label="Cliente"
-                                                                    placeholder="cliente"
-                                                                />
-                                                            )}
-                                                            onChange={(event, value) => {
-                                                                if (value !== null) {
-                                                                    setCustomerInvolved(value)
-                                                                }
-                                                            }}
-                                                        /> : <div>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                cliente
-                                                            </Typography><IconButton onClick={() => {
-                                                                handleOpenCustomerCard()
-                                                            }}>
-                                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
-                                                                    {customerInvolved.nome_cognome}
-                                                                </Typography>
-                                                            </IconButton>
-                                                        </div>
-                                                    }
-                                                </div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
-                                                    {
-                                                        eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === "" || type === null || type === ""}
-                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
-                                                            onClick={() => { addCalendar() }}>
-                                                            Aggiungi evento
-                                                        </Button> : <Button
-                                                            variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
-                                                            onClick={() => { updateCalendar() }}>
-                                                            Aggiorna evento
-                                                        </Button>
-                                                    }
-                                                </div>
                                                 {
-                                                    customerSelected === null ? "" : <div>
-                                                        <Modal
-                                                            open={openCustomerCard}
-                                                            onClose={() => { setOpenCustomerCard(false) }}
-                                                            aria-labelledby="modal-modal-label"
-                                                            aria-describedby="modal-modal-description"
-                                                        >
-                                                            <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <CustomerCard customerSelected={customerSelected} />
-                                                            </Box>
-                                                        </Modal>
-                                                    </div>
+                                                    localStorage.getItem("user") !== "admin" && eventSelected === null ?
+                                                        <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
+                                                        : <div>
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                {
+                                                                    eventSelected === null ? <TextField
+                                                                        id="standard-search"
+                                                                        label="Titolo dell'evento"
+                                                                        type="search"
+                                                                        variant="standard"
+                                                                        onChange={(e) => {
+                                                                            setTitleEvent(e.target.value)
+                                                                        }}
+                                                                        xs={12}
+                                                                        sm={6}
+                                                                        style={{ marginTop: "3rem", width: "80%" }}
+                                                                    /> : <TextField
+                                                                        id="standard-search"
+                                                                        label="Titolo dell'evento"
+                                                                        type="search"
+                                                                        defaultValue={eventSelected.title}
+                                                                        variant="standard"
+                                                                        onChange={(e) => {
+                                                                            setTitleEvent(e.target.value)
+                                                                        }}
+                                                                        xs={12}
+                                                                        sm={6}
+                                                                        style={{ marginTop: "3rem", width: "80%" }}
+                                                                    />
+                                                                }
+
+                                                            </div>
+
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                                {
+                                                                    eventSelected === null ? <div>
+                                                                        <Button
+                                                                            id="demo-positioned-button"
+                                                                            aria-controls={openMenu ? 'demo-positioned-menu' : undefined}
+                                                                            aria-haspopup="true"
+                                                                            aria-expanded={openMenu ? 'true' : undefined}
+                                                                            onClick={(event) => {
+                                                                                setAnchorEl(event.currentTarget)
+                                                                            }}
+                                                                        >
+                                                                            Tipo di appuntamento
+                                                                        </Button>
+                                                                        <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                            {type}
+                                                                        </Typography>
+                                                                    </div> : <div>
+                                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                            Tipo di appuntamento
+                                                                        </Typography>
+                                                                        <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                            {eventSelected.type}
+                                                                        </Typography>
+                                                                    </div>
+                                                                }
+                                                                <Menu
+                                                                    id="demo-positioned-menu"
+                                                                    aria-labelledby="demo-positioned-button"
+                                                                    anchorEl={anchorEl}
+                                                                    open={openMenu}
+                                                                    onClose={() => {
+                                                                        setAnchorEl(null)
+                                                                    }}
+                                                                    anchorOrigin={{
+                                                                        vertical: 'top',
+                                                                        horizontal: 'left',
+                                                                    }}
+                                                                    transformOrigin={{
+                                                                        vertical: 'top',
+                                                                        horizontal: 'left',
+                                                                    }}
+                                                                >
+                                                                    <MenuItem onClick={() => {
+                                                                        setType("installazione")
+                                                                        setAnchorEl(null)
+                                                                    }}>Installazione</MenuItem>
+                                                                    <MenuItem onClick={() => {
+                                                                        setType("sopralluogo")
+                                                                        setAnchorEl(null)
+                                                                    }}>Sopralluogo</MenuItem>
+                                                                    <MenuItem onClick={() => {
+                                                                        setType("assistenza")
+                                                                        setAnchorEl(null)
+                                                                    }}>Assistenza</MenuItem>
+                                                                </Menu>
+                                                            </div>
+
+                                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
+                                                                <TimePicker
+                                                                    label="inizio"
+                                                                    value={selectedStartTime}
+                                                                    item xs={12} sm={6}
+                                                                    // style={{ width: "90%" }}
+                                                                    onChange={(date) => {
+                                                                        setSelectedStartTime(date)
+                                                                    }}
+                                                                />
+                                                                <TimePicker
+                                                                    label="fine"
+                                                                    value={selectedEndTime}
+                                                                    item xs={12} sm={6}
+                                                                    // style={{ width: "90%" }}
+                                                                    onChange={(date) => {
+                                                                        setSelectedEndTime(date)
+                                                                    }}
+
+                                                                />
+                                                            </Grid>
+                                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                                {
+                                                                    eventSelected === null ? <Autocomplete
+                                                                        multiple
+                                                                        id="tags-standard"
+                                                                        // item xs={12} sm={12}
+                                                                        style={{ width: "50%" }}
+                                                                        options={employees}
+                                                                        getOptionLabel={(option) => option.label}
+                                                                        renderInput={(params) => (
+                                                                            <TextField
+                                                                                {...params}
+                                                                                variant="standard"
+                                                                                label="Dipendenti coinvolti"
+                                                                                placeholder="dipendenti coinvolti"
+                                                                            />
+                                                                        )}
+                                                                        onChange={(event, value) => {
+                                                                            if (value !== null) {
+                                                                                setEmployeesInvolved(value)
+                                                                            }
+                                                                        }}
+                                                                    /> : <Autocomplete
+                                                                        multiple
+                                                                        id="tags-standard"
+                                                                        // item xs={12} sm={12}
+                                                                        style={{ width: "50%" }}
+                                                                        options={employees}
+                                                                        defaultValue={eventSelected.employees}
+                                                                        getOptionLabel={(option) => option.label}
+                                                                        renderInput={(params) => (
+                                                                            <TextField
+                                                                                {...params}
+                                                                                variant="standard"
+                                                                                label="Dipendenti coinvolti"
+                                                                                placeholder="dipendenti coinvolti"
+                                                                            />
+                                                                        )}
+                                                                        onChange={(event, value) => {
+                                                                            if (value !== null) {
+                                                                                setEmployeesInvolved(value)
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                }
+                                                            </Grid>
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                                {
+                                                                    eventSelected === null ? <Autocomplete
+                                                                        id="tags-standard"
+                                                                        style={{ width: "40%" }}
+                                                                        options={customers}
+                                                                        getOptionLabel={(option) => option.nome_cognome}
+                                                                        renderInput={(params) => (
+                                                                            <TextField
+                                                                                {...params}
+                                                                                variant="standard"
+                                                                                label="Cliente"
+                                                                                placeholder="cliente"
+                                                                            />
+                                                                        )}
+                                                                        onChange={(event, value) => {
+                                                                            if (value !== null) {
+                                                                                setCustomerInvolved(value)
+                                                                            }
+                                                                        }}
+                                                                    /> : <div>
+                                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                            cliente
+                                                                        </Typography><IconButton onClick={() => {
+                                                                            handleOpenCustomerCard()
+                                                                        }}>
+                                                                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
+                                                                                {customerInvolved.nome_cognome}
+                                                                            </Typography>
+                                                                        </IconButton>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
+                                                                {
+                                                                    eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === "" || type === null || type === ""}
+                                                                        variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
+                                                                        onClick={() => { addCalendar() }}>
+                                                                        Aggiungi evento
+                                                                    </Button> : <Button
+                                                                        variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
+                                                                        onClick={() => { updateCalendar() }}>
+                                                                        Aggiorna evento
+                                                                    </Button>
+                                                                }
+                                                            </div>
+                                                            {
+                                                                customerSelected === null ? "" : <div>
+                                                                    <Modal
+                                                                        open={openCustomerCard}
+                                                                        onClose={() => { setOpenCustomerCard(false) }}
+                                                                        aria-labelledby="modal-modal-label"
+                                                                        aria-describedby="modal-modal-description"
+                                                                    >
+                                                                        <Box sx={style} style={{ maxHeight: '80%', overflowY: 'auto', marginTop: 'auto', marginBottom: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <CustomerCard customerSelected={customerSelected} />
+                                                                        </Box>
+                                                                    </Modal>
+                                                                </div>
+                                                            }
+                                                        </div>
                                                 }
                                             </MuiPickersUtilsProvider>
                                         </Card>

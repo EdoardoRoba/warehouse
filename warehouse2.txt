@@ -29,8 +29,10 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- dare i permessi ad installatori per vedere clienti specifici - on hold
-- cliccando il cliente di un appuntamento vado direttamente nella sezione cliente col cliente aperto (posso anche solo richiamare la customercard)
+- campo note nella box visibile
+- filtro calendario
+- dipendenti external
+
 
 
 APP:
@@ -38,10 +40,9 @@ APP:
 - vedere i pdf (+ caricare) tutti, no pagamenti
 - note e computo visibili e modificabili
 - qr code: tecnico_installazione (tecnico) solo togli, gli altri togli/aggiungi
-- calendario
+- filtro su clienti
 
 
-calendario appuntamenti - che si collega alla scheda del cliente
 
 
 
