@@ -207,6 +207,20 @@ function MyCalendar() {
         })
     }
 
+    const updateExternalEmployees = async (externalEmployees) => {
+        // console.log(externalEmployees)
+        var is = []
+        for (let extE of externalEmployees) {
+            if (extE.visibleCustomers.filter(e => e.nome_cognome === customerInvolved.nome_cognome).length === 0) {
+                var newField = {}
+                newField.visibleCustomers = extE.visibleCustomers.concat(customerInvolved)
+                is.push(axiosInstance.put('employee/' + extE._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }))
+            }
+        }
+        is = await Promise.allSettled(is)
+        console.log("dipendenti esterni aggiornati!")
+    }
+
     const updateCustomer = () => {
         let newField = {}
         newField["tecnico_" + type] = employeesInvolved.map((eI) => eI.lastName.toUpperCase()).join("-")
@@ -229,11 +243,15 @@ function MyCalendar() {
 
     const addCalendar = () => {
         setIsLoading(true)
+        let externalEmployees = employeesInvolved.filter((eI) => eI.external)
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
                 if (type !== "admin") {
                     updateCustomer()
+                }
+                if (externalEmployees.length > 0) {
+                    updateExternalEmployees(externalEmployees)
                 }
                 handleCloseModal()
             }).catch(error => {
@@ -250,11 +268,15 @@ function MyCalendar() {
 
     const updateCalendar = () => {
         setIsLoading(true)
+        let externalEmployees = employeesInvolved.filter((eI) => eI.external)
         axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
                 if (type !== "admin") {
                     updateCustomer()
+                }
+                if (externalEmployees.length > 0) {
+                    updateExternalEmployees(externalEmployees)
                 }
                 handleCloseModal()
             }).catch(error => {
@@ -568,28 +590,52 @@ function MyCalendar() {
                                                                                 setEmployeesInvolved(value)
                                                                             }
                                                                         }}
-                                                                    /> : <Autocomplete
-                                                                        multiple
-                                                                        id="tags-standard"
-                                                                        // item xs={12} sm={12}
-                                                                        style={{ width: "50%" }}
-                                                                        options={employees}
-                                                                        defaultValue={eventSelected.employees}
-                                                                        getOptionLabel={(option) => option.label}
-                                                                        renderInput={(params) => (
-                                                                            <TextField
-                                                                                {...params}
-                                                                                variant="standard"
-                                                                                label="Dipendenti coinvolti"
-                                                                                placeholder="dipendenti coinvolti"
+                                                                    /> : <div>
+                                                                        {
+                                                                            localStorage.getItem("user") !== "admin" ? <Autocomplete
+                                                                                multiple
+                                                                                id="tags-standard"
+                                                                                readOnly
+                                                                                options={employees}
+                                                                                defaultValue={eventSelected.employees}
+                                                                                getOptionLabel={(option) => option.label}
+                                                                                renderInput={(params) => (
+                                                                                    <TextField
+                                                                                        {...params}
+                                                                                        variant="standard"
+                                                                                        label="Dipendenti coinvolti"
+                                                                                        placeholder="dipendenti coinvolti"
+                                                                                    />
+                                                                                )}
+                                                                                onChange={(event, value) => {
+                                                                                    if (value !== null) {
+                                                                                        setEmployeesInvolved(value)
+                                                                                    }
+                                                                                }}
+                                                                            /> : <Autocomplete
+                                                                                multiple
+                                                                                id="tags-standard"
+                                                                                // item xs={12} sm={12}
+                                                                                // style={{ width: "50%" }}
+                                                                                options={employees}
+                                                                                defaultValue={eventSelected.employees}
+                                                                                getOptionLabel={(option) => option.label}
+                                                                                renderInput={(params) => (
+                                                                                    <TextField
+                                                                                        {...params}
+                                                                                        variant="standard"
+                                                                                        label="Dipendenti coinvolti"
+                                                                                        placeholder="dipendenti coinvolti"
+                                                                                    />
+                                                                                )}
+                                                                                onChange={(event, value) => {
+                                                                                    if (value !== null) {
+                                                                                        setEmployeesInvolved(value)
+                                                                                    }
+                                                                                }}
                                                                             />
-                                                                        )}
-                                                                        onChange={(event, value) => {
-                                                                            if (value !== null) {
-                                                                                setEmployeesInvolved(value)
-                                                                            }
-                                                                        }}
-                                                                    />
+                                                                        }
+                                                                    </div>
                                                                 }
                                                             </Grid>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
@@ -631,11 +677,15 @@ function MyCalendar() {
                                                                         variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
                                                                         onClick={() => { addCalendar() }}>
                                                                         Aggiungi evento
-                                                                    </Button> : <Button
-                                                                        variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
-                                                                        onClick={() => { updateCalendar() }}>
-                                                                        Aggiorna evento
-                                                                    </Button>
+                                                                    </Button> : <div>
+                                                                        {
+                                                                            localStorage.getItem("user") !== "admin" ? "" : <Button
+                                                                                variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
+                                                                                onClick={() => { updateCalendar() }}>
+                                                                                Aggiorna evento
+                                                                            </Button>
+                                                                        }
+                                                                    </div>
                                                                 }
                                                             </div>
                                                             {

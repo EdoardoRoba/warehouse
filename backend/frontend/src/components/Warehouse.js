@@ -1049,7 +1049,7 @@ function Warehouse(props) {
                                             </Button>
                                         </Grid>
                                         {
-                                            (auths["warehouse"] === "installer" && auths["user"] !== "angelo.mirisola") ? "" :
+                                            (auths["warehouse"] === "installer" && auths["user"] !== "mirisola") ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={handleChangeUpdateAddBook}>
                                                         Aumenta quantità prodotto
