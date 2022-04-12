@@ -232,7 +232,9 @@ function MyCalendar() {
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                updateCustomer()
+                if (type !== "admin") {
+                    updateCustomer()
+                }
                 handleCloseModal()
             }).catch(error => {
                 if (error.response.status === 401) {
@@ -243,6 +245,7 @@ function MyCalendar() {
                 handleCloseModal()
             });
 
+
     }
 
     const updateCalendar = () => {
@@ -250,7 +253,9 @@ function MyCalendar() {
         axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                updateCustomer()
+                if (type !== "admin") {
+                    updateCustomer()
+                }
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
@@ -316,7 +321,7 @@ function MyCalendar() {
             if (type === "customer") {
                 valFilter = value.nome_cognome
             } else {
-                valFilter = value.label
+                valFilter = value.lastName
             }
             filter.user = user
             filter[type] = valFilter
@@ -370,7 +375,7 @@ function MyCalendar() {
                                             style={{ marginLeft: 'auto', marginRight: "auto" }}
                                             sx={{ width: 300 }}
                                             getOptionLabel={option => option.label.toUpperCase()}
-                                            renderInput={(params) => <TextField {...params} label="filtra per cliente" />}
+                                            renderInput={(params) => <TextField {...params} label="filtra per dipendente" />}
                                             onChange={(event, value) => {
                                                 showFilteredCalendar(value, "employee")
                                             }
@@ -513,6 +518,10 @@ function MyCalendar() {
                                                                         setType("assistenza")
                                                                         setAnchorEl(null)
                                                                     }}>Assistenza</MenuItem>
+                                                                    <MenuItem onClick={() => {
+                                                                        setType("admin")
+                                                                        setAnchorEl(null)
+                                                                    }}>Solo per admin</MenuItem>
                                                                 </Menu>
                                                             </div>
 
