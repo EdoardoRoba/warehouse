@@ -533,7 +533,7 @@ app.get('/api/employee', (req, res) => {
 // GET EXTERNAL
 app.get('/api/employeeIsExternal', (req, res) => {
     let filter = {}
-    filter.label = req.query.user
+    filter.lastName = req.query.user
     // it gets all the element in that document
     Employee.findOne(filter).then((result) => {
         res.send(result.external);
@@ -699,7 +699,7 @@ app.post('/api/customer', (req, res) => {
 app.get('/api/customer', (req, res) => {
     // it gets all the element in that document
     if (req.query !== null && req.query.user !== null && req.query.user !== undefined) {
-        Employee.findOne({ label: req.query.user }).then((result) => {
+        Employee.findOne({ lastName: req.query.user }).then((result) => {
             res.send(result.visibleCustomers);
         }).catch((error) => { console.log("error: ", error) })
     } else {
@@ -799,7 +799,7 @@ app.get('/api/calendar', (req, res) => {
         filter["customer.nome_cognome"] = req.query.customer
     }
     if (req.query.employee !== null && req.query.employee !== undefined) {
-        filter["employees.label"] = req.query.employee
+        filter["employees.lastName"] = req.query.employee
     }
     if (req.query.user !== null && req.query.user !== undefined) {
         // it gets all the element in that document with employee requested
@@ -811,7 +811,7 @@ app.get('/api/calendar', (req, res) => {
             res.send(result);
         }).catch((error) => { console.log("error: ", error) })
     } else {
-        Calendar.find({ "employees.label": usr }).then((result) => {
+        Calendar.find({ "employees.lastName": usr }).then((result) => {
             res.send(result);
         }).catch((error) => { console.log("error: ", error) })
     }
