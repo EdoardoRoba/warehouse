@@ -32,6 +32,7 @@ warehouse:
 - filtro calendario su clienti e dipendenti
 - dipendenti external
 - layout note
+- foto che scorrono
 
 
 

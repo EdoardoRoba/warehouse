@@ -40,6 +40,8 @@ function MyCalendar() {
     const [openModal, setOpenModal] = React.useState(false);
     const [titleEvent, setTitleEvent] = React.useState("");
     const [type, setType] = React.useState("");
+    const [filterCustomer, setFilterCustomer] = React.useState("");
+    const [filterEmployee, setFilterEmployee] = React.useState("");
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [selectedStartTime, setSelectedStartTime] = React.useState();
@@ -247,7 +249,7 @@ function MyCalendar() {
         axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                if (type !== "admin") {
+                if (type !== "appuntamento") {
                     updateCustomer()
                 }
                 if (externalEmployees.length > 0) {
@@ -272,7 +274,7 @@ function MyCalendar() {
         axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                if (type !== "admin") {
+                if (type !== "appuntamento") {
                     updateCustomer()
                 }
                 if (externalEmployees.length > 0) {
@@ -351,7 +353,7 @@ function MyCalendar() {
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
-                // console.log("error")
+                console.log(error)
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -386,9 +388,21 @@ function MyCalendar() {
                                             renderInput={(params) => <TextField {...params} label="filtra per cliente" />}
                                             onChange={(event, value) => {
                                                 showFilteredCalendar(value, "customer")
+                                                setFilterCustomer(value.nome_cognome)
+                                                setFilterEmployee("")
                                             }
                                             }
                                         />
+                                        {
+                                            filterCustomer === "" && filterEmployee === "" ? "" : <div>
+                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h7" component="h7">
+                                                    Filtrato per:
+                                                </Typography>
+                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                    {filterCustomer}{filterEmployee}
+                                                </Typography>
+                                            </div>
+                                        }
                                         <Autocomplete
                                             disablePortal
                                             item xs={12} sm={4}
@@ -400,6 +414,8 @@ function MyCalendar() {
                                             renderInput={(params) => <TextField {...params} label="filtra per dipendente" />}
                                             onChange={(event, value) => {
                                                 showFilteredCalendar(value, "employee")
+                                                setFilterEmployee(value.label)
+                                                setFilterCustomer("")
                                             }
                                             }
                                         />
@@ -407,6 +423,8 @@ function MyCalendar() {
                                             <IconButton
                                                 onClick={() => {
                                                     getEvents()
+                                                    setFilterCustomer("")
+                                                    setFilterEmployee("")
                                                 }}>
                                                 <ReplayIcon style={{ fontSize: "30px" }} />
                                             </IconButton>
@@ -541,9 +559,9 @@ function MyCalendar() {
                                                                         setAnchorEl(null)
                                                                     }}>Assistenza</MenuItem>
                                                                     <MenuItem onClick={() => {
-                                                                        setType("admin")
+                                                                        setType("appuntamento")
                                                                         setAnchorEl(null)
-                                                                    }}>Solo per admin</MenuItem>
+                                                                    }}>Appuntamento</MenuItem>
                                                                 </Menu>
                                                             </div>
 
@@ -638,42 +656,44 @@ function MyCalendar() {
                                                                     </div>
                                                                 }
                                                             </Grid>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
-                                                                {
-                                                                    eventSelected === null ? <Autocomplete
-                                                                        id="tags-standard"
-                                                                        style={{ width: "40%" }}
-                                                                        options={customers}
-                                                                        getOptionLabel={(option) => option.nome_cognome}
-                                                                        renderInput={(params) => (
-                                                                            <TextField
-                                                                                {...params}
-                                                                                variant="standard"
-                                                                                label="Cliente"
-                                                                                placeholder="cliente"
-                                                                            />
-                                                                        )}
-                                                                        onChange={(event, value) => {
-                                                                            if (value !== null) {
-                                                                                setCustomerInvolved(value)
-                                                                            }
-                                                                        }}
-                                                                    /> : <div>
-                                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                            cliente
-                                                                        </Typography><IconButton onClick={() => {
-                                                                            handleOpenCustomerCard()
-                                                                        }}>
-                                                                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
-                                                                                {customerInvolved.nome_cognome}
-                                                                            </Typography>
-                                                                        </IconButton>
-                                                                    </div>
-                                                                }
-                                                            </div>
+                                                            {
+                                                                type === "appuntamento" || type === "admin" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
+                                                                    {
+                                                                        eventSelected === null ? <Autocomplete
+                                                                            id="tags-standard"
+                                                                            style={{ width: "40%" }}
+                                                                            options={customers}
+                                                                            getOptionLabel={(option) => option.nome_cognome}
+                                                                            renderInput={(params) => (
+                                                                                <TextField
+                                                                                    {...params}
+                                                                                    variant="standard"
+                                                                                    label="Cliente"
+                                                                                    placeholder="cliente"
+                                                                                />
+                                                                            )}
+                                                                            onChange={(event, value) => {
+                                                                                if (value !== null) {
+                                                                                    setCustomerInvolved(value)
+                                                                                }
+                                                                            }}
+                                                                        /> : <div>
+                                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                                cliente
+                                                                            </Typography><IconButton onClick={() => {
+                                                                                handleOpenCustomerCard()
+                                                                            }}>
+                                                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h4" component="h2">
+                                                                                    {customerInvolved.nome_cognome}
+                                                                                </Typography>
+                                                                            </IconButton>
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
                                                                 {
-                                                                    eventSelected === null ? <Button disabled={customerInvolved === null || customerInvolved === "" || employeesInvolved === null || employeesInvolved.length === 0 || titleEvent === "" || type === null || type === ""}
+                                                                    eventSelected === null ? <Button disabled={titleEvent === "" || type === null || type === ""}
                                                                         variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
                                                                         onClick={() => { addCalendar() }}>
                                                                         Aggiungi evento
