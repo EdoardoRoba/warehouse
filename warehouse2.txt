@@ -29,7 +29,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- apri pdf in una nuova pagina
+- apri clienti in una nuova pagina
 
 
 

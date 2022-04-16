@@ -110,6 +110,8 @@ function CustomerCard(customerPassed) {
     const [typeToDeleteAll, setTypeToDeleteAll] = React.useState("");
     const [checkTypologyToDelete, setCheckTypologyToDelete] = React.useState("");
     const [noteType, setNoteType] = React.useState("");
+    const [touchStart, setTouchStart] = React.useState(0);
+    const [touchEnd, setTouchEnd] = React.useState(0);
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
@@ -926,20 +928,39 @@ function CustomerCard(customerPassed) {
         }
     }
 
-    const handleChangeAccordion = () => {
-        setOpenAccordion((prev) => !prev)
+    const handleTouchStart = (e) => {
+        setTouchStart(e.targetTouches[0].clientX);
     }
 
-    const handleChangeAccordionManual = () => {
-        setOpenAccordionManual((prev) => !prev)
+    const handleTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
     }
 
-    const handleChangeAccordionScheda = () => {
-        setOpenAccordionScheda((prev) => !prev)
-    }
+    const handleTouchEnd = (type) => {
+        console.log(touchStart - touchEnd)
+        if (touchStart - touchEnd > 75) {
+            if (type === "sopralluogo" && pageSopralluogo < customerSelected.foto_sopralluogo.length) {
+                setPageSopralluogo(pageSopralluogo + 1)
+            }
+            if (type === "installazione" && pageInstallazione < customerSelected.foto_fine_installazione.length) {
+                setPageInstallazione(pageInstallazione + 1)
+            }
+            if (type === "assistenza" && pageAssistenza < customerSelected.foto_fine_assistenza.length) {
+                setPageAssistenza(pageAssistenza + 1)
+            }
+        }
 
-    const handleChangeComplete = (event) => {
-        setColorToAdd(event.hex)
+        if (touchStart - touchEnd < -75) {
+            if (type === "sopralluogo" && pageSopralluogo > 1) {
+                setPageSopralluogo(pageSopralluogo - 1)
+            }
+            if (type === "installazione" && pageInstallazione > 1) {
+                setPageInstallazione(pageInstallazione - 1)
+            }
+            if (type === "assistenza" && pageAssistenza > 1) {
+                setPageAssistenza(pageAssistenza - 1)
+            }
+        }
     }
 
     const userIsAuthenticated = () => {
@@ -1961,7 +1982,6 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowBackIosIcon />
                                                     </IconButton>
-                                                    <img item xs={12} sm={6} style={{ maxHeight: '600px', maxWidth: '600px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageSopralluogo < customerSelected.foto_sopralluogo.length) {
                                                             setPageSopralluogo(pageSopralluogo + 1)
@@ -1969,6 +1989,7 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
+                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("sopralluogo")} item xs={12} sm={6} style={{ maxHeight: '600px', maxWidth: '600px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
@@ -2009,7 +2030,6 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowBackIosIcon />
                                                     </IconButton>
-                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageInstallazione < customerSelected.foto_fine_installazione.length) {
                                                             setPageInstallazione(pageInstallazione + 1)
@@ -2017,6 +2037,7 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
+                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("installazione")} style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
@@ -2058,7 +2079,6 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowBackIosIcon />
                                                     </IconButton>
-                                                    <img style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageAssistenza < customerSelected.foto_assistenza.length) {
                                                             setPageAssistenza(pageAssistenza + 1)
@@ -2067,6 +2087,7 @@ function CustomerCard(customerPassed) {
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
                                                 </Grid>
+                                                <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("assistenza")} style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
