@@ -1166,7 +1166,7 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.pdf_sopralluogo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "pdf_sopralluogo")
@@ -1357,7 +1357,7 @@ function CustomerCard(customerPassed) {
                                                                     customerSelected.pdf_computo.map(pf => {
                                                                         return <div>
                                                                             <IconButton>
-                                                                                <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                             </IconButton>
                                                                             <IconButton onClick={() => {
                                                                                 deletePdf(pf, "pdf_computo")
@@ -1512,7 +1512,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.pagamenti_pdf.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "pagamenti_pdf")
@@ -1563,7 +1563,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.collaudo.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "collaudo")
@@ -1597,7 +1597,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.check_list.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "check_list")
@@ -1631,7 +1631,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.fgas.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "fgas")
@@ -1665,7 +1665,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.prova_fumi.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "prova_fumi")
@@ -1699,7 +1699,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.di_co.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "di_co")
@@ -1792,7 +1792,7 @@ function CustomerCard(customerPassed) {
                                                                         customerSelected.assistenza.map(pf => {
                                                                             return <div>
                                                                                 <IconButton>
-                                                                                    <a href={pf}><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
                                                                                 </IconButton>
                                                                                 <IconButton onClick={() => {
                                                                                     deletePdf(pf, "assistenza")
