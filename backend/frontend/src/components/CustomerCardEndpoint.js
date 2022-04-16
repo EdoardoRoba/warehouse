@@ -907,8 +907,8 @@ function CustomerCardEndpoint() {
                 </div> : <div>
                     {
                         customerSelected === null ? "" :
-                            <div style={{ overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem' }}>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                            <div style={{ width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                     <Typography variant="h4" component="div">
                                         {customerSelected.nome_cognome.toUpperCase()}
                                         {
@@ -922,7 +922,7 @@ function CustomerCardEndpoint() {
                                         }
                                     </Typography>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                     <div>
                                         <Tooltip style={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
                                             <IconButton>
@@ -945,7 +945,7 @@ function CustomerCardEndpoint() {
                                         <CircularProgress color="inherit" />
                                     </Backdrop> : <div>
 
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1009,7 +1009,7 @@ function CustomerCardEndpoint() {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1088,8 +1088,8 @@ function CustomerCardEndpoint() {
                                                             }
                                                         </Grid>
                                                     </Grid>
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                        <div sx={{ overflowX: 'auto' }} style={{ marginTop: '3rem' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <div style={{ marginTop: '3rem' }}>
                                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                     foto
@@ -1159,7 +1159,7 @@ function CustomerCardEndpoint() {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1281,8 +1281,8 @@ function CustomerCardEndpoint() {
                                                     </Grid>
                                                     {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                             </Grid> */}
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
-                                                        <div sx={{ overflowX: 'auto' }}>
+                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <div>
                                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                     foto
@@ -1352,7 +1352,7 @@ function CustomerCardEndpoint() {
                                             </Card>
                                         </div>
                                         {
-                                            auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
+                                            auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1633,7 +1633,7 @@ function CustomerCardEndpoint() {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi assistenza
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1727,7 +1727,7 @@ function CustomerCardEndpoint() {
                                                                     }
                                                                 </Typography>
                                                             </Grid>
-                                                            <div sx={{ overflowX: 'auto' }}>
+                                                            <div>
                                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto

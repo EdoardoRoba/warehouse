@@ -987,7 +987,7 @@ function CustomerCard(customerPassed) {
                 </div> : <div>
                     {
                         customerSelected === null ? "" :
-                            <div sx={{ overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }} style={{ marginTop: '4rem' }}>
+                            <div sx={{ width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }} style={{ marginTop: '4rem' }}>
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     <Typography variant="h4" component="div">
                                         {customerSelected.nome_cognome.toUpperCase()}
