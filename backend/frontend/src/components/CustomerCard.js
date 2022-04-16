@@ -937,7 +937,6 @@ function CustomerCard(customerPassed) {
     }
 
     const handleTouchEnd = (type) => {
-        console.log(touchStart - touchEnd)
         if (touchStart - touchEnd > 75) {
             if (type === "sopralluogo" && pageSopralluogo < customerSelected.foto_sopralluogo.length) {
                 setPageSopralluogo(pageSopralluogo + 1)
@@ -1989,6 +1988,8 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
+                                                </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("sopralluogo")} item xs={12} sm={6} style={{ maxHeight: '600px', maxWidth: '600px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
@@ -2037,6 +2038,8 @@ function CustomerCard(customerPassed) {
                                                     }}>
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
+                                                </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("installazione")} style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
@@ -2087,7 +2090,9 @@ function CustomerCard(customerPassed) {
                                                         <ArrowForwardIosIcon />
                                                     </IconButton>
                                                 </Grid>
-                                                <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("assistenza")} style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("assistenza")} style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
+                                                </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
