@@ -29,10 +29,8 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- filtro calendario su clienti e dipendenti
-- dipendenti external
-- layout note
 - foto che scorrono
+- apri pdf in una nuova pagina
 
 
 
@@ -42,6 +40,7 @@ APP:
 - note e computo visibili e modificabili
 - qr code: tecnico_installazione (tecnico) solo togli, gli altri togli/aggiungi
 - filtro su clienti
+- SISTEMA AUTORIZZATIVO
 
 
 

@@ -13,6 +13,8 @@ import NotesIcon from '@material-ui/icons/Notes';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LinkIcon from '@material-ui/icons/Link';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
@@ -1191,7 +1193,7 @@ function CustomerCard(customerPassed) {
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }} style={{ marginTop: '3rem' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography sx={{ marginBottom: '2rem', color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
+                                                        <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
@@ -1384,7 +1386,7 @@ function CustomerCard(customerPassed) {
                                             <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }}>
                                                 <div sx={{ overflowX: 'auto' }}>
                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem', marginBottom: '2rem' }} color="text.primary" gutterBottom>
+                                                        <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                             foto
                                                         </Typography>
                                                         <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
@@ -1849,7 +1851,7 @@ function CustomerCard(customerPassed) {
                                                     </Grid>
                                                     <div sx={{ overflowX: 'auto' }}>
                                                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                            <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem', marginBottom: '2rem' }} color="text.primary" gutterBottom>
+                                                            <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                 foto
                                                             </Typography>
                                                             <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
@@ -1951,9 +1953,23 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
-                                                </div>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageSopralluogo > 1) {
+                                                            setPageSopralluogo(pageSopralluogo - 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowBackIosIcon />
+                                                    </IconButton>
+                                                    <img item xs={12} sm={6} style={{ maxHeight: '600px', maxWidth: '600px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageSopralluogo < customerSelected.foto_sopralluogo.length) {
+                                                            setPageSopralluogo(pageSopralluogo + 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowForwardIosIcon />
+                                                    </IconButton>
+                                                </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
@@ -1965,7 +1981,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} />
+                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} /> */}
                                             </div>
                                     }
                                 </div>
@@ -1985,9 +2001,23 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageInstallazione > 1) {
+                                                            setPageInstallazione(pageInstallazione - 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowBackIosIcon />
+                                                    </IconButton>
                                                     <img style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
-                                                </div>
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageInstallazione < customerSelected.foto_fine_installazione.length) {
+                                                            setPageInstallazione(pageInstallazione + 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowForwardIosIcon />
+                                                    </IconButton>
+                                                </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
@@ -1999,7 +2029,7 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} />
+                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
                                             </div>
                                     }
                                 </div>
@@ -2020,9 +2050,23 @@ function CustomerCard(customerPassed) {
                                     {
                                         customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageAssistenza > 1) {
+                                                            setPageAssistenza(pageAssistenza - 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowBackIosIcon />
+                                                    </IconButton>
                                                     <img style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
-                                                </div>
+                                                    <IconButton item xs={12} sm={6} onClick={() => {
+                                                        if (pageAssistenza < customerSelected.foto_assistenza.length) {
+                                                            setPageAssistenza(pageAssistenza + 1)
+                                                        }
+                                                    }}>
+                                                        <ArrowForwardIosIcon />
+                                                    </IconButton>
+                                                </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
                                                         deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
@@ -2034,23 +2078,11 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div>
-                                                <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} />
+                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
                                             </div>
                                     }
                                 </div>
                             }
-                        </Box>
-                    </Modal>
-
-
-                    <Modal
-                        open={openCustomerCard}
-                        onClose={() => { setOpenCustomerCard(false) }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <CustomerCard customerSelected={customerSelected} />
                         </Box>
                     </Modal>
 
