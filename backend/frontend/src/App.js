@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Warehouse from './components/Warehouse';
 import History from './components/History';
 import Customers from './components/Customers';
+import CustomerCardEndpoint from './components/CustomerCardEndpoint';
 import Employees from './components/Employees';
 import MyCalendar from './components/MyCalendar';
 import Home from './components/Home';
@@ -221,6 +222,7 @@ function App() {
         <Route exact path='/warehouse' element={< Warehouse />}></Route>
         <Route exact path='/history' element={< History />}></Route>
         <Route exact path='/customers' element={< Customers />}></Route>
+        <Route exact path='/customers/customer-card' element={< CustomerCardEndpoint />}></Route>
         <Route exact path='/employees' element={< Employees />}></Route>
         <Route exact path='/calendar' element={< MyCalendar />}></Route>
       </Routes>

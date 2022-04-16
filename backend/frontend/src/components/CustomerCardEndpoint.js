@@ -43,7 +43,7 @@ import { makeStyles } from '@mui/styles';
 import DDT from "./DDT.js";
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
-function CustomerCard(customerPassed) {
+function CustomerCardEndpoint() {
 
     const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [selectedFile, setSelectedFile] = React.useState();
@@ -140,11 +140,7 @@ function CustomerCard(customerPassed) {
     React.useEffect(() => {
         userIsAuthenticated()
         getStatusColors()
-        if (customerPassed.customerSelected) {
-            setCustomerSelected(customerPassed.customerSelected)
-        } else {
-            setCustomerSelected(location.state.customerSelected)
-        }
+        setCustomerSelected(location.state.customerSelected)
     }, [])
 
     React.useEffect(() => {
@@ -629,82 +625,6 @@ function CustomerCard(customerPassed) {
             setGenericError("Tipo file non riconosciuto.")
         }
 
-
-
-
-
-        // for (let s of selectedSopralluogo) {
-        //     // customer.foto_sopralluogo.push(s.base64)
-        //     imgs.images.push(s.base64)
-
-        //     const now = Date.now()
-        //     const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
-        //     // storageRef.put(s).on('state_changed', (snap) => {
-        //     //     let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
-        //     //     setProgress(percentage);
-        //     // }, (err) => {
-        //     //     setShowError(true)
-        //     // }, async () => {
-        //     //     const urll = await storageRef.getDownloadURL();
-        //     //     setUrl(urll);
-        //     // });
-        //     const uploadTask = uploadBytesResumable(storageRef, s)
-        //     uploadTask.on("state_changed", (snapshot) => {
-        //         const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        //         setProgress(progr)
-        //         setIsLoading(false)
-        //     }, (error) => console.log("error: ", error),
-        //         () => {
-        //             //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-        //             getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-        //                 console.log("fileUrl: ", fileUrl)
-        //                 // const image = new Image();
-        //                 // image.onload = () => {
-        //                 //     setSrc(fileUrl)
-        //                 // };
-        //                 // image.src = fileUrl;
-        //                 // console.log("image", image)
-        //                 // customer.foto_sopralluogo.push(image)
-        //                 customer.foto_sopralluogo.push(fileUrl)
-        //                 // var newField = {}
-        //                 // newField[fieldToEdit] = customerSelected[fieldToEdit]
-        //                 // if (newField[fieldToEdit] === undefined) {
-        //                 //     newField[fieldToEdit] = [fileUrl]
-        //                 // } else {
-        //                 //     newField[fieldToEdit].push(fileUrl)
-        //                 // }
-        //                 // axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-        //                 //     setConfermaUpdate(true)
-        //                 //     getCustomers()
-        //                 //     axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("customer updated")
-        //                 //         setCustomerSelected(respp.data)
-        //                 //     }).catch((error) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("error")
-        //                 //         console.log(error)
-        //                 //     })
-        //                 // }).catch((error) => {
-        //                 //     // console.log("error: ", error)
-        //                 //     setIsLoading(false)
-        //                 //     setShowError(true)
-        //                 // });
-        //             })
-        //         }
-        //     )
-        // }
-        // axiosInstance.put("images/" + imagesId, imgs).then(response => {
-        //     // console.log("Fatto!", response)
-        //     setConfermaUpdate(true)
-        //     getImages("sopralluogo")
-        //     setIsLoading(false)
-        // }).catch((error) => {
-        //     // console.log("error: ", error)
-        //     setIsLoading(false)
-        //     setShowError(true)
-        // });
-
     };
 
     const handleSubmissionInstallazione = (e) => {
@@ -987,8 +907,8 @@ function CustomerCard(customerPassed) {
                 </div> : <div>
                     {
                         customerSelected === null ? "" :
-                            <div sx={{ overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto' }} style={{ marginTop: '4rem' }}>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                            <div style={{ overflowX: 'auto', width: "90%", minWidth: 300, marginLeft: 'auto', marginRight: 'auto', marginTop: '4rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     <Typography variant="h4" component="div">
                                         {customerSelected.nome_cognome.toUpperCase()}
                                         {
@@ -1002,9 +922,9 @@ function CustomerCard(customerPassed) {
                                         }
                                     </Typography>
                                 </div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
+                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
                                     <div>
-                                        <Tooltip sx={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
+                                        <Tooltip style={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
                                             <IconButton>
                                                 <AiFillInfoCircle sx={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
                                             </IconButton>
@@ -1024,18 +944,8 @@ function CustomerCard(customerPassed) {
                                     isLoading ? <Backdrop className={classes.backdrop} open>
                                         <CircularProgress color="inherit" />
                                     </Backdrop> : <div>
-                                        {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                    
-                                </div> */}
 
-                                        {/* <PDFViewer>
-                                    <DDT customer={customerSelected} />
-                                </PDFViewer>
-                                <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
-                                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-                                </PDFDownloadLink> */}
-
-                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1099,34 +1009,14 @@ function CustomerCard(customerPassed) {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                         <div>
                                                             Sopralluogo
-                                                            {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note sopralluogo"}>
-                                                        <IconButton onClick={() => {
-                                                            setNoteType("note_sopralluogo")
-                                                            setOpenNote(true)
-                                                        }}>
-                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("note_sopralluogo")
-                                                                setOpenEditField(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton></Tooltip>
-                                                    } */}
                                                         </div>
                                                     </Typography>
-                                                    {/* <Typography variant="body2">
-                                                <SettingsIcon sx={{ marginBottom: '2rem' }} />
-                                            </Typography> */}
                                                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                         {/* <div> */}
                                                         <Grid item xs={12} sm={6}>
@@ -1269,7 +1159,7 @@ function CustomerCard(customerPassed) {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1462,34 +1352,14 @@ function CustomerCard(customerPassed) {
                                             </Card>
                                         </div>
                                         {
-                                            auths["customers"] !== "*" ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                            auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
                                                                 Documenti
-                                                                {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note pagamenti"}>
-                                                            <IconButton onClick={() => {
-                                                                setNoteType("note_pagamenti")
-                                                                setOpenNote(true)
-                                                            }}>
-                                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note_pagamenti")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton></Tooltip>
-                                                        } */}
                                                             </div>
                                                         </Typography>
-                                                        {/* <Typography variant="body2">
-                                                    <PictureAsPdfIcon sx={{ marginBottom: '1rem' }} />
-                                                </Typography> */}
                                                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                             {/* <div> */}
                                                             <Grid item xs={12} sm={6}>
@@ -1755,7 +1625,7 @@ function CustomerCard(customerPassed) {
                                             </div>
                                         }
                                         {
-                                            !customerSelected.isAssisted ? <div sx={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                            !customerSelected.isAssisted ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
                                                 <IconButton onClick={() => {
                                                     assistCustomer(true)
                                                 }}>
@@ -1763,7 +1633,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi assistenza
-                                                </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -2245,4 +2115,4 @@ function CustomerCard(customerPassed) {
     );
 }
 
-export default CustomerCard;
+export default CustomerCardEndpoint;

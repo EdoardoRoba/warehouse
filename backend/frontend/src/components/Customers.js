@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -124,6 +124,7 @@ function Customers(props) {
     var JSZip = require("jszip");
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
+    const navigate = useNavigate();
 
     const bull = (
         <Box
@@ -238,17 +239,12 @@ function Customers(props) {
         setIsFilePicked(true);
     };
 
-    const handleChangeFotoSopralluogo = (event, value) => {
-        setPageSopralluogo(value);
-    };
-
-    const handleChangeFotoInstallazione = (event, value) => {
-        setPageInstallazione(value);
-    };
-
-    const handleChangeFotoAssistenza = (event, value) => {
-        setPageAssistenza(value);
-    };
+    const routeChange = (custSel) => {
+        let path = 'customer-card';
+        console.log("custSel")
+        console.log(custSel)
+        navigate(path, { state: { customerSelected: custSel } });
+    }
 
     const checkUserExternal = () => {
         setIsLoading(true)
@@ -909,7 +905,8 @@ function Customers(props) {
                                                         renderInput={(params) => <TextField {...params} label="clienti" />}
                                                         onChange={(event, value) => {
                                                             setCustomerSelected(value)
-                                                            setOpenCustomerCard(true)
+                                                            // setOpenCustomerCard(true)
+                                                            routeChange(value)
                                                         }}
                                                     />
                                                     <div style={{ height: 400, width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -921,7 +918,8 @@ function Customers(props) {
                                                             rowsPerPageOptions={[5]}
                                                             onRowClick={(event, value) => {
                                                                 setCustomerSelected(event.row)
-                                                                setOpenCustomerCard(true)
+                                                                // setOpenCustomerCard(true)
+                                                                routeChange(event.row)
                                                             }}
                                                         />
                                                     </div>
