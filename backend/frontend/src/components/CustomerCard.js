@@ -117,7 +117,7 @@ function CustomerCard(customerPassed) {
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
         { field: 'status', headerName: 'stato', flex: 1 }
     ]
-
+    const hasWindow = typeof window !== 'undefined';
     var JSZip = require("jszip");
 
     const imageTypes = ["image/png", "image/jpeg"]
@@ -155,7 +155,7 @@ function CustomerCard(customerPassed) {
         p: 4,
         maxHeight: '80%',
         overflowY: 'auto',
-        overflowX: 'auto'
+        // overflowX: 'auto'
     };
 
     React.useEffect(() => {
@@ -1990,7 +1990,14 @@ function CustomerCard(customerPassed) {
                                                     </IconButton>
                                                 </Grid>
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("sopralluogo")} item xs={12} sm={6} style={{ maxHeight: '600px', maxWidth: '600px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} alt="Logo" />
+                                                    <img
+                                                        onTouchStart={(e) => { handleTouchStart(e) }}
+                                                        onTouchMove={(e) => { handleTouchMove(e) }}
+                                                        onTouchEnd={() => handleTouchEnd("sopralluogo")}
+                                                        item xs={12} sm={6}
+                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
+                                                        src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} ù
+                                                        alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
@@ -2040,7 +2047,13 @@ function CustomerCard(customerPassed) {
                                                     </IconButton>
                                                 </Grid>
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("installazione")} style={{ maxHeight: '500px', maxWidth: '500px', marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_fine_installazione[pageInstallazione - 1]} alt="Logo" />
+                                                    <img
+                                                        onTouchStart={(e) => { handleTouchStart(e) }}
+                                                        onTouchMove={(e) => { handleTouchMove(e) }}
+                                                        onTouchEnd={() => handleTouchEnd("installazione")}
+                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
+                                                        src={customerSelected.foto_fine_installazione[pageInstallazione - 1]}
+                                                        alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
@@ -2091,7 +2104,13 @@ function CustomerCard(customerPassed) {
                                                     </IconButton>
                                                 </Grid>
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img onTouchStart={(e) => { handleTouchStart(e) }} onTouchMove={(e) => { handleTouchMove(e) }} onTouchEnd={() => handleTouchEnd("assistenza")} style={{ maxHeight: 500, maxWidth: 500, marginRight: 'auto', marginLeft: 'auto' }} src={customerSelected.foto_assistenza[pageAssistenza - 1]} alt="Logo" />
+                                                    <img
+                                                        onTouchStart={(e) => { handleTouchStart(e) }}
+                                                        onTouchMove={(e) => { handleTouchMove(e) }}
+                                                        onTouchEnd={() => handleTouchEnd("assistenza")}
+                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
+                                                        src={customerSelected.foto_assistenza[pageAssistenza - 1]}
+                                                        alt="Logo" />
                                                 </Grid>
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     <IconButton onClick={() => {
@@ -2146,7 +2165,8 @@ function CustomerCard(customerPassed) {
                             <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Carica file pdf {fieldToEdit.toUpperCase()}:
                             </Typography>
-                            <div>
+                            {/* <div> */}
+                            <div style={{ marginRight: 'auto', marginLeft: 'auto', justifyContent: 'center', textAlign: 'center' }} >
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     <input type="file" name="file" onChange={changeHandlerPDF} /></div>
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>

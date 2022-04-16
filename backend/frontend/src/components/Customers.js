@@ -122,8 +122,6 @@ function Customers(props) {
     ]
 
     var JSZip = require("jszip");
-
-    const imageTypes = ["image/png", "image/jpeg"]
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
 
