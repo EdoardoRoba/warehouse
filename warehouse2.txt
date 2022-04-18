@@ -29,17 +29,16 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 ----------------------------------------------------------
 
 warehouse:
-- apri clienti in una nuova pagina
 - carica pdf e foto nel momento in cui vengono selezionati i file
 
 
 
 APP:
 - sotto cliente: indirizzo, comune, prov, company, num telefono
-- vedere i pdf (+ caricare) tutti, no pagamenti
 - note e computo visibili e modificabili
-- qr code: tecnico_installazione (tecnico) solo togli, gli altri togli/aggiungi
 - filtro su clienti
+- readonly pdf
+- accedere a cliente dal calendario
 
 
 

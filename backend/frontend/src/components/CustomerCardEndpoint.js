@@ -983,7 +983,7 @@ function CustomerCardEndpoint() {
                                                         indirizzo
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.indirizzo} {bull} {customerSelected.comune} {bull} {customerSelected.provincia} {bull} {customerSelected.cap}
+                                                        {customerSelected.indirizzo} - {customerSelected.comune} - {customerSelected.provincia} - {customerSelected.cap}
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         telefono
@@ -995,7 +995,7 @@ function CustomerCardEndpoint() {
                                                         bonus
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.bonus} {bull} {customerSelected.termico_elettrico}
+                                                        {customerSelected.bonus} - {customerSelected.termico_elettrico}
                                                         {/* {
                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                         onClick={() => {
