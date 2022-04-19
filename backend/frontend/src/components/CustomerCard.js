@@ -376,7 +376,7 @@ function CustomerCard(customerPassed) {
     const handleSubmissionPDF = () => {
         if (!selectedFilePDF) return;
         const now = Date.now()
-        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + fieldToEdit + "_" + now)
+        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + selectedFilePDF.name.replace(".pdf", "") + "_" + now)
         const uploadTask = uploadBytesResumable(storageRef, selectedFilePDF)
         uploadTask.on("state_changed", (snapshot) => {
             const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
@@ -1024,16 +1024,6 @@ function CustomerCard(customerPassed) {
                                     isLoading ? <Backdrop className={classes.backdrop} open>
                                         <CircularProgress color="inherit" />
                                     </Backdrop> : <div>
-                                        {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem', overflowX: 'auto' }}>
-                                    
-                                </div> */}
-
-                                        {/* <PDFViewer>
-                                    <DDT customer={customerSelected} />
-                                </PDFViewer>
-                                <PDFDownloadLink document={<DDT />} fileName="ddt_ex.pdf">
-                                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-                                </PDFDownloadLink> */}
 
                                         <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
@@ -1172,17 +1162,17 @@ function CustomerCard(customerPassed) {
                                                                     <Typography variant="h7" component="div">
                                                                         {
                                                                             customerSelected.pdf_sopralluogo.map(pf => {
-                                                                                return <div>
-                                                                                    <IconButton>
-                                                                                        <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                    <IconButton item xs={12} sm={6}>
+                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                     </IconButton>
-                                                                                    <IconButton onClick={() => {
+                                                                                    <IconButton item xs={12} sm={6} onClick={() => {
                                                                                         deletePdf(pf, "pdf_sopralluogo")
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                     </IconButton>
-                                                                                </div>
+                                                                                </Grid >
                                                                             })
                                                                         }
                                                                     </Typography>
@@ -1363,17 +1353,17 @@ function CustomerCard(customerPassed) {
                                                                     <Typography variant="h7" component="div">
                                                                         {
                                                                             customerSelected.pdf_computo.map(pf => {
-                                                                                return <div>
-                                                                                    <IconButton>
-                                                                                        <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                    <IconButton item xs={12} sm={6}>
+                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                     </IconButton>
-                                                                                    <IconButton onClick={() => {
+                                                                                    <IconButton item xs={12} sm={6} onClick={() => {
                                                                                         deletePdf(pf, "pdf_computo")
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                     </IconButton>
-                                                                                </div>
+                                                                                </Grid >
                                                                             })
                                                                         }
                                                                     </Typography>
@@ -1518,17 +1508,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.pagamenti_pdf.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "pagamenti_pdf")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1569,17 +1559,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.collaudo.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "collaudo")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1603,17 +1593,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.check_list.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "check_list")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1637,17 +1627,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.fgas.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "fgas")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1671,17 +1661,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.prova_fumi.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "prova_fumi")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1705,17 +1695,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.di_co.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "di_co")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>
@@ -1798,17 +1788,17 @@ function CustomerCard(customerPassed) {
                                                                         <Typography variant="h7" component="div">
                                                                             {
                                                                                 customerSelected.assistenza.map(pf => {
-                                                                                    return <div>
-                                                                                        <IconButton>
-                                                                                            <a href={pf} target="_blank"><LinkIcon style={{ fontSize: "15px" }} /></a>
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton onClick={() => {
+                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
                                                                                             deletePdf(pf, "assistenza")
                                                                                             setIsLoading(true)
                                                                                         }}>
                                                                                             <DeleteIcon style={{ fontSize: "15px" }} />
                                                                                         </IconButton>
-                                                                                    </div>
+                                                                                    </Grid >
                                                                                 })
                                                                             }
                                                                         </Typography>

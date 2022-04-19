@@ -241,8 +241,6 @@ function Customers(props) {
 
     const routeChange = (custSel) => {
         let path = 'customer-card';
-        console.log("custSel")
-        console.log(custSel)
         navigate(path, { state: { customerSelected: custSel } });
     }
 
