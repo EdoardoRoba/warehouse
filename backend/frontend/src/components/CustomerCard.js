@@ -995,7 +995,7 @@ function CustomerCard(customerPassed) {
                                             auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
                                                 onClick={() => {
                                                     setFieldToEdit("nome_cognome")
-                                                    setOpenEditStatus(true)
+                                                    setOpenEditField(true)
                                                 }}>
                                                 <EditIcon style={{ fontSize: "15px" }} />
                                             </IconButton></Tooltip>

@@ -19,7 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { TimePicker, MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import DateFnsUtils from '@date-io/date-fns';
 import Backdrop from '@mui/material/Backdrop';
@@ -566,25 +566,69 @@ function MyCalendar() {
                                                             </div>
 
                                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
-                                                                <TimePicker
-                                                                    label="inizio"
-                                                                    value={selectedStartTime}
-                                                                    item xs={12} sm={6}
-                                                                    // style={{ width: "90%" }}
-                                                                    onChange={(date) => {
-                                                                        setSelectedStartTime(date)
-                                                                    }}
-                                                                />
-                                                                <TimePicker
-                                                                    label="fine"
-                                                                    value={selectedEndTime}
-                                                                    item xs={12} sm={6}
-                                                                    // style={{ width: "90%" }}
-                                                                    onChange={(date) => {
-                                                                        setSelectedEndTime(date)
-                                                                    }}
-
-                                                                />
+                                                                {
+                                                                    eventSelected === null ? <div>
+                                                                        <TimePicker
+                                                                            label="inizio"
+                                                                            value={selectedStartTime}
+                                                                            item xs={12} sm={6}
+                                                                            // style={{ width: "90%" }}
+                                                                            onChange={(date) => {
+                                                                                setSelectedStartTime(date)
+                                                                            }}
+                                                                        />
+                                                                        <TimePicker
+                                                                            label="fine"
+                                                                            value={selectedEndTime}
+                                                                            item xs={12} sm={6}
+                                                                            // style={{ width: "90%" }}
+                                                                            onChange={(date) => {
+                                                                                setSelectedEndTime(date)
+                                                                            }}
+                                                                        />
+                                                                    </div> : <div>
+                                                                        {
+                                                                            localStorage.getItem("user") !== "admin" ? <DateTimePicker
+                                                                                label="inizio"
+                                                                                readOnly
+                                                                                value={selectedStartTime}
+                                                                                item xs={12} sm={6}
+                                                                                // style={{ width: "90%" }}
+                                                                                onChange={(date) => {
+                                                                                    setSelectedStartTime(date)
+                                                                                }}
+                                                                            /> : <DateTimePicker
+                                                                                label="inizio"
+                                                                                value={selectedStartTime}
+                                                                                item xs={12} sm={6}
+                                                                                // style={{ width: "90%" }}
+                                                                                onChange={(date) => {
+                                                                                    setSelectedStartTime(date)
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                        {
+                                                                            localStorage.getItem("user") !== "admin" ? <DateTimePicker
+                                                                                label="fine"
+                                                                                readOnly
+                                                                                value={selectedEndTime}
+                                                                                item xs={12} sm={6}
+                                                                                // style={{ width: "90%" }}
+                                                                                onChange={(date) => {
+                                                                                    setSelectedEndTime(date)
+                                                                                }}
+                                                                            /> : <DateTimePicker
+                                                                                label="fine"
+                                                                                value={selectedEndTime}
+                                                                                item xs={12} sm={6}
+                                                                                // style={{ width: "90%" }}
+                                                                                onChange={(date) => {
+                                                                                    setSelectedEndTime(date)
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                    </div>
+                                                                }
                                                             </Grid>
                                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "3rem" }}>
                                                                 {
