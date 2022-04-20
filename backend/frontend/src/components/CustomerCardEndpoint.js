@@ -266,7 +266,7 @@ function CustomerCardEndpoint() {
     };
 
     const changeHandlerPDF = (event) => {
-        setSelectedFilePDF(event.target.files[0]);
+        setSelectedFilePDF(event.target.files);
         setIsFilePDFPicked(true);
     };
 
@@ -371,42 +371,44 @@ function CustomerCardEndpoint() {
 
     const handleSubmissionPDF = () => {
         if (!selectedFilePDF) return;
-        const now = Date.now()
-        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + selectedFilePDF.name.replace(".pdf", ""))
-        const uploadTask = uploadBytesResumable(storageRef, selectedFilePDF)
-        uploadTask.on("state_changed", (snapshot) => {
-            const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-            setProgress(progr)
-            setIsLoading(false)
-        }, (error) => console.log("error: ", error),
-            () => {
-                //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-                getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-                    console.log("fileUrl: ", fileUrl)
+        for (let pdf of selectedFilePDF) {
+            // const now = Date.now()
+            const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + pdf.name.replace(".pdf", ""))
+            const uploadTask = uploadBytesResumable(storageRef, pdf)
+            uploadTask.on("state_changed", (snapshot) => {
+                const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                setProgress(progr)
+                setIsLoading(false)
+            }, (error) => console.log("error: ", error),
+                () => {
+                    //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                    getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                        console.log("fileUrl: ", fileUrl)
 
-                    var newField = {}
-                    newField[fieldToEdit] = customerSelected[fieldToEdit]
-                    if (newField[fieldToEdit] === undefined) {
-                        newField[fieldToEdit] = [fileUrl]
-                    } else {
-                        newField[fieldToEdit].push(fileUrl)
-                    }
-                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
-                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
-                            setIsLoading(false)
-                            console.log("customer updated")
-                            setCustomerSelected(respp.data)
-                            handleCloseLoadPdf()
-                        }).catch((error) => {
-                            setIsLoading(false)
-                            if (error.response.status === 401) {
-                                userIsAuthenticated()
-                            }
+                        var newField = {}
+                        newField[fieldToEdit] = customerSelected[fieldToEdit]
+                        if (newField[fieldToEdit] === undefined) {
+                            newField[fieldToEdit] = [fileUrl]
+                        } else {
+                            newField[fieldToEdit].push(fileUrl)
+                        }
+                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
+                                setIsLoading(false)
+                                console.log("customer updated")
+                                setCustomerSelected(respp.data)
+                                handleCloseLoadPdf()
+                            }).catch((error) => {
+                                setIsLoading(false)
+                                if (error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                            })
                         })
                     })
-                })
-            }
-        )
+                }
+            )
+        }
     };
 
     const deletePdf = (pdf, pdfType) => {
@@ -730,27 +732,6 @@ function CustomerCardEndpoint() {
             setGenericError("Tipo file non riconosciuto.")
         }
     };
-
-    const downloadCustomers = () => { // csvData, fileName
-        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
-        // var csvData = []
-        // for (let c of customers) {
-        //     var customerForCsv = {}
-        //     customerForCsv.company = c.company
-        //     customerForCsv.nome_cognome = c.nome
-        //     customerForCsv.attrezzo = c.label
-        //     customerForCsv.codice = c.code
-        //     customerForCsv.quantita = c.quantity
-        //     customerForCsv.quantita_minima = c.lowerBound
-        //     csvData.push(customerForCsv)
-        // }
-        let fileName = "clienti"
-        const ws = XLSX.utils.json_to_sheet(customers);
-        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], { type: fileType });
-        saveAs(data, fileName + fileExtension);
-    }
 
     const downloadImage = async (image, filename) => {
         let blob = await fetch(image).then((r) => r.blob());
@@ -2047,8 +2028,8 @@ function CustomerCardEndpoint() {
                             {/* <div> */}
                             <div style={{ marginRight: 'auto', marginLeft: 'auto', justifyContent: 'center', textAlign: 'center' }} >
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                    <input type="file" name="file" onChange={changeHandlerPDF} /></div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <input multiple type="file" name="file" onChange={changeHandlerPDF} /></div>
+                                {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     {isFilePDFPicked ?
                                         <div>
                                             <p>Nome file: {selectedFilePDF.name}</p>
@@ -2058,7 +2039,7 @@ function CustomerCardEndpoint() {
                                         :
                                         <p>Seleziona un file per vederne le specifiche</p>
                                     }
-                                </div>
+                                </div> */}
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     <Button disabled={!isFilePDFPicked} onClick={(event) => {
                                         handleSubmissionPDF()

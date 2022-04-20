@@ -270,7 +270,7 @@ function CustomerCard(customerPassed) {
     };
 
     const changeHandlerPDF = (event) => {
-        setSelectedFilePDF(event.target.files[0]);
+        setSelectedFilePDF(event.target.files);
         setIsFilePDFPicked(true);
     };
 
@@ -375,42 +375,44 @@ function CustomerCard(customerPassed) {
 
     const handleSubmissionPDF = () => {
         if (!selectedFilePDF) return;
-        const now = Date.now()
-        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + selectedFilePDF.name.replace(".pdf", ""))
-        const uploadTask = uploadBytesResumable(storageRef, selectedFilePDF)
-        uploadTask.on("state_changed", (snapshot) => {
-            const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-            setProgress(progr)
-            setIsLoading(false)
-        }, (error) => console.log("error: ", error),
-            () => {
-                //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-                getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-                    console.log("fileUrl: ", fileUrl)
+        for (let pdf of selectedFilePDF) {
+            // const now = Date.now()
+            const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + pdf.name.replace(".pdf", ""))
+            const uploadTask = uploadBytesResumable(storageRef, pdf)
+            uploadTask.on("state_changed", (snapshot) => {
+                const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                setProgress(progr)
+                setIsLoading(false)
+            }, (error) => console.log("error: ", error),
+                () => {
+                    //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                    getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                        console.log("fileUrl: ", fileUrl)
 
-                    var newField = {}
-                    newField[fieldToEdit] = customerSelected[fieldToEdit]
-                    if (newField[fieldToEdit] === undefined) {
-                        newField[fieldToEdit] = [fileUrl]
-                    } else {
-                        newField[fieldToEdit].push(fileUrl)
-                    }
-                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
-                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
-                            setIsLoading(false)
-                            console.log("customer updated")
-                            setCustomerSelected(respp.data)
-                            handleCloseLoadPdf()
-                        }).catch((error) => {
-                            setIsLoading(false)
-                            if (error.response.status === 401) {
-                                userIsAuthenticated()
-                            }
+                        var newField = {}
+                        newField[fieldToEdit] = customerSelected[fieldToEdit]
+                        if (newField[fieldToEdit] === undefined) {
+                            newField[fieldToEdit] = [fileUrl]
+                        } else {
+                            newField[fieldToEdit].push(fileUrl)
+                        }
+                        axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                            axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
+                                setIsLoading(false)
+                                console.log("customer updated")
+                                setCustomerSelected(respp.data)
+                                handleCloseLoadPdf()
+                            }).catch((error) => {
+                                setIsLoading(false)
+                                if (error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                            })
                         })
                     })
-                })
-            }
-        )
+                }
+            )
+        }
     };
 
     const deletePdf = (pdf, pdfType) => {
@@ -2166,8 +2168,8 @@ function CustomerCard(customerPassed) {
                             {/* <div> */}
                             <div style={{ marginRight: 'auto', marginLeft: 'auto', justifyContent: 'center', textAlign: 'center' }} >
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                    <input type="file" name="file" onChange={changeHandlerPDF} /></div>
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                    <input multiple type="file" name="file" onChange={changeHandlerPDF} /></div>
+                                {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     {isFilePDFPicked ?
                                         <div>
                                             <p>Nome file: {selectedFilePDF.name}</p>
@@ -2177,7 +2179,7 @@ function CustomerCard(customerPassed) {
                                         :
                                         <p>Seleziona un file per vederne le specifiche</p>
                                     }
-                                </div>
+                                </div> */}
                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     <Button disabled={!isFilePDFPicked} onClick={(event) => {
                                         handleSubmissionPDF()

@@ -36,6 +36,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+// import QrCode from 'react.qrcode.generator'
 import './Classes.css'
 import { makeStyles } from '@mui/styles';
 
@@ -1183,6 +1184,9 @@ function Warehouse(props) {
                                                             renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
                                                             onChange={(event, value) => { showToolFound(event, value) }}
                                                         />
+                                                        {/* <div>
+                                                            <QrCode value='https://reactjs.org' />
+                                                        </div> */}
                                                         <Autocomplete
                                                             disablePortal
                                                             id="combo-box-demo"
