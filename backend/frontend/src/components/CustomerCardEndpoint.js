@@ -372,7 +372,7 @@ function CustomerCardEndpoint() {
     const handleSubmissionPDF = () => {
         if (!selectedFilePDF) return;
         const now = Date.now()
-        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + selectedFilePDF.name.replace(".pdf", "") + "_" + now)
+        const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + selectedFilePDF.name.replace(".pdf", ""))
         const uploadTask = uploadBytesResumable(storageRef, selectedFilePDF)
         uploadTask.on("state_changed", (snapshot) => {
             const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
@@ -1064,14 +1064,16 @@ function CustomerCardEndpoint() {
                                                                             customerSelected.pdf_sopralluogo.map(pf => {
                                                                                 return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                     <IconButton item xs={12} sm={6}>
-                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                     </IconButton>
-                                                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                        deletePdf(pf, "pdf_sopralluogo")
-                                                                                        setIsLoading(true)
-                                                                                    }}>
-                                                                                        <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                    </IconButton>
+                                                                                    {
+                                                                                        auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                            deletePdf(pf, "pdf_sopralluogo")
+                                                                                            setIsLoading(true)
+                                                                                        }}>
+                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                        </IconButton>
+                                                                                    }
                                                                                 </Grid >
                                                                             })
                                                                         }
@@ -1256,14 +1258,16 @@ function CustomerCardEndpoint() {
                                                                                 return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                     {/* <p item xs={12} sm={6}></p> */}
                                                                                     <IconButton item xs={12} sm={6}>
-                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                     </IconButton>
-                                                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                        deletePdf(pf, "pdf_computo")
-                                                                                        setIsLoading(true)
-                                                                                    }}>
-                                                                                        <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                    </IconButton>
+                                                                                    {
+                                                                                        auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                            deletePdf(pf, "pdf_computo")
+                                                                                            setIsLoading(true)
+                                                                                        }}>
+                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                        </IconButton>
+                                                                                    }
                                                                                 </Grid>
                                                                             })
                                                                         }
@@ -1391,14 +1395,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.pagamenti_pdf.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "pagamenti_pdf")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "pagamenti_pdf")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1442,14 +1448,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.collaudo.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "collaudo")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "collaudo")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1476,14 +1484,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.check_list.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "check_list")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "check_list")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1510,14 +1520,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.fgas.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "fgas")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "fgas")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1544,14 +1556,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.prova_fumi.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "prova_fumi")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "prova_fumi")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1578,14 +1592,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.di_co.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "di_co")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "di_co")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
@@ -1671,14 +1687,16 @@ function CustomerCardEndpoint() {
                                                                                 customerSelected.assistenza.map(pf => {
                                                                                     return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                                                         <IconButton item xs={12} sm={6}>
-                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0]}</a>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
                                                                                         </IconButton>
-                                                                                        <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "assistenza")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "assistenza")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
                                                                                     </Grid >
                                                                                 })
                                                                             }
