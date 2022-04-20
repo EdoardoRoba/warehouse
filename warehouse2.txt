@@ -30,10 +30,7 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
-- drag and drop: foto
 - crea qr code
-- aggiorna campo bottone tutto sulla sinistra
-- multiple pdfs
 
 
 

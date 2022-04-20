@@ -2078,7 +2078,7 @@ function CustomerCardEndpoint() {
                                     <AiFillInfoCircle sx={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
                                 </div>
                             }
-                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
                                 <Button sx={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
                                     editStatus()
                                     setIsLoading(true)

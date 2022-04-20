@@ -36,7 +36,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-// import QrCode from 'react.qrcode.generator'
+import QRCodeSVG from 'qrcode.react'
 import './Classes.css'
 import { makeStyles } from '@mui/styles';
 
@@ -111,7 +111,8 @@ function Warehouse(props) {
 
     const structureId = "6205a1c27f6cda42c2064a0f"
     const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Z"]
-    const beUrl = "http://localhost:8050/"
+    // const beUrl = "http://localhost:8050/"
+    const beUrl = "https://my-warehouse-app-heroku.herokuapp.com/api/"
     const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const fileExtension = '.xlsx';
 
@@ -318,10 +319,8 @@ function Warehouse(props) {
     }
 
     const handleScanWebCam = (result) => {
-        console.log("prova ", result)
         if (result) {
             setQrData(result);
-            console.log("qrData: ", result)
             setOpenQrCode(false)
         }
     }
@@ -802,6 +801,19 @@ function Warehouse(props) {
         }
     }
 
+    const downloadQR = () => {
+        const canvas = document.getElementById(beUrl + "tool/" + toolFound._id);
+        const pngUrl = canvas
+            .toDataURL("image/png")
+            .replace("image/png", "image/octet-stream");
+        let downloadLink = document.createElement("a");
+        downloadLink.href = pngUrl;
+        downloadLink.download = toolFound.label + ".png";
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    };
+
     // PUT
     let updateBook = (label, q, user, lb) => {
         var employeeIsPresent = false
@@ -1184,9 +1196,22 @@ function Warehouse(props) {
                                                             renderInput={(params) => <TextField {...params} label="prodotti (per nome)" />}
                                                             onChange={(event, value) => { showToolFound(event, value) }}
                                                         />
-                                                        {/* <div>
-                                                            <QrCode value='https://reactjs.org' />
-                                                        </div> */}
+                                                        {
+                                                            toolFound === null ? "" : <div>
+                                                                <div style={{ marginTop: "-1rem" }}>
+                                                                    <QRCodeSVG
+                                                                        id={beUrl + "tool/" + toolFound._id}
+                                                                        value={beUrl + "tool/" + toolFound._id}
+                                                                        size={100}
+                                                                        level={"H"}
+                                                                        includeMargin={true}
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <a className="hovered" style={{ textDecoration: "underline" }} onClick={downloadQR}>Download QR </a>
+                                                                </div>
+                                                            </div>
+                                                        }
                                                         <Autocomplete
                                                             disablePortal
                                                             id="combo-box-demo"
@@ -1200,74 +1225,76 @@ function Warehouse(props) {
                                                         />
                                                         {/* </div> */}
                                                     </Grid>
-                                                    {toolFound === null ? "" : <Card style={{ marginTop: '1rem' }}>
-                                                        <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    prodotto
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.label}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    reparto
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.department}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    sotto-reparto
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.subDepartment}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    quantità
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.quantity}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    quantità minima necessaria
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.lowerBound}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    prezzo d'acquisto (per unità)
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.price}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    codice prodotto
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.code}
-                                                                </Typography>
-                                                            </div>
-                                                            <div style={{ marginRight: '3rem' }}>
-                                                                <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                                                    ultimo utente
-                                                                </Typography>
-                                                                <Typography variant="h7" component="div">
-                                                                    {toolFound.lastUser}
-                                                                </Typography>
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
+                                                    {toolFound === null ? "" : <div>
+                                                        <Card style={{ marginTop: '1rem' }}>
+                                                            <CardContent style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        prodotto
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.label}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        reparto
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.department}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        sotto-reparto
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.subDepartment}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        quantità
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.quantity}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        quantità minima necessaria
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.lowerBound}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        prezzo d'acquisto (per unità)
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.price}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        codice prodotto
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.code}
+                                                                    </Typography>
+                                                                </div>
+                                                                <div style={{ marginRight: '3rem' }}>
+                                                                    <Typography style={{ marginTop: '1rem' }} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                                                                        ultimo utente
+                                                                    </Typography>
+                                                                    <Typography variant="h7" component="div">
+                                                                        {toolFound.lastUser}
+                                                                    </Typography>
+                                                                </div>
+                                                            </CardContent>
+                                                        </Card>
+                                                    </div>
                                                     }
                                                 </div>
 
