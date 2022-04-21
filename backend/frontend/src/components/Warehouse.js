@@ -1062,7 +1062,7 @@ function Warehouse(props) {
                                             </Button>
                                         </Grid>
                                         {
-                                            (auths["warehouse"] === "installer" && auths["user"] !== "mirisola") ? "" :
+                                            (auths["warehouse"] === "installer" && localStorage.getItem("user") !== "mirisola") ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button style={{ color: 'white', backgroundColor: '#ffae1b' }} onClick={handleChangeUpdateAddBook}>
                                                         Aumenta quantità prodotto
@@ -2044,7 +2044,18 @@ function Warehouse(props) {
                                                 }
                                                 {
                                                     !isSubDep ? "" : <div>
-                                                        <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} />
+                                                        {/* <input style={{ marginTop: '2rem' }} placeholder="reparto (GIA' ESISTENTE)" onChange={(event) => { setAddingDepartment(event.target.value) }} /> */}
+                                                        <Autocomplete
+                                                            disablePortal
+                                                            id="combo-box-demo"
+                                                            options={departments}
+                                                            style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "2rem", marginTop: "1rem" }}
+                                                            sx={{ width: 300 }}
+                                                            renderInput={(params) => <TextField {...params} label="reparto già esistente" />}
+                                                            onChange={(event) => {
+                                                                setAddingDepartment(event.target.value)
+                                                            }}
+                                                        />
                                                         <input placeholder="sottoreparto" onChange={(event) => { setAddingSubDepartment(event.target.value) }} />
                                                     </div>
                                                 }

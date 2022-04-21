@@ -30,16 +30,11 @@ java -jar C:\Users\edoar\Downloads\jenkins.war
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
-- crea qr code
 
 
 
 APP:
-- sotto cliente: indirizzo, comune, prov, company, num telefono
-- note e computo visibili e modificabili
 - filtro su clienti
-- readonly pdf
-- accedere a cliente dal calendario
 
 
 
