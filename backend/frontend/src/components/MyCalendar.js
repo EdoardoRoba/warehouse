@@ -137,6 +137,10 @@ function MyCalendar() {
         axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: user } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
             .then(res => {
                 // console.log("customers: ", res.data)
+                for (let e of res.data) {
+                    e.start = new Date(e.start)
+                    e.end = new Date(e.end)
+                }
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
@@ -439,7 +443,7 @@ function MyCalendar() {
                                         selectable={true}
                                         onSelectSlot={onSelectSlot}
                                         onSelectEvent={onSelectEvent}
-                                        views={["month"]} // "week", "day"
+                                        views={["month", "day"]} // "week", "day"
                                     />
                                     <Modal
                                         open={openModal}
