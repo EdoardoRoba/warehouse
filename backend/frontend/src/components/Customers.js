@@ -83,7 +83,7 @@ function Customers(props) {
     const [tecnico_sopralluogo, setTecnico_sopralluogo] = React.useState("");
     const [trasferta, setTrasferta] = React.useState("");
     const [collaudo, setCollaudo] = React.useState("");
-    const [assistenza, setAssistenza] = React.useState("");
+    const [assistenza, setAssistenza] = React.useState([]);
     const [status, setStatus] = React.useState("");
     const [note_info, setNote_info] = React.useState("");
     const [note_sopralluogo, setNote_sopralluogo] = React.useState("");

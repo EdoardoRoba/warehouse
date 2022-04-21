@@ -1125,7 +1125,7 @@ function CustomerCardEndpoint() {
                                                             <Typography display="inline-block" style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                 note sopralluogo
                                                             </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
                                                                 {customerSelected.note_sopralluogo}
                                                                 {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
@@ -1173,7 +1173,7 @@ function CustomerCardEndpoint() {
                                                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                 computo
                                                             </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
                                                                 {customerSelected.computo}
                                                                 {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
@@ -1320,7 +1320,7 @@ function CustomerCardEndpoint() {
                                                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                 note installazione
                                                             </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
                                                                 {customerSelected.note_installazione}
                                                                 {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
@@ -1604,7 +1604,7 @@ function CustomerCardEndpoint() {
                                                                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                     note documenti
                                                                 </Typography>
-                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
                                                                     {customerSelected.note_pagamenti}
                                                                     {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
@@ -1779,7 +1779,7 @@ function CustomerCardEndpoint() {
                                                                 <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                     note assistenza
                                                                 </Typography>
-                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
                                                                     {customerSelected.assistenza}
                                                                     {
                                                                         auths["customers"] !== "*" ? "" : <IconButton

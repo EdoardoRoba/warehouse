@@ -26,15 +26,24 @@ jenkins admin: edoardoroba1317, 30-Marzo-1996, Edoardo Roba, gmail
 http://localhost:8000/ (o 8080)
 java -jar C:\Users\edoar\Downloads\jenkins.war
 
+
+maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
+
 ----------------------------------------------------------
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
 
 
-
 APP:
-- filtro su clienti
+- tutto sulla stessa pagina NON modale - ...
+- in modale sopralluogo: APRI FOTO grande iniziale, sotto il pdf "modulo pdf", data, tecnico, note, al fondo: CARICA FOTO (solo se foto sono vuote. se ce ne sono già, non ne carico più)
+- foto non più caricabili?!
+- Login messo a icona sulla destra
+- togliere "back" mettere "indietro" o niente
+- testo un po' più grande
+- installazione:  data, tecnico, computo txt, computo pdf, apri e carica foto grande in basso
+- solo per admin: vedere documenti anche da app
 
 
 
