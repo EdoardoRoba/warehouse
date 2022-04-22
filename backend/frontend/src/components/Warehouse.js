@@ -1049,7 +1049,7 @@ function Warehouse(props) {
                                         <Grid item xs={12} sm={6} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}> */}
                                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginLeft: '1rem', marginRight: '1rem', marginTop: '2rem' }}>
                                         {
-                                            auths["warehouse"] === "installer" ? "" :
+                                            auths["warehouse"] === "installer" && localStorage.getItem("user") !== "mirisola" ? "" :
                                                 <Grid item xs={12} sm={2} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                                                     <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={handleChangeAddBook}>
                                                         Aggiungi nuovo prodotto

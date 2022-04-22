@@ -36,14 +36,7 @@ warehouse:
 
 
 APP:
-- tutto sulla stessa pagina NON modale - ...
-- in modale sopralluogo: APRI FOTO grande iniziale, sotto il pdf "modulo pdf", data, tecnico, note, al fondo: CARICA FOTO (solo se foto sono vuote. se ce ne sono già, non ne carico più)
-- foto non più caricabili?!
-- Login messo a icona sulla destra
-- togliere "back" mettere "indietro" o niente
-- testo un po' più grande
-- installazione:  data, tecnico, computo txt, computo pdf, apri e carica foto grande in basso
-- solo per admin: vedere documenti anche da app
+- sopr, inst, assis tutti accordion ( wait )
 
 
 
