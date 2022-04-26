@@ -268,8 +268,6 @@ function MyCalendar() {
                 setShowError(true)
                 handleCloseModal()
             });
-
-
     }
 
     const updateCalendar = () => {
@@ -284,6 +282,23 @@ function MyCalendar() {
                 if (externalEmployees.length > 0) {
                     updateExternalEmployees(externalEmployees)
                 }
+                handleCloseModal()
+            }).catch(error => {
+                // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+                setIsLoading(false)
+                setShowError(true)
+                handleCloseModal()
+            });
+    }
+
+    const deleteCalendar = () => {
+        setIsLoading(true)
+        axiosInstance.delete('calendar/' + eventSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            .then(() => {
+                getEvents()
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
@@ -751,6 +766,13 @@ function MyCalendar() {
                                                                                 variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
                                                                                 onClick={() => { updateCalendar() }}>
                                                                                 Aggiorna evento
+                                                                            </Button>
+                                                                        }
+                                                                        {
+                                                                            localStorage.getItem("user") !== "admin" ? "" : <Button
+                                                                                variant="outlined" style={{ color: 'white', backgroundColor: 'red', marginBottom: '1rem' }}
+                                                                                onClick={() => { deleteCalendar() }}>
+                                                                                Elimina evento
                                                                             </Button>
                                                                         }
                                                                     </div>

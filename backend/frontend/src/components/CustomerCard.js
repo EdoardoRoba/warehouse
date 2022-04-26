@@ -1294,7 +1294,7 @@ function CustomerCard(customerPassed) {
                                                             <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                                 computo
                                                             </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
+                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line", textAlign: "left" }} variant="body2">
                                                                 {customerSelected.computo}
                                                                 {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
