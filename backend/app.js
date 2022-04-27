@@ -685,6 +685,7 @@ app.post('/api/customer', (req, res) => {
         trasferta: req.body.trasferta,
         assistenza: req.body.assistenza,
         note: req.body.note,
+        cf: req.body.cf,
         pagamenti_testo: req.body.pagamenti_testo
     })
     // console.log("customer: ", customer)

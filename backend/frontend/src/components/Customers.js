@@ -70,6 +70,7 @@ function Customers(props) {
     const [company, setCompany] = React.useState("");
     const [nome_cognome, setNome_cognome] = React.useState("");
     const [telefono, setTelefono] = React.useState("");
+    const [cf, setCf] = React.useState("");
     const [indirizzo, setIndirizzo] = React.useState("");
     const [comune, setComune] = React.useState("");
     const [provincia, setProvincia] = React.useState("");
@@ -340,7 +341,7 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "" }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "", cf: cf }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -822,6 +823,7 @@ function Customers(props) {
                                                                 <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
                                                                 <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toUpperCase()) }} />
                                                                 <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
+                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="codice fiscale" onChange={(event) => { setCf(parseInt(event.target.value)) }} />
                                                             </div>
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                 <input style={{ margin: '1rem', width: '25%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />

@@ -43,6 +43,10 @@ const customerSchema = new Schema({
         type: String,
         required: false
     },
+    cf: {
+        type: String,
+        required: false
+    },
     pdf_computo: {
         type: Array,
         required: false

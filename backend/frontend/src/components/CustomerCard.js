@@ -1068,6 +1068,21 @@ function CustomerCard(customerPassed) {
                                                         {customerSelected.indirizzo} - {customerSelected.comune} - {customerSelected.provincia} - {customerSelected.cap}
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                        CF
+                                                    </Typography>
+                                                    <Typography sx={{ fontSize: 18 }} variant="body2">
+                                                        {customerSelected.cf}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("cf")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
+                                                    </Typography>
+                                                    <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         telefono
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18 }} variant="body2">
