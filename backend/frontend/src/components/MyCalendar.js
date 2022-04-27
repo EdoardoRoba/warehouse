@@ -250,7 +250,15 @@ function MyCalendar() {
     const addCalendar = () => {
         setIsLoading(true)
         let externalEmployees = employeesInvolved.filter((eI) => eI.external)
-        axiosInstance.post('calendar', { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        // nome, tipo app, azienda, termico/eletttrico
+        let newEvent = {}
+        if (type === "appuntamento") {
+            newEvent = { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }
+        } else {
+            let titleNewEvent = customerInvolved.nome_cognome.toUpperCase() + "-" + type.toUpperCase() + "-" + customerInvolved.company.toUpperCase() + "-" + customerInvolved.termico_elettrico.toUpperCase()
+            newEvent = { start: selectedStartTime, end: selectedEndTime, title: titleNewEvent, employees: employeesInvolved, customer: customerInvolved, type: type }
+        }
+        axiosInstance.post('calendar', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
                 if (type !== "appuntamento") {
@@ -492,36 +500,6 @@ function MyCalendar() {
                                                     auths["calendar"] !== "*" && eventSelected === null ?
                                                         <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
                                                         : <div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                {
-                                                                    eventSelected === null ? <TextField
-                                                                        id="standard-search"
-                                                                        label="Titolo dell'evento"
-                                                                        type="search"
-                                                                        variant="standard"
-                                                                        onChange={(e) => {
-                                                                            setTitleEvent(e.target.value)
-                                                                        }}
-                                                                        xs={12}
-                                                                        sm={6}
-                                                                        style={{ marginTop: "3rem", width: "80%" }}
-                                                                    /> : <TextField
-                                                                        id="standard-search"
-                                                                        label="Titolo dell'evento"
-                                                                        type="search"
-                                                                        defaultValue={eventSelected.title}
-                                                                        variant="standard"
-                                                                        onChange={(e) => {
-                                                                            setTitleEvent(e.target.value)
-                                                                        }}
-                                                                        xs={12}
-                                                                        sm={6}
-                                                                        style={{ marginTop: "3rem", width: "80%" }}
-                                                                    />
-                                                                }
-
-                                                            </div>
-
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                                 {
                                                                     eventSelected === null ? <div>
@@ -568,20 +546,57 @@ function MyCalendar() {
                                                                     <MenuItem onClick={() => {
                                                                         setType("installazione")
                                                                         setAnchorEl(null)
+                                                                        setTitleEvent("nonAppuntamento")
                                                                     }}>Installazione</MenuItem>
                                                                     <MenuItem onClick={() => {
                                                                         setType("sopralluogo")
                                                                         setAnchorEl(null)
+                                                                        setTitleEvent("nonAppuntamento")
                                                                     }}>Sopralluogo</MenuItem>
                                                                     <MenuItem onClick={() => {
                                                                         setType("assistenza")
                                                                         setAnchorEl(null)
+                                                                        setTitleEvent("nonAppuntamento")
                                                                     }}>Assistenza</MenuItem>
                                                                     <MenuItem onClick={() => {
                                                                         setType("appuntamento")
                                                                         setAnchorEl(null)
                                                                     }}>Appuntamento</MenuItem>
                                                                 </Menu>
+                                                            </div>
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                {
+                                                                    eventSelected === null ? <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                        {
+                                                                            type !== "appuntamento" ? "" : <TextField
+                                                                                id="standard-search"
+                                                                                label="Titolo dell'evento"
+                                                                                type="search"
+                                                                                variant="standard"
+                                                                                onChange={(e) => {
+                                                                                    setTitleEvent(e.target.value)
+                                                                                }}
+                                                                                xs={12}
+                                                                                sm={6}
+                                                                                style={{ marginTop: "3rem", width: "80%" }}
+                                                                            />
+                                                                        }
+                                                                    </Grid>
+                                                                        : <TextField
+                                                                            id="standard-search"
+                                                                            label="Titolo dell'evento"
+                                                                            type="search"
+                                                                            defaultValue={eventSelected.title}
+                                                                            variant="standard"
+                                                                            onChange={(e) => {
+                                                                                setTitleEvent(e.target.value)
+                                                                            }}
+                                                                            xs={12}
+                                                                            sm={6}
+                                                                            style={{ marginTop: "3rem", width: "80%" }}
+                                                                        />
+                                                                }
+
                                                             </div>
 
                                                             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
