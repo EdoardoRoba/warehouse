@@ -12,6 +12,7 @@ const Customer = require('./models/customer')
 const Auth = require('./models/auth')
 const Color = require('./models/color')
 const Calendar = require('./models/calendar')
+const Gestionale = require('./models/gestionale')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -65,6 +66,7 @@ app.use("/api/employee", middleware)
 app.use("/api/customer", middleware)
 app.use("/api/colorStatus", middleware)
 app.use("/api/calendar", middleware)
+app.use("/api/gestionale", middleware)
 
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ limit: '1000mb' }));
@@ -846,6 +848,89 @@ app.put('/api/calendar/:id', (req, res, next) => {
 app.delete('/api/calendar/:id', (req, res) => {
     const id = req.params.id;
     Calendar.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+
+
+// GESTIONALE
+// POST
+app.post('/api/gestionale', (req, res) => {
+    const gestionale = new Gestionale({
+        start: req.body.start,
+        end: req.body.end,
+        title: req.body.title,
+        employees: req.body.employees,
+        customer: req.body.customer,
+        type: req.body.type
+    })
+    // console.log("gestionale: ", gestionale)
+    gestionale.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/gestionale', (req, res) => {
+    let filter = {}
+    let usr = ""
+    if (req.query.customer !== null && req.query.customer !== undefined) {
+        filter["customer.nome_cognome"] = req.query.customer
+    }
+    if (req.query.employee !== null && req.query.employee !== undefined) {
+        filter["employees.lastName"] = req.query.employee
+    }
+    if (req.query.user !== null && req.query.user !== undefined) {
+        // it gets all the element in that document with employee requested
+        usr = req.query.user.replace("_", " ").replace("_", " ")
+        filter.usr = req.query.user
+    }
+    if (req.query.user === "admin") {
+        Gestionale.find(filter).then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    } else {
+        Gestionale.find({ "employees.lastName": usr }).then((result) => {
+            res.send(result);
+        }).catch((error) => { console.log("error: ", error) })
+    }
+})
+
+// GET SINGLE
+app.get('/api/gestionale/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    Gestionale.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/gestionale/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    Gestionale.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// DELETE
+app.delete('/api/gestionale/:id', (req, res) => {
+    const id = req.params.id;
+    Gestionale.deleteOne(
         { _id: id }
     ).then((result) => {
         res.send(result)

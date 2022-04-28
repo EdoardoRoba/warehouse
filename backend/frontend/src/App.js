@@ -25,6 +25,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import List from '@mui/material/List';
 import { ItaurosTextField } from "itauros-material";
+import Gestionale from "./components/Gestionale.js";
 
 
 function App() {
@@ -81,6 +82,12 @@ function App() {
         pg['id'] = "employees"
         pgs.push(pg)
       }
+      if (auths.includes("gestionale")) {
+        pg = {}
+        pg['label'] = "Gestionale"
+        pg['id'] = "gestionale"
+        pgs.push(pg)
+      }
       if (auths.includes("calendar")) {
         pg = {}
         pg['label'] = "Calendario"
@@ -122,12 +129,6 @@ function App() {
   }
 
   const list = () => (
-    // <Box
-    //   // sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-    //   role="presentation"
-    //   onClick={toggleDrawer}
-    //   onKeyDown={toggleDrawer}
-    // >
     <List>
       {pages.map((page) => (
         <ListItem button key={page.label}>
@@ -190,17 +191,6 @@ function App() {
                     {list()}
                   </Drawer>
                 </Box>
-                {/* <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                  {pages.map((page) => (
-                    <Button
-                      key={page}
-                      onClick={handleCloseNavMenu}
-                      style={{ color: 'white' }}
-                    >
-                      <Link style={{ color: 'white' }} to={"/" + page.id}>{page.label}</Link>
-                    </Button>
-                  ))}
-                </Box>*/}
                 <Button style={{ marginRight: 'auto' }} color="inherit">
                   <Tooltip title="Logout">
                     <IconButton onClick={() => { freeCache() }}>
@@ -225,6 +215,7 @@ function App() {
         <Route exact path='/customers/customer-card' element={< CustomerCardEndpoint />}></Route>
         <Route exact path='/employees' element={< Employees />}></Route>
         <Route exact path='/calendar' element={< MyCalendar />}></Route>
+        <Route exact path='/gestionale' element={< Gestionale />}></Route>
       </Routes>
 
     </Router >

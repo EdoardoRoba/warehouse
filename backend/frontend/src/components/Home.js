@@ -18,6 +18,7 @@ import HistoryPage from "./HomePages/HistoryPage.js";
 import CustomerPage from "./HomePages/CustomersPage.js";
 import EmployeesPage from "./HomePages/EmployeesPage.js";
 import CalendarPage from "./HomePages/CalendarPage.js";
+import GestionalePage from "./HomePages/GestionalePage.js";
 
 function Home() {
 
@@ -25,40 +26,9 @@ function Home() {
     const [userIsAuthenticatedFlag, setUserIsAuthenticatedFlag] = React.useState(true)
     const [auths, setAuths] = React.useState([])
 
-    const TabPanel = (props) => {
-        const { children, value, index, component, ...other } = props;
-
-        return (
-            <div
-                role="tabpanel"
-                hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}
-                {...other}
-            >
-                {value === index && (
-                    <Box sx={{ p: 3 }}>
-                        {children}
-                    </Box>
-                )}
-            </div>
-        );
-    }
-
     React.useEffect(() => {
         userIsAuthenticated()
     }, [])
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
-
-    const a11yProps = (index) => {
-        return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
-        };
-    }
 
     const userIsAuthenticated = () => {
         setUserIsAuthenticatedFlag(true)
@@ -88,6 +58,9 @@ function Home() {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <CalendarPage />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <GestionalePage />
                                 </Grid>
                             </Grid>
                         </Box>

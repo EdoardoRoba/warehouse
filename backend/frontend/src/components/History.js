@@ -173,10 +173,8 @@ function History(props) {
             } else {
                 setEmployeeSelected(null)
                 setToolSelected(value.label)
-                console.log(value.label)
                 axiosInstance.get('history', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { type: "tool", data: value.label } })
                     .then(response => {
-                        console.log(response.data)
                         setHistoryShown(response.data)
                     }).catch(error => {
                         if (error.response.status === 401) {

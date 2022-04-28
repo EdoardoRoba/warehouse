@@ -970,7 +970,43 @@ function CustomerCardEndpoint() {
                                                         indirizzo
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.indirizzo} - {customerSelected.comune} - {customerSelected.provincia} - {customerSelected.cap}
+                                                        {customerSelected.indirizzo}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("indirizzo")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        } - {customerSelected.comune}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("comune")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        } - {customerSelected.provincia}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("provincia")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        } - {customerSelected.cap}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("cap")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         CF
