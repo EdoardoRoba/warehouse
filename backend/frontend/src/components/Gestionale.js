@@ -40,14 +40,12 @@ function Gestionale() {
     const [auths, setAuths] = React.useState([])
     const [events, setEvents] = React.useState([])
     const [employees, setEmployees] = React.useState([])
+    const [employee, setEmployee] = React.useState({})
     const [customers, setCustomers] = React.useState([])
     const [isLoading, setIsLoading] = React.useState(true);
     const [showError, setShowError] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
-    const [titleEvent, setTitleEvent] = React.useState("");
     const [type, setType] = React.useState("");
-    const [filterCustomer, setFilterCustomer] = React.useState("");
-    const [filterEmployee, setFilterEmployee] = React.useState("");
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [selectedStartTime, setSelectedStartTime] = React.useState();
@@ -123,10 +121,15 @@ function Gestionale() {
 
     React.useEffect(() => {
         userIsAuthenticated()
-        getEvents()
-        getEmployees()
-        getCustomers()
     }, [])
+
+    React.useEffect(() => {
+        if (auths.gestionale) {
+            getEvents()
+            getEmployee()
+            getEmployees()
+        }
+    }, [auths])
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -166,51 +169,51 @@ function Gestionale() {
 
     const getEvents = () => {
         let user = ""
-        if (localStorage.getItem("profile") === "admin") {
-            user = "admin"
+        if (auths["gestionale"] === "*") {
+            axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+                .then(ress => {
+                    let its = []
+                    its = ress.data.map((e, idx) => {
+                        let it = {}
+                        it.id = idx
+                        it.group = e.employee.lastName
+                        it.title = e.type
+                        it.start_time = new Date(e.start)
+                        it.end_time = new Date(e.end)
+                        return it
+                    })
+                    // console.log("its")
+                    // console.log(its)
+                    setItems(its)
+                    setIsLoading(false)
+                }).catch(error => {
+                    console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
+                    setIsLoading(false)
+                    setShowError(true)
+                });
         } else {
-            user = localStorage.getItem("user").replaceAll(".", "_")
+            axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { lastName: localStorage.getItem("user") } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+                .then(res => {
+                    for (let e of res.data) {
+                        e.start = new Date(e.start)
+                        e.end = new Date(e.end)
+                        e.title = e.type
+                    }
+                    setEvents(res.data)
+                    setIsLoading(false)
+                }).catch(error => {
+                    console.log("error")
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
+                    setIsLoading(false)
+                    setShowError(true)
+                });
         }
-        axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: user } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-            .then(res => {
-                for (let e of res.data) {
-                    e.start = new Date(e.start)
-                    e.end = new Date(e.end)
-                }
-                setEvents(res.data)
-                axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-                    .then(ress => {
-                        let its = []
-                        console.log(ress)
-                        for (let g of ress.data) {
-                            let it = {}
-                            it.id = g.employee.lastName
-                            it.group = g.employee.lastName
-                            it.title = g.type
-                            it.start_time = new Date(g.start)
-                            it.end_time = new Date(g.end)
-                            its.push(it)
-                        }
-                        console.log("its")
-                        console.log(its)
-                        setItems(its)
-                        setIsLoading(false)
-                    }).catch(error => {
-                        console.log("error")
-                        if (error.response.status === 401) {
-                            userIsAuthenticated()
-                        }
-                        setIsLoading(false)
-                        setShowError(true)
-                    });
-            }).catch(error => {
-                console.log("error")
-                if (error.response.status === 401) {
-                    userIsAuthenticated()
-                }
-                setIsLoading(false)
-                setShowError(true)
-            });
+
     }
 
     const getEmployees = async () => {
@@ -223,6 +226,8 @@ function Gestionale() {
                     e.height = 60
                     return e
                 })
+                // console.log("gps")
+                // console.log(gps)
                 setGroups(gps)
             }).catch(error => {
                 // console.log("error")
@@ -232,11 +237,10 @@ function Gestionale() {
             });
     }
 
-    const getCustomers = async () => {
-        axiosInstance.get('customer', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+    const getEmployee = () => {
+        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { lastName: localStorage.getItem("user") } })
             .then(res => {
-                // console.log("Customers: ", res.data)
-                setCustomers(res.data)
+                setEmployee(res.data[0])
             }).catch(error => {
                 // console.log("error")
                 if (error.response.status === 401) {
@@ -268,71 +272,14 @@ function Gestionale() {
         setOpenModal(true)
     }
 
-    const handleOpenCustomerCard = () => {
-        axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
-            setCustomerSelected(respp.data)
-            setOpenCustomerCard(true)
-        }).catch((error) => {
-            if (error.response.status === 401) {
-                userIsAuthenticated()
-            }
-        })
-    }
-
-    const updateExternalEmployees = async (externalEmployees) => {
-        // console.log(externalEmployees)
-        var is = []
-        for (let extE of externalEmployees) {
-            if (extE.visibleCustomers.filter(e => e.nome_cognome === customerInvolved.nome_cognome).length === 0) {
-                var newField = {}
-                newField.visibleCustomers = extE.visibleCustomers.concat(customerInvolved)
-                is.push(axiosInstance.put('employee/' + extE._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }))
-            }
-        }
-        is = await Promise.allSettled(is)
-        console.log("dipendenti esterni aggiornati!")
-    }
-
-    const updateCustomer = () => {
-        let newField = {}
-        newField["tecnico_" + type] = employeesInvolved.map((eI) => eI.lastName.toUpperCase()).join("-")
-        if (type === "installazione" && (new Date(selectedStartTime).getDate()) !== (new Date(selectedEndTime).getDate())) {
-            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
-        } else {
-            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
-        }
-        // console.log(newField)
-        axiosInstance.put("customer/" + customerInvolved._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
-            console.log("aggiornato!")
-            setIsLoading(false)
-        }).catch((error) => {
-            setIsLoading(false)
-            if (error.response.status === 401) {
-                userIsAuthenticated()
-            }
-        })
-    }
-
-    const addCalendar = () => {
+    const addGestionale = () => {
         setIsLoading(true)
         let externalEmployees = employeesInvolved.filter((eI) => eI.external)
         // nome, tipo app, azienda, termico/eletttrico
-        let newEvent = {}
-        if (type === "appuntamento") {
-            newEvent = { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }
-        } else {
-            let titleNewEvent = customerInvolved.nome_cognome.toUpperCase() + "-" + type.toUpperCase() + "-" + customerInvolved.company.toUpperCase() + "-" + customerInvolved.termico_elettrico.toUpperCase()
-            newEvent = { start: selectedStartTime, end: selectedEndTime, title: titleNewEvent, employees: employeesInvolved, customer: customerInvolved, type: type }
-        }
-        axiosInstance.post('calendar', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        let newEvent = { start: selectedStartTime, end: selectedEndTime, employee: employee, type: type }
+        axiosInstance.post('gestionale', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                if (type !== "appuntamento") {
-                    updateCustomer()
-                }
-                if (externalEmployees.length > 0) {
-                    updateExternalEmployees(externalEmployees)
-                }
                 handleCloseModal()
             }).catch(error => {
                 if (error.response.status === 401) {
@@ -344,18 +291,11 @@ function Gestionale() {
             });
     }
 
-    const updateCalendar = () => {
+    const updateGestionale = () => {
         setIsLoading(true)
-        let externalEmployees = employeesInvolved.filter((eI) => eI.external)
-        axiosInstance.put('calendar/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, title: titleEvent, employees: employeesInvolved, customer: customerInvolved, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        axiosInstance.put('gestionale/' + eventSelected._id, { start: selectedStartTime, end: selectedEndTime, employee: employee, type: type }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                if (type !== "appuntamento") {
-                    updateCustomer()
-                }
-                if (externalEmployees.length > 0) {
-                    updateExternalEmployees(externalEmployees)
-                }
                 handleCloseModal()
             }).catch(error => {
                 // console.log("error")
@@ -368,9 +308,9 @@ function Gestionale() {
             });
     }
 
-    const deleteCalendar = () => {
+    const deleteGestionale = () => {
         setIsLoading(true)
-        axiosInstance.delete('calendar/' + eventSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        axiosInstance.delete('gestionale/' + eventSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(() => {
                 getEvents()
                 handleCloseModal()
@@ -391,7 +331,6 @@ function Gestionale() {
         setSelectedEndTime()
         setEmployeesInvolved([])
         setCustomerInvolved(null)
-        setTitleEvent("")
         setType("")
         setCustomerSelected(null)
         getEvents()
@@ -418,42 +357,9 @@ function Gestionale() {
         )
         setEmployeesInvolved(e.employees)
         setCustomerInvolved(e.customer)
-        setTitleEvent(e.title)
         setType(e.type)
         setCustomerSelected(e.customer)
         setOpenModal(true)
-    }
-
-    const showFilteredCalendar = (value, type) => {
-        if (value !== null) {
-            setIsLoading(true)
-            let user = ""
-            if (localStorage.getItem("profile") === "admin") {
-                user = "admin"
-            } else {
-                user = localStorage.getItem("user").replaceAll(".", "_")
-            }
-            let filter = {}
-            let valFilter = ""
-            if (type === "customer") {
-                valFilter = value.nome_cognome
-            } else {
-                valFilter = value.lastName
-            }
-            filter.user = user
-            filter[type] = valFilter
-            axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: filter }).then((res) => { //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-                setEvents(res.data)
-                setIsLoading(false)
-            }).catch(error => {
-                console.log(error)
-                if (error.response.status === 401) {
-                    userIsAuthenticated()
-                }
-                setIsLoading(false)
-                setShowError(true)
-            });
-        }
     }
 
     return (
@@ -469,32 +375,207 @@ function Gestionale() {
                                 <CircularProgress color="inherit" />
                             </Backdrop> :
                                 <div style={{ marginBottom: "1rem", marginTop: "2rem", width: "90%", marginLeft: "auto", marginRight: "auto" }}>
-                                    {/* <Calendar
-                                        localizer={localizer}
-                                        events={events}
-                                        style={{ height: 800 }}
-                                        startAccessor="start"
-                                        endAccessor="end"
-                                        selectable={true}
-                                        onSelectSlot={onSelectSlot}
-                                        onSelectEvent={onSelectEvent}
-                                        views={["month", "week", "day"]} // "week", "day"
-                                    /> */}
-                                    <Timeline
-                                        groups={groups}
-                                        items={items}
-                                        style={{ height: "500px" }}
-                                        defaultTimeStart={moment().add(-12, 'hour')}
-                                        defaultTimeEnd={moment().add(12, 'hour')}>
-                                        <TimelineHeaders className={classes.color}>
-                                            <SidebarHeader className={classes.color}>
-                                            </SidebarHeader >
-                                            <DateHeader unit="primaryHeader" className={classes.color} />
-                                            <DateHeader />
-                                        </TimelineHeaders>
-                                    </Timeline>
+                                    {
+                                        auths["gestionale"] !== "*" ? <div>
+                                            <h2>Gestionale</h2>
+                                            <h3>Inserisci i tuoi orari</h3>
+                                            <Calendar
+                                                localizer={localizer}
+                                                events={events}
+                                                style={{ height: 800 }}
+                                                startAccessor="start"
+                                                endAccessor="end"
+                                                selectable={true}
+                                                onSelectSlot={onSelectSlot}
+                                                onSelectEvent={onSelectEvent}
+                                                views={["month", "week", "day"]} // "week", "day"
+                                            />
+                                        </div> : <div>
+                                            {
+                                                items.length === 0 ? "" : <Timeline
+                                                    groups={groups}
+                                                    items={items}
+                                                    style={{ height: "500px" }}
+                                                    canMove={false}
+                                                    canResize={false}
+                                                    showCursorLine
+                                                    defaultTimeStart={moment().add(-12, 'hour')}
+                                                    defaultTimeEnd={moment().add(12, 'hour')}
+                                                >
+                                                    <TimelineHeaders className={classes.color}>
+                                                        <SidebarHeader className={classes.color}>
+                                                        </SidebarHeader >
+                                                        <DateHeader unit="primaryHeader" className={classes.color} />
+                                                        <DateHeader />
+                                                    </TimelineHeaders>
+                                                </Timeline>
+                                            }
+                                        </div>
+                                    }
                                 </div >
                         }
+                        <Modal
+                            open={openModal}
+                            onClose={() => { handleCloseModal() }}
+                            aria-labelledby="modal-modal-label"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Card container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={style}>
+                                {
+                                    eventSelected === null ? <CardHeader
+                                        title="Aggiungi un orario"
+                                        item xs={12} sm={6}
+                                        style={{
+                                            marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                            color: "white",
+                                            // paddingLeft: 5
+                                        }}
+                                    /> : <CardHeader
+                                        title="Consulta o aggiorna l'orario selezionato"
+                                        item xs={12} sm={6}
+                                        style={{
+                                            marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                            color: "white",
+                                            // paddingLeft: 5
+                                        }}
+                                    />
+                                }
+
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                    {
+                                        auths["gestionale"] !== "installer" ?
+                                            <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
+                                            : <div>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                    {
+                                                        eventSelected === null ? <div>
+                                                            <Button
+                                                                id="demo-positioned-button"
+                                                                aria-controls={openMenu ? 'demo-positioned-menu' : undefined}
+                                                                aria-haspopup="true"
+                                                                aria-expanded={openMenu ? 'true' : undefined}
+                                                                onClick={(event) => {
+                                                                    setAnchorEl(event.currentTarget)
+                                                                }}
+                                                            >
+                                                                Tipo di orario
+                                                            </Button>
+                                                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                {type}
+                                                            </Typography>
+                                                        </div> : <div>
+                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                Tipo di orario
+                                                            </Typography>
+                                                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                                {eventSelected.type}
+                                                            </Typography>
+                                                        </div>
+                                                    }
+                                                    <Menu
+                                                        id="demo-positioned-menu"
+                                                        aria-labelledby="demo-positioned-button"
+                                                        anchorEl={anchorEl}
+                                                        open={openMenu}
+                                                        onClose={() => {
+                                                            setAnchorEl(null)
+                                                        }}
+                                                        anchorOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'left',
+                                                        }}
+                                                        transformOrigin={{
+                                                            vertical: 'top',
+                                                            horizontal: 'left',
+                                                        }}
+                                                    >
+                                                        <MenuItem onClick={() => {
+                                                            setType("orario lavorativo")
+                                                            setAnchorEl(null)
+                                                        }}>Orario lavorativo</MenuItem>
+                                                        <MenuItem onClick={() => {
+                                                            setType("ferie")
+                                                            setAnchorEl(null)
+                                                        }}>Ferie</MenuItem>
+                                                        <MenuItem onClick={() => {
+                                                            setType("permesso")
+                                                            setAnchorEl(null)
+                                                        }}>Permesso</MenuItem>
+                                                    </Menu>
+                                                </div>
+
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
+                                                    {
+                                                        eventSelected === null ? <div>
+                                                            <TimePicker
+                                                                label="inizio"
+                                                                value={selectedStartTime}
+                                                                ampm={false}
+                                                                item xs={12} sm={6}
+                                                                // style={{ width: "90%" }}
+                                                                onChange={(date) => {
+                                                                    setSelectedStartTime(date)
+                                                                }}
+                                                            />
+                                                            <TimePicker
+                                                                label="fine"
+                                                                value={selectedEndTime}
+                                                                ampm={false}
+                                                                item xs={12} sm={6}
+                                                                // style={{ width: "90%" }}
+                                                                onChange={(date) => {
+                                                                    setSelectedEndTime(date)
+                                                                }}
+                                                            />
+                                                        </div> : <div>
+                                                            <DateTimePicker
+                                                                label="inizio"
+                                                                value={selectedStartTime}
+                                                                ampm={false}
+                                                                item xs={12} sm={6}
+                                                                // style={{ width: "90%" }}
+                                                                onChange={(date) => {
+                                                                    setSelectedStartTime(date)
+                                                                }}
+                                                            />
+                                                            <DateTimePicker
+                                                                label="fine"
+                                                                ampm={false}
+                                                                value={selectedEndTime}
+                                                                item xs={12} sm={6}
+                                                                // style={{ width: "90%" }}
+                                                                onChange={(date) => {
+                                                                    setSelectedEndTime(date)
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    }
+                                                </Grid>
+                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
+                                                    {
+                                                        eventSelected === null ? <Button disabled={type === null || type === ""}
+                                                            variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
+                                                            onClick={() => { addGestionale() }}>
+                                                            Aggiungi orario
+                                                        </Button> : <div>
+                                                            <Button
+                                                                variant="outlined" style={{ color: 'white', backgroundColor: '#ffae1b', marginBottom: '1rem' }}
+                                                                onClick={() => { updateGestionale() }}>
+                                                                Aggiorna orario
+                                                            </Button>
+                                                            <Button
+                                                                variant="outlined" style={{ color: 'white', backgroundColor: 'red', marginBottom: '1rem' }}
+                                                                onClick={() => { deleteGestionale() }}>
+                                                                Elimina evento
+                                                            </Button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                    }
+                                </MuiPickersUtilsProvider>
+                            </Card>
+                        </Modal>
                     </div>
             }
             {

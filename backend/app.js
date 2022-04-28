@@ -522,12 +522,12 @@ app.post('/api/employee', (req, res) => {
 
 // GET
 app.get('/api/employee', (req, res) => {
-    // let filter = {}
-    // if (req.query !== null && req.query.visibleCustomers !== null) {
-    //     filter.label = req.query.visibleCustomers
-    // }
+    let filter = {}
+    if (req.query !== null && req.query.lastName !== undefined) {
+        filter.lastName = req.query.lastName
+    }
     // it gets all the element in that document
-    Employee.find().then((result) => {
+    Employee.find(filter).then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
 })
@@ -878,27 +878,12 @@ app.post('/api/gestionale', (req, res) => {
 // GET
 app.get('/api/gestionale', (req, res) => {
     let filter = {}
-    // let usr = ""
-    // if (req.query.customer !== null && req.query.customer !== undefined) {
-    //     filter["customer.nome_cognome"] = req.query.customer
-    // }
-    // if (req.query.employee !== null && req.query.employee !== undefined) {
-    //     filter["employees.lastName"] = req.query.employee
-    // }
-    // if (req.query.user !== null && req.query.user !== undefined) {
-    //     // it gets all the element in that document with employee requested
-    //     usr = req.query.user.replace("_", " ").replace("_", " ")
-    //     filter.usr = req.query.user
-    // }
-    // if (req.query.user === "admin") {
+    if (req.query.lastName !== null && req.query.lastName !== undefined) {
+        filter["employee.lastName"] = req.query.lastName
+    }
     Gestionale.find(filter).then((result) => {
         res.send(result);
     }).catch((error) => { console.log("error: ", error) })
-    // } else {
-    //     Gestionale.find({ "employee.lastName": usr }).then((result) => {
-    //         res.send(result);
-    //     }).catch((error) => { console.log("error: ", error) })
-    // }
 })
 
 // GET SINGLE
