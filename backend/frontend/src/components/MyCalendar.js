@@ -605,6 +605,7 @@ function MyCalendar() {
                                                                         <TimePicker
                                                                             label="inizio"
                                                                             value={selectedStartTime}
+                                                                            ampm={false}
                                                                             item xs={12} sm={6}
                                                                             // style={{ width: "90%" }}
                                                                             onChange={(date) => {
@@ -614,6 +615,7 @@ function MyCalendar() {
                                                                         <TimePicker
                                                                             label="fine"
                                                                             value={selectedEndTime}
+                                                                            ampm={false}
                                                                             item xs={12} sm={6}
                                                                             // style={{ width: "90%" }}
                                                                             onChange={(date) => {
@@ -626,6 +628,7 @@ function MyCalendar() {
                                                                                 label="inizio"
                                                                                 readOnly
                                                                                 value={selectedStartTime}
+                                                                                ampm={false}
                                                                                 item xs={12} sm={6}
                                                                                 // style={{ width: "90%" }}
                                                                                 onChange={(date) => {
@@ -634,6 +637,7 @@ function MyCalendar() {
                                                                             /> : <DateTimePicker
                                                                                 label="inizio"
                                                                                 value={selectedStartTime}
+                                                                                ampm={false}
                                                                                 item xs={12} sm={6}
                                                                                 // style={{ width: "90%" }}
                                                                                 onChange={(date) => {
@@ -645,6 +649,7 @@ function MyCalendar() {
                                                                             localStorage.getItem("user") !== "admin" ? <DateTimePicker
                                                                                 label="fine"
                                                                                 readOnly
+                                                                                ampm={false}
                                                                                 value={selectedEndTime}
                                                                                 item xs={12} sm={6}
                                                                                 // style={{ width: "90%" }}
@@ -653,6 +658,7 @@ function MyCalendar() {
                                                                                 }}
                                                                             /> : <DateTimePicker
                                                                                 label="fine"
+                                                                                ampm={false}
                                                                                 value={selectedEndTime}
                                                                                 item xs={12} sm={6}
                                                                                 // style={{ width: "90%" }}
