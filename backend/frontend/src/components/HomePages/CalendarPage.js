@@ -19,18 +19,18 @@ function CalendarPage() {
         <div style={{ display: "flex", justifyContent: 'center', textAlign: 'center', marginTop: '5rem', marginLeft: 'auto', marginRight: 'auto' }}>
             <Card sx={{ width: "80%", height: "100%" }}>
                 <CardHeader
-                    title="Gestionale"
-                    subheader="Inserisci i tuoi orari"
+                    title="Calendario"
+                    subheader="Consulta il tuo calendario"
                 />
                 <CalendarTodayIcon style={{ height: 100, width: 100 }} />
                 <CardContent>
                     <Typography style={{ marginBottom: "2rem", marginTop: "2rem" }} variant="body2" color="text.primary">
-                        All'interno di questa sezione, potrai gestire i tuoi orari lavorativi, inserendo ore lavorative, ferie e permessi
+                        All'interno di questa sezione, potrai visualizzare, modificare e aggiungere i tuoi appuntamenti con i clienti
                     </Typography>
                 </CardContent>
                 <CardActions style={{ display: "flex", justifyContent: 'center', textAlign: 'center' }}>
                     <IconButton>
-                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}><Link style={{ color: 'white' }} to={"/gestionale"}>Vai al gestionale!</Link></Button>
+                        <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}><Link style={{ color: 'white' }} to={"/calendar"}>Vai al calendario!</Link></Button>
                     </IconButton>
                 </CardActions>
             </Card>

@@ -11,15 +11,7 @@ const gestionaleSchema = new Schema({
         type: Date,
         required: true
     },
-    title: {
-        type: String,
-        required: true
-    },
-    employees: {
-        type: Array,
-        required: true
-    },
-    customer: {
+    employee: {
         type: Object,
         required: true
     },

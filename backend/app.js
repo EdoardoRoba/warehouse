@@ -864,10 +864,8 @@ app.post('/api/gestionale', (req, res) => {
     const gestionale = new Gestionale({
         start: req.body.start,
         end: req.body.end,
-        title: req.body.title,
-        employees: req.body.employees,
-        customer: req.body.customer,
-        type: req.body.type
+        type: req.body.type,
+        employee: req.body.employee
     })
     // console.log("gestionale: ", gestionale)
     gestionale.save().then((result) => {
@@ -880,27 +878,27 @@ app.post('/api/gestionale', (req, res) => {
 // GET
 app.get('/api/gestionale', (req, res) => {
     let filter = {}
-    let usr = ""
-    if (req.query.customer !== null && req.query.customer !== undefined) {
-        filter["customer.nome_cognome"] = req.query.customer
-    }
-    if (req.query.employee !== null && req.query.employee !== undefined) {
-        filter["employees.lastName"] = req.query.employee
-    }
-    if (req.query.user !== null && req.query.user !== undefined) {
-        // it gets all the element in that document with employee requested
-        usr = req.query.user.replace("_", " ").replace("_", " ")
-        filter.usr = req.query.user
-    }
-    if (req.query.user === "admin") {
-        Gestionale.find(filter).then((result) => {
-            res.send(result);
-        }).catch((error) => { console.log("error: ", error) })
-    } else {
-        Gestionale.find({ "employees.lastName": usr }).then((result) => {
-            res.send(result);
-        }).catch((error) => { console.log("error: ", error) })
-    }
+    // let usr = ""
+    // if (req.query.customer !== null && req.query.customer !== undefined) {
+    //     filter["customer.nome_cognome"] = req.query.customer
+    // }
+    // if (req.query.employee !== null && req.query.employee !== undefined) {
+    //     filter["employees.lastName"] = req.query.employee
+    // }
+    // if (req.query.user !== null && req.query.user !== undefined) {
+    //     // it gets all the element in that document with employee requested
+    //     usr = req.query.user.replace("_", " ").replace("_", " ")
+    //     filter.usr = req.query.user
+    // }
+    // if (req.query.user === "admin") {
+    Gestionale.find(filter).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+    // } else {
+    //     Gestionale.find({ "employee.lastName": usr }).then((result) => {
+    //         res.send(result);
+    //     }).catch((error) => { console.log("error: ", error) })
+    // }
 })
 
 // GET SINGLE

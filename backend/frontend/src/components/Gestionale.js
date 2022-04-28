@@ -92,6 +92,10 @@ function Gestionale() {
             zIndex: 999,
             color: '#fff',
         },
+        color: {
+            backgroundColor: '#1976d2 !important',
+        },
+
     }));
 
     moment.locale('ko', {
@@ -169,38 +173,38 @@ function Gestionale() {
         }
         axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { user: user } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
             .then(res => {
-                // console.log("customers: ", res.data)
                 for (let e of res.data) {
                     e.start = new Date(e.start)
                     e.end = new Date(e.end)
                 }
-                // const items = [
-                //     {
-                //         id: 1,
-                //         group: 1,
-                //         title: 'item 1',
-                //         start_time: moment(),
-                //         end_time: moment().add(1, 'hour')
-                //     },
-                //     {
-                //         id: 2,
-                //         group: 2,
-                //         title: 'item 2',
-                //         start_time: moment().add(-0.5, 'hour'),
-                //         end_time: moment().add(0.5, 'hour')
-                //     },
-                //     {
-                //         id: 3,
-                //         group: 1,
-                //         title: 'item 3',
-                //         start_time: moment().add(2, 'hour'),
-                //         end_time: moment().add(3, 'hour')
-                //     }
-                // ]
                 setEvents(res.data)
-                setIsLoading(false)
+                axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+                    .then(ress => {
+                        let its = []
+                        console.log(ress)
+                        for (let g of ress.data) {
+                            let it = {}
+                            it.id = g.employee.lastName
+                            it.group = g.employee.lastName
+                            it.title = g.type
+                            it.start_time = new Date(g.start)
+                            it.end_time = new Date(g.end)
+                            its.push(it)
+                        }
+                        console.log("its")
+                        console.log(its)
+                        setItems(its)
+                        setIsLoading(false)
+                    }).catch(error => {
+                        console.log("error")
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
+                        setIsLoading(false)
+                        setShowError(true)
+                    });
             }).catch(error => {
-                // console.log("error")
+                console.log("error")
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -212,15 +216,14 @@ function Gestionale() {
     const getEmployees = async () => {
         axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
-                // console.log("Employees: ", res.data)
                 setEmployees(res.data)
                 let gps = res.data.map((e, idx) => {
                     e.title = e.lastName
                     e.id = e.lastName
+                    e.height = 60
                     return e
                 })
                 setGroups(gps)
-                // let gps = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
             }).catch(error => {
                 // console.log("error")
                 if (error.response.status === 401) {
@@ -480,9 +483,16 @@ function Gestionale() {
                                     <Timeline
                                         groups={groups}
                                         items={items}
+                                        style={{ height: "500px" }}
                                         defaultTimeStart={moment().add(-12, 'hour')}
-                                        defaultTimeEnd={moment().add(12, 'hour')}
-                                    />
+                                        defaultTimeEnd={moment().add(12, 'hour')}>
+                                        <TimelineHeaders className={classes.color}>
+                                            <SidebarHeader className={classes.color}>
+                                            </SidebarHeader >
+                                            <DateHeader unit="primaryHeader" className={classes.color} />
+                                            <DateHeader />
+                                        </TimelineHeaders>
+                                    </Timeline>
                                 </div >
                         }
                     </div>
