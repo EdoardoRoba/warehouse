@@ -466,7 +466,7 @@ function MyCalendar() {
                                         selectable={true}
                                         onSelectSlot={onSelectSlot}
                                         onSelectEvent={onSelectEvent}
-                                        views={["month", "day"]} // "week", "day"
+                                        views={["month", "week", "day"]} // "week", "day"
                                     />
                                     <Modal
                                         open={openModal}

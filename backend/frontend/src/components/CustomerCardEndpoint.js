@@ -42,6 +42,7 @@ import { getDownloadURL, ref, uploadBytesResumable, getStorage, deleteObject, up
 import { makeStyles } from '@mui/styles';
 import DDT from "./DDT.js";
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import Gallery from 'react-grid-gallery';
 
 function CustomerCardEndpoint() {
 
@@ -877,6 +878,11 @@ function CustomerCardEndpoint() {
             setUserIsAuthenticatedFlag(false)
             setIsLoading(false)
         }
+    }
+
+    const convertToGallery = (images) => {
+        let imagesForGallery = images.map((i) => { return { src: i, thumbnail: i } })
+        return imagesForGallery
     }
 
     return (
@@ -1848,7 +1854,7 @@ function CustomerCardEndpoint() {
                                     {
                                         customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageSopralluogo > 1) {
                                                             setPageSopralluogo(pageSopralluogo - 1)
@@ -1884,7 +1890,8 @@ function CustomerCardEndpoint() {
                                                     <IconButton onClick={() => { downloadImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], customerSelected.nome_cognome.replace(" ", "_") + "_sopralluogo_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                         <GetAppIcon />
                                                     </IconButton>
-                                                </div>
+                                                </div> */}
+                                                <Gallery images={convertToGallery(customerSelected.foto_sopralluogo)} />
                                                 {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} /> */}
                                             </div>
                                     }
@@ -1905,7 +1912,7 @@ function CustomerCardEndpoint() {
                                     {
                                         customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageInstallazione > 1) {
                                                             setPageInstallazione(pageInstallazione - 1)
@@ -1940,7 +1947,8 @@ function CustomerCardEndpoint() {
                                                     <IconButton onClick={() => { downloadImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], customerSelected.nome_cognome.replace(" ", "_") + "_fine_installazione_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                         <GetAppIcon />
                                                     </IconButton>
-                                                </div>
+                                                </div> */}
+                                                <Gallery images={convertToGallery(customerSelected.foto_fine_installazione)} />
                                                 {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
                                             </div>
                                     }
@@ -1962,7 +1970,7 @@ function CustomerCardEndpoint() {
                                     {
                                         customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                             <div>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageAssistenza > 1) {
                                                             setPageAssistenza(pageAssistenza - 1)
@@ -1997,7 +2005,8 @@ function CustomerCardEndpoint() {
                                                     <IconButton onClick={() => { downloadImage(customerSelected.foto_assistenza[pageAssistenza - 1], customerSelected.nome_cognome.replace(" ", "_") + "_assistenza_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
                                                         <GetAppIcon />
                                                     </IconButton>
-                                                </div>
+                                                </div> */}
+                                                <Gallery images={convertToGallery(customerSelected.foto_assistenza)} />
                                                 {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
                                             </div>
                                     }
