@@ -180,6 +180,11 @@ function Gestionale() {
                         it.title = e.type
                         it.start_time = new Date(e.start)
                         it.end_time = new Date(e.end)
+                        it.itemProps = {
+                            style: {
+                                position: "sticky"
+                            }
+                        }
                         return it
                     })
                     // console.log("its")
@@ -395,10 +400,10 @@ function Gestionale() {
                                                 items.length === 0 ? "" : <Timeline
                                                     groups={groups}
                                                     items={items}
-                                                    style={{ height: "500px" }}
-                                                    canMove={false}
-                                                    canResize={false}
-                                                    showCursorLine
+                                                    // style={{ height: "500px" }}
+                                                    // canMove={false}
+                                                    // canResize={false}
+                                                    // showCursorLine
                                                     defaultTimeStart={moment().add(-12, 'hour')}
                                                     defaultTimeEnd={moment().add(12, 'hour')}
                                                 >
