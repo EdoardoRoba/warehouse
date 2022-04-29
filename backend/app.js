@@ -14,6 +14,7 @@ const Color = require('./models/color')
 const Calendar = require('./models/calendar')
 const Gestionale = require('./models/gestionale')
 const Request = require('./models/requests')
+const EmailEvent = require('./models/emailEvent')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -982,6 +983,68 @@ app.put('/api/requests/:id', (req, res, next) => {
 app.delete('/api/requests/:id', (req, res) => {
     const id = req.params.id;
     Request.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+
+// EMAILEVENT
+// POST
+app.post('/api/emailEvent', (req, res) => {
+    const emailEvent = new EmailEvent({
+        events: req.body.events
+    })
+    // console.log("emailEvent: ", emailEvent)
+    emailEvent.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/emailEvent', (req, res) => {
+    let filter = {}
+    if (req.query.lastName !== null && req.query.lastName !== undefined) {
+        filter["employee.lastName"] = req.query.lastName
+    }
+    EmailEvent.find(filter).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// GET SINGLE
+app.get('/api/emailEvent/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    EmailEvent.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/emailEvent/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    EmailEvent.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// DELETE
+app.delete('/api/emailEvent/:id', (req, res) => {
+    const id = req.params.id;
+    EmailEvent.deleteOne(
         { _id: id }
     ).then((result) => {
         res.send(result)

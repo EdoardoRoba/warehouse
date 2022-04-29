@@ -41,7 +41,10 @@ function Gestionale() {
     const [events, setEvents] = React.useState([])
     const [employees, setEmployees] = React.useState([])
     const [employee, setEmployee] = React.useState({})
-    const [customers, setCustomers] = React.useState([])
+    const [selectedEmployee, setSelectedEmployee] = React.useState({})
+    const [requests, setRequests] = React.useState([])
+    const [showRequests, setShowRequests] = React.useState(false)
+    const [requestsToShow, setRequestsToShow] = React.useState([])
     const [isLoading, setIsLoading] = React.useState(true);
     const [showError, setShowError] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
@@ -131,6 +134,7 @@ function Gestionale() {
             getEvents()
             getEmployee()
             getEmployees()
+            getRequests()
         }
     }, [auths])
 
@@ -238,7 +242,7 @@ function Gestionale() {
                 // console.log(gps)
                 setGroups(gps)
             }).catch(error => {
-                // console.log("error")
+                // console.log(error)
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -251,6 +255,27 @@ function Gestionale() {
                 setEmployee(res.data[0])
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+            });
+    }
+
+    const groupArrayOfObjects = (list, key) => {
+        return list.reduce(function (rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
+
+    const getRequests = () => {
+        axiosInstance.get('requests', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            .then(res => {
+                let data = res.data
+                let rqsts = groupArrayOfObjects(data, "employee")
+                setRequests(rqsts)
+            }).catch(error => {
+                console.log(error)
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -357,6 +382,11 @@ function Gestionale() {
         setOpenModal(false)
     }
 
+    const handleCloseModalRequests = () => {
+        setRequestsToShow([])
+        setShowRequests(false)
+    }
+
     const onSelectEvent = (e) => {
         setEventSelected(e)
         setSelectedStartTime(new Date(
@@ -381,6 +411,19 @@ function Gestionale() {
         setCustomerSelected(e.customer)
         setOpenModal(true)
     }
+
+    const groupRenderer = ({ group }) => {
+        let marker = ""
+        if (requests[group.title] && requests[group.title].length > 0) {
+            marker = "!"
+        }
+        return <div style={{ display: "flex" }} className="hovered" onClick={() => {
+            setShowRequests(true)
+            setRequestsToShow(requests[group.lastName])
+            // console.log(requests[group.lastName])
+            setSelectedEmployee(group)
+        }}><p>{group.title}</p><p style={{ color: "red", fontWeight: "bold", marginLeft: "5px" }}>{marker}</p></div>;
+    };
 
     return (
         <div>
@@ -415,6 +458,7 @@ function Gestionale() {
                                                 items.length === 0 ? "" : <Timeline
                                                     groups={groups}
                                                     items={items}
+                                                    groupRenderer={groupRenderer}
                                                     // style={{ height: "500px" }}
                                                     // canMove={false}
                                                     // canResize={false}
@@ -434,6 +478,28 @@ function Gestionale() {
                                     }
                                 </div >
                         }
+                        <Modal
+                            open={showRequests}
+                            onClose={() => { handleCloseModalRequests() }}
+                            aria-labelledby="modal-modal-label"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Card container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={style}>
+                                {
+                                    !selectedEmployee.lastName ? "" : <CardHeader
+                                        title={"Richieste di ferie/permessi: " + selectedEmployee.lastName.toUpperCase()}
+                                        item xs={12} sm={6}
+                                        style={{
+                                            marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                            color: "white",
+                                            // paddingLeft: 5
+                                        }}
+                                    />
+                                }
+                                <div>ciao</div>
+                            </Card>
+                        </Modal>
+
                         <Modal
                             open={openModal}
                             onClose={() => { handleCloseModal() }}

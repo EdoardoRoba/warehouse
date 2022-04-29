@@ -16,17 +16,26 @@ import Autocomplete from '@mui/material/Autocomplete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ReplayIcon from '@material-ui/icons/Replay';
 import IconButton from '@mui/material/IconButton';
+import EmailIcon from '@material-ui/icons/Email';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Badge from '@mui/material/Badge';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import { TimePicker, MuiPickersUtilsProvider, DateTimePicker } from "@material-ui/pickers";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import DateFnsUtils from '@date-io/date-fns';
 import Backdrop from '@mui/material/Backdrop';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
 import './Classes.css'
 import CustomerCard from "./CustomerCard.js";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 function MyCalendar() {
 
@@ -38,6 +47,8 @@ function MyCalendar() {
     const [isLoading, setIsLoading] = React.useState(true);
     const [showError, setShowError] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
+    const [checkEmailEvent, setCheckEmailEvent] = React.useState(false);
+    const [emailEvents, setEmailEvents] = React.useState([])
     const [titleEvent, setTitleEvent] = React.useState("");
     const [type, setType] = React.useState("");
     const [filterCustomer, setFilterCustomer] = React.useState("");
@@ -51,6 +62,7 @@ function MyCalendar() {
     const [customerSelected, setCustomerSelected] = React.useState(null)
     const [eventSelected, setEventSelected] = React.useState(null)
     const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
+    const [openModalEmail, setOpenModalEmail] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
 
@@ -89,6 +101,7 @@ function MyCalendar() {
         getEvents()
         getEmployees()
         getCustomers()
+        getEmailEvents()
     }, [])
 
     React.useEffect(() => {
@@ -144,7 +157,7 @@ function MyCalendar() {
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
-                // console.log("error")
+                console.log(error)
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -160,6 +173,19 @@ function MyCalendar() {
                 setEmployees(res.data)
             }).catch(error => {
                 // console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+            });
+    }
+
+    const getEmailEvents = async () => {
+        axiosInstance.get('emailEvent', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            .then(res => {
+                // console.log("email events: ", res.data[0])
+                setEmailEvents(res.data[0])
+            }).catch(error => {
+                console.log(error)
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
@@ -268,6 +294,48 @@ function MyCalendar() {
                     updateExternalEmployees(externalEmployees)
                 }
                 handleCloseModal()
+                if (checkEmailEvent) {
+                    if (emailEvents === undefined || emailEvents === null || emailEvents.events === undefined || emailEvents.events === null || emailEvents.events.length === 0) {
+                        let ees = {}
+                        ees.events = [newEvent]
+                        axiosInstance.post('emailEvent', ees, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+                            .then(respp => {
+                                setEmailEvents(respp.data)
+                            })
+                            .catch(error => {
+                                if (error.respp.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                    } else {
+                        let ees = {}
+                        ees.events = emailEvents.events
+                        ees.events.push(newEvent)
+                        axiosInstance.put('emailEvent/' + emailEvents._id, ees, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((r) => {
+                            axiosInstance.put('emailEvent/' + emailEvents._id, ees, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+                                .then(respp => {
+                                    setEmailEvents(respp.data)
+                                    // console.log(respp.data)
+                                })
+                                .catch(error => {
+                                    if (error.respp.status === 401) {
+                                        userIsAuthenticated()
+                                    }
+                                    setIsLoading(false)
+                                    setShowError(true)
+                                });
+                        })
+                            .catch(error => {
+                                if (error.respp.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                    }
+                }
             }).catch(error => {
                 if (error.response.status === 401) {
                     userIsAuthenticated()
@@ -329,7 +397,12 @@ function MyCalendar() {
         setType("")
         setCustomerSelected(null)
         getEvents()
+        setCheckEmailEvent(false)
         setOpenModal(false)
+    }
+
+    const sendEmail = () => {
+
     }
 
     const onSelectEvent = (e) => {
@@ -456,6 +529,24 @@ function MyCalendar() {
                                                 <ReplayIcon style={{ fontSize: "30px" }} />
                                             </IconButton>
                                         </Tooltip>
+                                        <Tooltip item xs={12} sm={4} sx={{ marginRight: '1rem' }} title={"Invio email"}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    setOpenModalEmail(true)
+                                                }}>
+                                                {
+                                                    localStorage.getItem("user") !== "admin" ? "" : <>
+                                                        {
+                                                            emailEvents === null || emailEvents === undefined || emailEvents.events === null || emailEvents.events === undefined || emailEvents.events === undefined || emailEvents.events === null ? <Badge badgeContent={0} color="primary">
+                                                                <EmailIcon style={{ fontSize: "30px" }} />
+                                                            </Badge> : <Badge badgeContent={emailEvents.events.length} color="primary">
+                                                                <EmailIcon style={{ fontSize: "30px" }} />
+                                                            </Badge>
+                                                        }
+                                                    </>
+                                                }
+                                            </IconButton>
+                                        </Tooltip>
                                     </Grid >
                                     <Calendar
                                         localizer={localizer}
@@ -468,6 +559,48 @@ function MyCalendar() {
                                         onSelectEvent={onSelectEvent}
                                         views={["month", "week", "day"]} // "week", "day"
                                     />
+                                    <Modal
+                                        open={openModalEmail}
+                                        onClose={() => { setOpenModalEmail(false) }}
+                                        aria-labelledby="modal-modal-label"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Card container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={style}>
+                                            <CardHeader
+                                                title="Visualizza appuntamenti prima dell'invio email"
+                                                item xs={12} sm={6}
+                                                style={{
+                                                    marginBottom: '1rem', display: 'flex', justifyContent: 'center', textAlign: 'center', width: "100%", backgroundColor: "#1976d2", minHeight: "80px",
+                                                    color: "white",
+                                                    // paddingLeft: 5
+                                                }}
+                                            />
+                                            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem", marginBottom: "4rem" }}>
+                                                    <List component="nav" aria-label="mailbox folders">
+                                                        {
+                                                            emailEvents.events.map((eE) => {
+                                                                return <>
+                                                                    <ListItem xs={12} sm={6} button>
+                                                                        <ListItemText primary={eE.customer.nome_cognome + " - " + eE.type + " - inizio: " + eE.start.replace("T", " ").replace("Z", " ").slice(0, 10) + ", fine: " + eE.end.replace("T", " ").replace("Z", " ").slice(0, 10)} />
+                                                                    </ListItem>
+                                                                    <Divider />
+                                                                </>
+                                                            })
+                                                        }
+                                                    </List>
+                                                </Grid>
+                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                    <Button
+                                                        xs={12} sm={6}
+                                                        variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
+                                                        onClick={() => { sendEmail() }}>
+                                                        Invia email
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Card>
+                                    </Modal>
                                     <Modal
                                         open={openModal}
                                         onClose={() => { handleCloseModal() }}
@@ -777,6 +910,16 @@ function MyCalendar() {
                                                             }
                                                             <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
                                                                 {
+                                                                    eventSelected !== null ? "" :
+                                                                        <FormControlLabel control={<Checkbox
+                                                                            checked={checkEmailEvent}
+                                                                            onChange={(event) => {
+                                                                                setCheckEmailEvent(event.target.checked)
+                                                                            }} />} label="Aggiungere all'email da inviare?" />
+                                                                }
+                                                            </div>
+                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem" }}>
+                                                                {
                                                                     eventSelected === null ? <Button disabled={titleEvent === "" || type === null || type === ""}
                                                                         variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
                                                                         onClick={() => { addCalendar() }}>
@@ -825,7 +968,7 @@ function MyCalendar() {
             {
                 (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Error. Controlla connessione, formato dei dati o ricarica la pagina.</Alert>
             }
-        </div>
+        </div >
     );
 }
 
