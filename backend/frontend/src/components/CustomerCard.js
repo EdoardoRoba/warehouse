@@ -1134,7 +1134,25 @@ function CustomerCard(customerPassed) {
                                                         bonus
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                        {customerSelected.bonus} - {customerSelected.termico_elettrico}
+                                                        {customerSelected.bonus}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("bonus")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        } - {customerSelected.termico_elettrico}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("termico_elettrico")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
                                                         {/* {
                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                         onClick={() => {
