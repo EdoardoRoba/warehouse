@@ -13,6 +13,7 @@ const Auth = require('./models/auth')
 const Color = require('./models/color')
 const Calendar = require('./models/calendar')
 const Gestionale = require('./models/gestionale')
+const Request = require('./models/requests')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -67,6 +68,7 @@ app.use("/api/customer", middleware)
 app.use("/api/colorStatus", middleware)
 app.use("/api/calendar", middleware)
 app.use("/api/gestionale", middleware)
+app.use("/api/requests", middleware)
 
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ limit: '1000mb' }));
@@ -865,7 +867,8 @@ app.post('/api/gestionale', (req, res) => {
         start: req.body.start,
         end: req.body.end,
         type: req.body.type,
-        employee: req.body.employee
+        employee: req.body.employee,
+        status: req.body.status
     })
     // console.log("gestionale: ", gestionale)
     gestionale.save().then((result) => {
@@ -914,6 +917,71 @@ app.put('/api/gestionale/:id', (req, res, next) => {
 app.delete('/api/gestionale/:id', (req, res) => {
     const id = req.params.id;
     Gestionale.deleteOne(
+        { _id: id }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+
+// REQUESTS
+// POST
+app.post('/api/requests', (req, res) => {
+    const request = new Request({
+        employee: req.body.employee,
+        type: req.body.type,
+        start: req.body.start,
+        end: req.body.end
+    })
+    // console.log("request: ", request)
+    request.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/requests', (req, res) => {
+    let filter = {}
+    if (req.query.lastName !== null && req.query.lastName !== undefined) {
+        filter["employee.lastName"] = req.query.lastName
+    }
+    Request.find(filter).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// GET SINGLE
+app.get('/api/requests/:id', (req, res) => {
+    const id = req.params.id;
+    // console.log(id)
+    // it gets all the element in that document
+    Request.findById(id).then((result) => {
+        res.send(result);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/requests/:id', (req, res, next) => {
+    const id = req.params.id;
+    const body = req.body;
+    Request.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
+// DELETE
+app.delete('/api/requests/:id', (req, res) => {
+    const id = req.params.id;
+    Request.deleteOne(
         { _id: id }
     ).then((result) => {
         res.send(result)

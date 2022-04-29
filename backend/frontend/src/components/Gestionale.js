@@ -121,6 +121,9 @@ function Gestionale() {
 
     React.useEffect(() => {
         userIsAuthenticated()
+        // const timer = setInterval(() => {
+        //     getEvents()
+        // }, 300000)
     }, [])
 
     React.useEffect(() => {
@@ -205,7 +208,7 @@ function Gestionale() {
                     for (let e of res.data) {
                         e.start = new Date(e.start)
                         e.end = new Date(e.end)
-                        e.title = e.type
+                        e.title = e.type + " (" + e.status + ")"
                     }
                     setEvents(res.data)
                     setIsLoading(false)
@@ -281,11 +284,23 @@ function Gestionale() {
         setIsLoading(true)
         let externalEmployees = employeesInvolved.filter((eI) => eI.external)
         // nome, tipo app, azienda, termico/eletttrico
-        let newEvent = { start: selectedStartTime, end: selectedEndTime, employee: employee, type: type }
+        let newEvent = { start: selectedStartTime, end: selectedEndTime, employee: employee, type: type, status: "in attesa" }
         axiosInstance.post('gestionale', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                handleCloseModal()
+                let newReq = { employee: employee.lastName, type: type, start: selectedStartTime, end: selectedEndTime }
+                axiosInstance.post('requests', newReq, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+                    .then(response => {
+                        getEvents()
+                        handleCloseModal()
+                    }).catch(error => {
+                        if (error.response.status === 401) {
+                            userIsAuthenticated()
+                        }
+                        setIsLoading(false)
+                        setShowError(true)
+                        handleCloseModal()
+                    });
             }).catch(error => {
                 if (error.response.status === 401) {
                     userIsAuthenticated()
@@ -494,10 +509,10 @@ function Gestionale() {
                                                             horizontal: 'left',
                                                         }}
                                                     >
-                                                        <MenuItem onClick={() => {
+                                                        {/* <MenuItem onClick={() => {
                                                             setType("orario lavorativo")
                                                             setAnchorEl(null)
-                                                        }}>Orario lavorativo</MenuItem>
+                                                        }}>Orario lavorativo</MenuItem> */}
                                                         <MenuItem onClick={() => {
                                                             setType("ferie")
                                                             setAnchorEl(null)
