@@ -1053,6 +1053,42 @@ app.delete('/api/emailEvent/:id', (req, res) => {
     })
 })
 
+// SEND EMAIL EVENT
+app.post('/api/sendEmailEvent', (req, res) => {
+    EmailTemplate.findOne({ use: "emailEvent" }).then((emailEvent) => {
+        EmailTemplate.findOne({ use: "singleEmailEvent" }).then((singleEmailEvent) => {
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'idroaltech.bot@gmail.com',
+                    // pass: 'owgjqqmbvuzkprtw'
+                    pass: 'qvysuihwjoiaawuj'
+                }
+            });
+
+            var listEventsEmail = ""
+            for (let e of req.body.events) {
+                listEventsEmail = listEventsEmail + singleEmailEvent.template.replace("{nome_cognome}", e.customer.nome_cognome).replace("{indirizzo}", e.customer.indirizzo).replace("{comune}", e.customer.comune).replace("{provincia}", e.customer.provincia).replace("{cap}", e.customer.cap).replace("{telefono}", e.customer.telefono).replace("{telefono}", e.customer.telefono).replace("{bonus}", e.customer.bonus).replace("{termico_elettrico}", e.customer.termico_elettrico)
+            }
+
+            var mailOptions = {
+                from: 'idroaltech.bot@gmail.com',
+                to: 'roba.edoardo@gmail.com', // info@idroaltech.it',
+                subject: 'INVIO EMAIL PER APPUNTAMENTI',
+                html: emailEvent.template.replace("{events}", listEventsEmail)
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    res.send('Email sent: ' + info.response)
+                }
+            });
+        }).catch((error) => { console.log("error: ", error) })
+    }).catch((error) => { console.log("error: ", error) })
+})
+
 
 
 // COMMENT WHEN RUNNING LOCALLY

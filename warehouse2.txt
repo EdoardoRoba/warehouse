@@ -35,11 +35,11 @@ warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
 - cerca cliente fuori da tutto (dalla card)
 - i "carica" diventano due bottoni
-- email da inviare crea evento (info@idroaltech.it)
+- email da inviare crea evento (info@idroaltech.it) - URGENTE!!!
 
 
 APP:
-- info cliente: bonus e poi termico/elettrico
+- visibilità magazzino da app
 
 
 

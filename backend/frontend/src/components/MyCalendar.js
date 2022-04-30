@@ -182,8 +182,11 @@ function MyCalendar() {
     const getEmailEvents = async () => {
         axiosInstance.get('emailEvent', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(res => {
-                // console.log("email events: ", res.data[0])
-                setEmailEvents(res.data[0])
+                if (res.data[0] !== undefined && res.data[0] !== null) {
+                    setEmailEvents(res.data[0])
+                } else {
+                    setEmailEvents([])
+                }
             }).catch(error => {
                 console.log(error)
                 if (error.response.status === 401) {
@@ -266,6 +269,7 @@ function MyCalendar() {
             console.log("aggiornato!")
             setIsLoading(false)
         }).catch((error) => {
+            console.log(error)
             setIsLoading(false)
             if (error.response.status === 401) {
                 userIsAuthenticated()
@@ -402,7 +406,32 @@ function MyCalendar() {
     }
 
     const sendEmail = () => {
-
+        console.log(emailEvents.events)
+        let email = {}
+        email.events = emailEvents.events
+        axiosInstance.post('sendEmailEvent', email, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            .then(response => {
+                getEvents()
+                setOpenModalEmail(false)
+                axiosInstance.delete('emailEvent/' + emailEvents._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                    console.log("emailEvent eliminato!")
+                    getEmailEvents()
+                }).catch(error => {
+                    console.log(error)
+                    if (error.response.status === 401) {
+                        userIsAuthenticated()
+                    }
+                    setIsLoading(false)
+                    setShowError(true)
+                });
+            }).catch(error => {
+                console.log(error)
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+                setIsLoading(false)
+                setShowError(true)
+            });
     }
 
     const onSelectEvent = (e) => {
@@ -579,14 +608,18 @@ function MyCalendar() {
                                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "4rem", marginBottom: "4rem" }}>
                                                     <List component="nav" aria-label="mailbox folders">
                                                         {
-                                                            emailEvents.events.map((eE) => {
-                                                                return <>
-                                                                    <ListItem xs={12} sm={6} button>
-                                                                        <ListItemText primary={eE.customer.nome_cognome + " - " + eE.type + " - inizio: " + eE.start.replace("T", " ").replace("Z", " ").slice(0, 10) + ", fine: " + eE.end.replace("T", " ").replace("Z", " ").slice(0, 10)} />
-                                                                    </ListItem>
-                                                                    <Divider />
-                                                                </>
-                                                            })
+                                                            !emailEvents.events ? "" : <>
+                                                                {
+                                                                    emailEvents.events.map((eE) => {
+                                                                        return <>
+                                                                            <ListItem xs={12} sm={6} button>
+                                                                                <ListItemText primary={eE.customer.nome_cognome + " - " + eE.type + " - inizio: " + eE.start.toString().replace("T", " ").replace("Z", " ").slice(0, 10) + ", fine: " + eE.end.toString().replace("T", " ").replace("Z", " ").slice(0, 10)} />
+                                                                            </ListItem>
+                                                                            <Divider />
+                                                                        </>
+                                                                    })
+                                                                }
+                                                            </>
                                                         }
                                                     </List>
                                                 </Grid>
@@ -594,6 +627,7 @@ function MyCalendar() {
                                                     <Button
                                                         xs={12} sm={6}
                                                         variant="outlined" style={{ color: 'white', backgroundColor: 'green', marginBottom: '1rem' }}
+                                                        disabled={!emailEvents.events || emailEvents.events.length === 0}
                                                         onClick={() => { sendEmail() }}>
                                                         Invia email
                                                     </Button>
