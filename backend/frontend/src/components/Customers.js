@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BrushIcon from '@material-ui/icons/Brush';
+import Grow from '@mui/material/Grow';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import IconButton from '@mui/material/IconButton';
 import Dialog from '@mui/material/Dialog';
@@ -18,6 +19,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AddIcon from '@material-ui/icons/Add';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
+import Grid from '@mui/material/Grid';
 import { AiFillInfoCircle } from "react-icons/ai";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -59,6 +63,8 @@ function Customers(props) {
     const [excel, setExcel] = React.useState({});
     const [showError, setShowError] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
+    const [addCustomerRecord, setAddCustomerRecord] = React.useState(false);
+    const [addCustomerRecordFile, setAddCustomerRecordFile] = React.useState(false);
     const [customers, setCustomers] = React.useState([]);
     const [customerSelected, setCustomerSelected] = React.useState(null);
     const [confermaUpdate, setConfermaUpdate] = React.useState(false);
@@ -753,116 +759,117 @@ function Customers(props) {
                                                 </Tooltip>
                                             }
                                         </div>
-                                        {
-                                            auths["customers"] === "installer" ? "" : <div>
-                                                <Accordion
-                                                    expanded={openAccordion || false}
-                                                    onChange={handleChangeAccordion}
-                                                    style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
-                                                >
-                                                    <AccordionSummary
-                                                        expandIcon={<ExpandMoreIcon />}
-                                                        aria-controls="panel1bh-content"
-                                                    >
-                                                        <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
-                                                            Carica file Excel
-                                                        </Typography>
-                                                        {/* <Typography sx={{ color: "text.secondary" }}>
-                                                I am an accordion
-                                            </Typography> */}
-                                                    </AccordionSummary>
-                                                    <AccordionDetails>
-                                                        {/* <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '60%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                                <Alert severity="warning">Il caricamento di un nuovo file sovrascriverà il precedente!</Alert>
-                                            </div> */}
-                                                        <div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <input type="file" name="file" onChange={changeHandler} /></div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                {isFilePicked ?
-                                                                    <div>
-                                                                        <p>Nome file: {selectedFile.name}</p>
-                                                                        <p>Tipo di file: {selectedFile.type}</p>
-                                                                        <p>Dimensione in bytes: {selectedFile.size}</p>
-                                                                        <p>
-                                                                            Ultima modifica:{' '}
-                                                                            {selectedFile.lastModifiedDate.toLocaleDateString()}
-                                                                        </p>
+                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                            <div item xs={12} sm={6}>
+                                                {
+                                                    auths["customers"] === "installer" ? "" : <div>
+                                                        <Tooltip style={{ marginRight: '1rem' }} title="Aggiungi un singolo cliente">
+                                                            <IconButton
+                                                                onClick={() => { setAddCustomerRecord((prev) => !prev) }}>
+                                                                <AddIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        {
+                                                            !addCustomerRecord ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Grow
+                                                                    in={addCustomerRecord}
+                                                                    style={{ transformOrigin: '0 0 0' }}
+                                                                    {...(addCustomerRecord ? { timeout: 1000 } : {})}
+                                                                >
+                                                                    <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%', marginTop: '1rem', marginBottom: '1rem' }}>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%' }}>
+                                                                            <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toUpperCase()) }} />
+                                                                            <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
+                                                                            <input style={{ margin: '1rem', width: '33%' }} placeholder="codice fiscale" onChange={(event) => { setCf(parseInt(event.target.value)) }} />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="cap" onChange={(event) => { setCap(event.target.value) }} />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="termico/elettrico" onChange={(event) => { setTermico_elettrico(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="computo" onChange={(event) => { setComputo(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="trasferta" onChange={(event) => { setTrasferta(event.target.value) }} />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico sopralluogo" onChange={(event) => { setTecnico_sopralluogo(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
+                                                                            <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico installazione" onChange={(event) => { setTecnico_installazione(event.target.value) }} />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            {/* <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} /> */}
+                                                                            <Autocomplete
+                                                                                disablePortal
+                                                                                id="combo-box-demo"
+                                                                                options={possibleStatuses}
+                                                                                sx={{ width: 300 }}
+                                                                                renderInput={(params) => <TextField {...params} label="stato" />}
+                                                                                onChange={(event, value) => { setStatus(value.label) }}
+                                                                            />
+                                                                            <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                                            <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addCustomer}>Conferma</Button>
+                                                                        </div>
                                                                     </div>
-                                                                    :
-                                                                    <p>Seleziona un file per vederne le specifiche</p>
-                                                                }
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <Button disabled={!isFilePicked} onClick={(event) => handleSubmission(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                                                {/* onClick={handleSubmission} */}
-                                                            </div>
-                                                        </div>
-                                                    </AccordionDetails>
-                                                </Accordion>
-                                                <img src={url} />
-                                                <Accordion
-                                                    expanded={openAccordionManual || false}
-                                                    onChange={handleChangeAccordionManual}
-                                                    style={{ width: '60%', marginLeft: 'auto', marginRight: 'auto' }}
-                                                >
-                                                    <AccordionSummary
-                                                        expandIcon={<ExpandMoreIcon />}
-                                                        aria-controls="panel1bh-content"
-                                                    >
-                                                        <Typography variant="h4" sx={{ width: "50%", flexShrink: 0 }}>
-                                                            Carica singolo cliente
-                                                        </Typography>
-                                                        {/* <Typography sx={{ color: "text.secondary" }}>
-                                                I am an accordion
-                                            </Typography> */}
-                                                    </AccordionSummary>
-                                                    <AccordionDetails>
-                                                        <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '90%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%' }}>
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="company" onChange={(event) => { setCompany(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="nome e cognome" onChange={(event) => { setNome_cognome(event.target.value.toUpperCase()) }} />
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="telefono" onChange={(event) => { setTelefono(parseInt(event.target.value)) }} />
-                                                                <input style={{ margin: '1rem', width: '33%' }} placeholder="codice fiscale" onChange={(event) => { setCf(parseInt(event.target.value)) }} />
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="indirizzo" onChange={(event) => { setIndirizzo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="comune" onChange={(event) => { setComune(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="provincia" onChange={(event) => { setProvincia(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="cap" onChange={(event) => { setCap(event.target.value) }} />
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="bonus" onChange={(event) => { setBonus(event.target.value.toLowerCase()) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="termico/elettrico" onChange={(event) => { setTermico_elettrico(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="computo" onChange={(event) => { setComputo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="trasferta" onChange={(event) => { setTrasferta(event.target.value) }} />
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="data sopralluogo" onChange={(event) => { setData_sopralluogo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico sopralluogo" onChange={(event) => { setTecnico_sopralluogo(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="data installazione" onChange={(event) => { setData_installazione(event.target.value) }} />
-                                                                <input style={{ margin: '1rem', width: '25%' }} placeholder="tecnico installazione" onChange={(event) => { setTecnico_installazione(event.target.value) }} />
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                {/* <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} /> */}
-                                                                <Autocomplete
-                                                                    disablePortal
-                                                                    id="combo-box-demo"
-                                                                    options={possibleStatuses}
-                                                                    sx={{ width: 300 }}
-                                                                    renderInput={(params) => <TextField {...params} label="stato" />}
-                                                                    onChange={(event, value) => { setStatus(value.label) }}
-                                                                />
-                                                                <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
-                                                            </div>
-                                                            <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                                                <Button variant="outlined" style={{ color: 'white', backgroundColor: 'green' }} onClick={addCustomer}>Conferma</Button>
-                                                            </div>
-                                                        </div>
-                                                    </AccordionDetails>
-                                                </Accordion>
+                                                                </Grow>
+                                                            </Box>
+                                                        }
+                                                        <img src={url} />
+                                                    </div>
+                                                }
                                             </div>
-                                        }
+                                            <div item xs={12} sm={6}>
+                                                {
+                                                    auths["customers"] === "installer" ? "" : <div>
+                                                        <Tooltip style={{ marginRight: '1rem' }} title="Aggiungi un Excel contenente i clienti">
+                                                            <IconButton
+                                                                onClick={() => { setAddCustomerRecordFile((prev) => !prev) }}>
+                                                                <FileCopyIcon />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        {
+                                                            !addCustomerRecordFile ? "" : <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Grow
+                                                                    in={addCustomerRecordFile}
+                                                                    style={{ transformOrigin: '0 0 0' }}
+                                                                    {...(addCustomerRecordFile ? { timeout: 1000 } : {})}
+                                                                >
+                                                                    <div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <input type="file" name="file" onChange={changeHandler} /></div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            {isFilePicked ?
+                                                                                <div>
+                                                                                    <p>Nome file: {selectedFile.name}</p>
+                                                                                    <p>Tipo di file: {selectedFile.type}</p>
+                                                                                    <p>Dimensione in bytes: {selectedFile.size}</p>
+                                                                                    <p>
+                                                                                        Ultima modifica:{' '}
+                                                                                        {selectedFile.lastModifiedDate.toLocaleDateString()}
+                                                                                    </p>
+                                                                                </div>
+                                                                                :
+                                                                                <p>Seleziona un file per vederne le specifiche</p>
+                                                                            }
+                                                                        </div>
+                                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                            <Button disabled={!isFilePicked} onClick={(event) => handleSubmission(event)} variant="outlined" style={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                        </div>
+                                                                    </div>
+                                                                </Grow>
+                                                            </Box>
+                                                        }
+                                                        <img src={url} />
+                                                    </div>
+                                                }
+                                            </div>
+                                        </Grid>
                                         {
                                             (!confermaAdd) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="success">File aggiunto correttamente!</Alert>
                                         }
@@ -880,6 +887,20 @@ function Customers(props) {
                                                 </IconButton>
                                             </Tooltip>
                                         </div>
+                                        <Autocomplete
+                                            disablePortal
+                                            id="combo-box-demo"
+                                            options={customers}
+                                            getOptionLabel={(option) => option.nome_cognome}
+                                            style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "3rem", marginTop: "3rem" }}
+                                            sx={{ width: 300 }}
+                                            renderInput={(params) => <TextField {...params} label="clienti" />}
+                                            onChange={(event, value) => {
+                                                setCustomerSelected(value)
+                                                // setOpenCustomerCard(true)
+                                                routeChange(value)
+                                            }}
+                                        />
                                         <Accordion
                                             expanded={openAccordionScheda || false}
                                             onChange={handleChangeAccordionScheda}
@@ -895,20 +916,6 @@ function Customers(props) {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <div style={{ width: '100%', marginTop: '1rem', marginBottom: '1rem' }}>
-                                                    <Autocomplete
-                                                        disablePortal
-                                                        id="combo-box-demo"
-                                                        options={customers}
-                                                        getOptionLabel={(option) => option.nome_cognome}
-                                                        style={{ marginLeft: 'auto', marginRight: "auto", marginBottom: "3rem" }}
-                                                        sx={{ width: 300 }}
-                                                        renderInput={(params) => <TextField {...params} label="clienti" />}
-                                                        onChange={(event, value) => {
-                                                            setCustomerSelected(value)
-                                                            // setOpenCustomerCard(true)
-                                                            routeChange(value)
-                                                        }}
-                                                    />
                                                     <div style={{ height: 400, width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
                                                         <DataGrid
                                                             rows={customers}

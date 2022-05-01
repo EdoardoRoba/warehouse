@@ -90,6 +90,7 @@ function CustomerCard(customerPassed) {
     const [noteType, setNoteType] = React.useState("");
     const [touchStart, setTouchStart] = React.useState(0);
     const [touchEnd, setTouchEnd] = React.useState(0);
+    const [currentImage, setCurrentImage] = React.useState({});
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
@@ -141,11 +142,22 @@ function CustomerCard(customerPassed) {
     React.useEffect(() => {
         userIsAuthenticated()
         getStatusColors()
+        let id = ""
         if (customerPassed.customerSelected) {
-            setCustomerSelected(customerPassed.customerSelected)
+            id = customerPassed.customerSelected._id
         } else {
-            setCustomerSelected(location.state.customerSelected)
+            id = location.state.customerSelected._id
         }
+        axiosInstance.get("customer/" + id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+            setCustomerSelected(resp.data)
+        }).catch(error => {
+            // console.log("error")
+            if (error.response.status === 401) {
+                userIsAuthenticated()
+            }
+            setIsLoading(false)
+            setShowError(true)
+        });
     }, [])
 
     React.useEffect(() => {
@@ -762,6 +774,11 @@ function CustomerCard(customerPassed) {
         }
     };
 
+    const onCurrentImageChange = (index) => {
+        setCurrentImage(index);
+    }
+
+
     const handleSubmissionAssistenza = (e) => {
         var imgs = {}
         imgs.images = imagesToShow
@@ -1066,6 +1083,15 @@ function CustomerCard(customerPassed) {
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
                                                         {customerSelected.company.toUpperCase()}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("company")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         indirizzo
@@ -1129,6 +1155,15 @@ function CustomerCard(customerPassed) {
                                                     </Typography>
                                                     <Typography sx={{ fontSize: 18 }} variant="body2">
                                                         {customerSelected.telefono}
+                                                        {
+                                                            auths["customers"] !== "*" ? "" : <IconButton
+                                                                onClick={() => {
+                                                                    setFieldToEdit("telefono")
+                                                                    setOpenEditField(true)
+                                                                }}>
+                                                                <EditIcon style={{ fontSize: "15px" }} />
+                                                            </IconButton>
+                                                        }
                                                     </Typography>
                                                     <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                         bonus
@@ -2012,43 +2047,36 @@ function CustomerCard(customerPassed) {
                                                 </Card>
                                             </div>
                                         }
-                                    </div>
-                                }
-
-                            </div>
-                    }
-                </div>
-            }
-            {
-                customerSelected === null ? "" : <Dialog onClose={handleCloseNote} open={openNote}>
-                    <DialogTitle>{noteType.toUpperCase().replace("_", " ")}:</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            {
-                                customerSelected[noteType] === "" || customerSelected[noteType] === null || customerSelected[noteType] === undefined ? <h4>Vuoto</h4> : <div>
-                                    {customerSelected[noteType]}
-                                </div>
-                            }
-                        </DialogContentText>
-                    </DialogContent>
-                </Dialog>
-            }
-            {
-                customerSelected === null ? "" : <div>
-                    <Modal
-                        open={openSopralluogo}
-                        onClose={() => { setOpenSopralluogo(false) }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            {
-                                customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
-                                    {
-                                        customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
-                                            <div>
-                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                        {
+                                            customerSelected === null ? "" : <Dialog onClose={handleCloseNote} open={openNote}>
+                                                <DialogTitle>{noteType.toUpperCase().replace("_", " ")}:</DialogTitle>
+                                                <DialogContent>
+                                                    <DialogContentText>
+                                                        {
+                                                            customerSelected[noteType] === "" || customerSelected[noteType] === null || customerSelected[noteType] === undefined ? <h4>Vuoto</h4> : <div>
+                                                                {customerSelected[noteType]}
+                                                            </div>
+                                                        }
+                                                    </DialogContentText>
+                                                </DialogContent>
+                                            </Dialog>
+                                        }
+                                        {
+                                            customerSelected === null ? "" : <div>
+                                                <Modal
+                                                    open={openSopralluogo}
+                                                    onClose={() => { setOpenSopralluogo(false) }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        {
+                                                            customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                                <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto sopralluogo</h2>
+                                                                {
+                                                                    customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                        <div>
+                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageSopralluogo > 1) {
                                                             setPageSopralluogo(pageSopralluogo - 1)
@@ -2085,28 +2113,38 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div> */}
-                                                <Gallery images={convertToGallery(customerSelected.foto_sopralluogo)} />
-                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} /> */}
-                                            </div>
-                                    }
-                                </div>
-                            }
-                        </Box>
-                    </Modal>
-                    <Modal
-                        open={openInstallazione}
-                        onClose={() => { setOpenInstallazione(false) }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            {
-                                customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
-                                    {
-                                        customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
-                                            <div>
-                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                                            <Gallery
+                                                                                images={convertToGallery(customerSelected.foto_sopralluogo)}
+                                                                                currentImageWillChange={onCurrentImageChange}
+                                                                                customControls={[
+                                                                                    <IconButton color="error" onClick={(event) => {
+                                                                                        deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                    }}>
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>
+                                                                                ]} />
+                                                                            {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} /> */}
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Box>
+                                                </Modal>
+                                                <Modal
+                                                    open={openInstallazione}
+                                                    onClose={() => { setOpenInstallazione(false) }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        {
+                                                            customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                                <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto fine installazione</h2>
+                                                                {
+                                                                    customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                        <div>
+                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageInstallazione > 1) {
                                                             setPageInstallazione(pageInstallazione - 1)
@@ -2142,29 +2180,39 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div> */}
-                                                <Gallery images={convertToGallery(customerSelected.foto_fine_installazione)} />
-                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
-                                            </div>
-                                    }
-                                </div>
-                            }
+                                                                            <Gallery
+                                                                                images={convertToGallery(customerSelected.foto_fine_installazione, "foto_fine_installazione")}
+                                                                                currentImageWillChange={onCurrentImageChange}
+                                                                                customControls={[
+                                                                                    <IconButton color="error" onClick={(event) => {
+                                                                                        deleteImage(customerSelected.foto_fine_installazione[currentImage], "foto_fine_installazione")
+                                                                                        setIsLoading(true)
+                                                                                    }}>
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>
+                                                                                ]} />
+                                                                            {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        }
 
-                        </Box>
-                    </Modal>
-                    <Modal
-                        open={openAssistenza}
-                        onClose={() => { setOpenAssistenza(false) }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            {
-                                customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
-                                    <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
-                                    {
-                                        customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
-                                            <div>
-                                                {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
+                                                    </Box>
+                                                </Modal>
+                                                <Modal
+                                                    open={openAssistenza}
+                                                    onClose={() => { setOpenAssistenza(false) }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        {
+                                                            customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                                <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto assistenza</h2>
+                                                                {
+                                                                    customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                        <div>
+                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
                                                     <IconButton item xs={12} sm={6} onClick={() => {
                                                         if (pageAssistenza > 1) {
                                                             setPageAssistenza(pageAssistenza - 1)
@@ -2200,54 +2248,64 @@ function CustomerCard(customerPassed) {
                                                         <GetAppIcon />
                                                     </IconButton>
                                                 </div> */}
-                                                <Gallery images={convertToGallery(customerSelected.foto_assistenza)} />
-                                                {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
-                                            </div>
-                                    }
-                                </div>
-                            }
-                        </Box>
-                    </Modal>
+                                                                            <Gallery
+                                                                                images={convertToGallery(customerSelected.foto_assistenza, "foto_assistenza")}
+                                                                                currentImageWillChange={onCurrentImageChange}
+                                                                                customControls={[
+                                                                                    <IconButton color="error" onClick={(event) => {
+                                                                                        deleteImage(customerSelected.foto_assistenza[currentImage], "foto_assistenza")
+                                                                                        setIsLoading(true)
+                                                                                    }}>
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>
+                                                                                ]} />
+                                                                            {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Box>
+                                                </Modal>
 
 
-                    {/* Modal to edit field */}
-                    <Modal
-                        open={openEditField}
-                        onClose={() => { handleCloseEditField() }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                            {/* <Typography item xs={12} sm={12} sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                                {/* Modal to edit field */}
+                                                <Modal
+                                                    open={openEditField}
+                                                    onClose={() => { handleCloseEditField() }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style} container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                        {/* <Typography item xs={12} sm={12} sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
                                 Aggiorna il campo {fieldToEdit.toUpperCase().replace("_", " ")}:
                             </Typography> */}
-                            <TextField label={"Aggiorna il campo " + fieldToEdit.toUpperCase().replace("_", " ") + ":"} item xs={12} sm={12} multiline maxRows={20} defaultValue={customerSelected[fieldToEdit]} style={{ marginBottom: '2rem', marginLeft: 'auto', marginRight: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} id="outlined-basic" variant="outlined" onChange={(event) => {
-                                setValueToEdit(event.target.value)
-                            }} />
-                            <div item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
-                                    editField()
-                                    setIsLoading(true)
-                                }}>Conferma</Button>
-                            </div>
-                        </Box>
-                    </Modal>
+                                                        <TextField label={"Aggiorna il campo " + fieldToEdit.toUpperCase().replace("_", " ") + ":"} item xs={12} sm={12} multiline maxRows={20} defaultValue={customerSelected[fieldToEdit]} style={{ marginBottom: '2rem', marginLeft: 'auto', marginRight: 'auto', display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} id="outlined-basic" variant="outlined" onChange={(event) => {
+                                                            setValueToEdit(event.target.value)
+                                                        }} />
+                                                        <div item xs={12} sm={12} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                            <Button sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
+                                                                editField()
+                                                                setIsLoading(true)
+                                                            }}>Conferma</Button>
+                                                        </div>
+                                                    </Box>
+                                                </Modal>
 
-                    <Modal
-                        open={openLoadPdf}
-                        onClose={() => { handleCloseLoadPdf() }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
-                                Carica file pdf {fieldToEdit.toUpperCase()}:
-                            </Typography>
-                            {/* <div> */}
-                            <div style={{ marginRight: 'auto', marginLeft: 'auto', justifyContent: 'center', textAlign: 'center' }} >
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                    <input multiple type="file" name="file" onChange={changeHandlerPDF} /></div>
-                                {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                <Modal
+                                                    open={openLoadPdf}
+                                                    onClose={() => { handleCloseLoadPdf() }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                                            Carica file pdf {fieldToEdit.toUpperCase()}:
+                                                        </Typography>
+                                                        {/* <div> */}
+                                                        <div style={{ marginRight: 'auto', marginLeft: 'auto', justifyContent: 'center', textAlign: 'center' }} >
+                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <input multiple type="file" name="file" onChange={changeHandlerPDF} /></div>
+                                                            {/* <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                     {isFilePDFPicked ?
                                         <div>
                                             <p>Nome file: {selectedFilePDF.name}</p>
@@ -2258,77 +2316,84 @@ function CustomerCard(customerPassed) {
                                         <p>Seleziona un file per vederne le specifiche</p>
                                     }
                                 </div> */}
-                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                    <Button disabled={!isFilePDFPicked} onClick={(event) => {
-                                        handleSubmissionPDF()
-                                        setIsLoading(true)
-                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
-                                </div>
-                                <h1>Uploaded {progress} %</h1>
-                            </div>
-                        </Box>
-                    </Modal>
-                    {/* Modal to edit status */}
-                    <Modal
-                        open={openEditStatus}
-                        onClose={() => { handleCloseEditStatus() }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
-                                Aggiorna il campo {fieldToEdit.toUpperCase()}:
-                            </Typography>
-                            <Autocomplete
-                                disablePortal
-                                sx={{ width: 300, marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginRight: 'auto', marginLeft: 'auto' }}
-                                id="combo-box-demo"
-                                options={possibleStatuses}
-                                renderInput={(params) => <TextField {...params} label="stato" />}
-                                onChange={(event, value) => {
-                                    if (value !== null) {
-                                        setValueToEdit(value.label)
-                                    }
-                                }}
-                            />
-                            {
-                                (valueToEdit === "" || valueToEdit === null || valueToEdit === undefined) ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                    <AiFillInfoCircle sx={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
-                                </div>
-                            }
-                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button sx={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
-                                    editStatus()
-                                    setIsLoading(true)
-                                }}>Conferma</Button>
-                            </div>
-                        </Box>
-                    </Modal>
+                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                <Button disabled={!isFilePDFPicked} onClick={(event) => {
+                                                                    handleSubmissionPDF()
+                                                                    setIsLoading(true)
+                                                                }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                            </div>
+                                                            <h1>Uploaded {progress} %</h1>
+                                                        </div>
+                                                    </Box>
+                                                </Modal>
+                                                {/* Modal to edit status */}
+                                                <Modal
+                                                    open={openEditStatus}
+                                                    onClose={() => { handleCloseEditStatus() }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                                            Aggiorna il campo {fieldToEdit.toUpperCase()}:
+                                                        </Typography>
+                                                        <Autocomplete
+                                                            disablePortal
+                                                            sx={{ width: 300, marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center', marginRight: 'auto', marginLeft: 'auto' }}
+                                                            id="combo-box-demo"
+                                                            options={possibleStatuses}
+                                                            renderInput={(params) => <TextField {...params} label="stato" />}
+                                                            onChange={(event, value) => {
+                                                                if (value !== null) {
+                                                                    setValueToEdit(value.label)
+                                                                }
+                                                            }}
+                                                        />
+                                                        {
+                                                            (valueToEdit === "" || valueToEdit === null || valueToEdit === undefined) ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                                <AiFillInfoCircle sx={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
+                                                            </div>
+                                                        }
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                            <Button sx={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
+                                                                editStatus()
+                                                                setIsLoading(true)
+                                                            }}>Conferma</Button>
+                                                        </div>
+                                                    </Box>
+                                                </Modal>
 
-                    {/* Delete all images */}
-                    <Modal
-                        open={askDeleteAll}
-                        onClose={() => { handleCloseAskDeleteAll() }}
-                        aria-labelledby="modal-modal-label"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
-                                <p>Inserisci <em>{typeToDeleteAll.replace("fine_", "")}</em> per confermare:</p>
-                            </Typography>
-                            <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Digita qui:" variant="filled" onChange={(event) => {
-                                setCheckTypologyToDelete(event.target.value)
-                            }} />
-                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
-                                <Button disabled={checkTypologyToDelete !== typeToDeleteAll.replace("fine_", "")} sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
-                                    deleteAllImages()
-                                    setIsLoading(true)
-                                }}>Conferma</Button>
+                                                {/* Delete all images */}
+                                                <Modal
+                                                    open={askDeleteAll}
+                                                    onClose={() => { handleCloseAskDeleteAll() }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h2">
+                                                            <p>Inserisci <em>{typeToDeleteAll.replace("fine_", "")}</em> per confermare:</p>
+                                                        </Typography>
+                                                        <TextField sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }} id="filled-basic" label="Digita qui:" variant="filled" onChange={(event) => {
+                                                            setCheckTypologyToDelete(event.target.value)
+                                                        }} />
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                            <Button disabled={checkTypologyToDelete !== typeToDeleteAll.replace("fine_", "")} sx={{ color: 'white', backgroundColor: 'green', marginLeft: '1rem' }} onClick={() => {
+                                                                deleteAllImages()
+                                                                setIsLoading(true)
+                                                            }}>Conferma</Button>
+                                                        </div>
+                                                    </Box>
+                                                </Modal>
+                                            </div>
+                                        }
+                                    </div>
+                                }
                             </div>
-                        </Box>
-                    </Modal>
+                    }
                 </div>
             }
+
         </div >
     );
 }

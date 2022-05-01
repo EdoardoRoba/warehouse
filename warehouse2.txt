@@ -33,13 +33,9 @@ maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
-- cerca cliente fuori da tutto (dalla card)
-- i "carica" diventano due bottoni
-- email da inviare crea evento (info@idroaltech.it) - URGENTE!!!
 
 
 APP:
-- visibilità magazzino da app
 
 
 
