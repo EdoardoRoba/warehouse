@@ -1073,7 +1073,7 @@ app.post('/api/sendEmailEvent', (req, res) => {
 
             var mailOptions = {
                 from: 'idroaltech.bot@gmail.com',
-                to: 'roba.edoardo@gmail.com, logistica@idroaltech.it, signoriello.f@gmail.com', // info@idroaltech.it',
+                to: 'roba.edoardo@gmail.com, logistica@idroaltech.it', // info@idroaltech.it', signoriello.f@gmail.com
                 subject: 'INVIO EMAIL PER APPUNTAMENTI',
                 html: emailEvent.template.replace("{events}", listEventsEmail)
             };
