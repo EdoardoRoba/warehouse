@@ -584,7 +584,7 @@ app.post('/api/profile', (req, res) => {
         if (profile.length > 0) {
             const id = res.id
             const token = jwt.sign({ id }, "jwtSecret", {
-                expiresIn: 3600
+                expiresIn: 28800
             })
             Auth.findOne({ code: profile[0].code }).then((resAuth) => {
                 res.json({ auth: true, token: token, auths: resAuth.permissions, profile: profile[0].code })

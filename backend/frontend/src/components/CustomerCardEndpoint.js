@@ -398,7 +398,7 @@ function CustomerCardEndpoint() {
         if (!selectedFilePDF) return;
         for (let pdf of selectedFilePDF) {
             // const now = Date.now()
-            const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + pdf.name.replace(".pdf", ""))
+            const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/' + pdf.name) //.replace(".pdf", ""))
             const uploadTask = uploadBytesResumable(storageRef, pdf)
             uploadTask.on("state_changed", (snapshot) => {
                 const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)

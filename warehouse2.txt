@@ -33,10 +33,11 @@ maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
+- download pdf
 
 
 APP:
-
+- carica un po' più di foto!!
 
 
 
