@@ -1068,12 +1068,12 @@ app.post('/api/sendEmailEvent', (req, res) => {
 
             var listEventsEmail = ""
             for (let e of req.body.events) {
-                listEventsEmail = listEventsEmail + singleEmailEvent.template.replace("{nome_cognome}", e.customer.nome_cognome).replace("{indirizzo}", e.customer.indirizzo).replace("{comune}", e.customer.comune).replace("{provincia}", e.customer.provincia).replace("{cap}", e.customer.cap).replace("{telefono}", e.customer.telefono).replace("{telefono}", e.customer.telefono).replace("{bonus}", e.customer.bonus).replace("{termico_elettrico}", e.customer.termico_elettrico)
+                listEventsEmail = listEventsEmail + singleEmailEvent.template.replace("{nome_cognome}", e.customer.nome_cognome.toUpperCase()).replace("{type}", e.type).replace("{indirizzo}", e.customer.indirizzo).replace("{comune}", e.customer.comune).replace("{provincia}", e.customer.provincia).replace("{cap}", e.customer.cap).replace("{telefono}", e.customer.telefono).replace("{telefono}", e.customer.telefono).replace("{bonus}", e.customer.bonus).replace("{termico_elettrico}", e.customer.termico_elettrico)
             }
 
             var mailOptions = {
                 from: 'idroaltech.bot@gmail.com',
-                to: 'roba.edoardo@gmail.com, logistica@idroaltech.it', // info@idroaltech.it', signoriello.f@gmail.com
+                to: 'roba.edoardo@gmail.com',// logistica@idroaltech.it', // info@idroaltech.it', signoriello.f@gmail.com
                 subject: 'INVIO EMAIL PER APPUNTAMENTI',
                 html: emailEvent.template.replace("{events}", listEventsEmail)
             };
