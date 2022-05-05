@@ -33,11 +33,15 @@ maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
 
 warehouse:
 - carica pdf e foto nel momento in cui vengono selezionati i file
-- aggiusta email carrello
+- aggiusta email carrello: prima dell'installazione, sopr e ass, metti data; type in altra riga rispetto al nome
+- computo che scompare???
+- appuntamenti: solo se è taggato mirisola
 
 
 APP:
-
+- qr code scorribile + qr code più piccolo
+- samsung: clienti non cliccabili più di una volta
+- samsung: ricerca tool non selezionabile
 
 
 

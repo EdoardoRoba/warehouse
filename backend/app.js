@@ -144,6 +144,15 @@ cron.schedule('00 15 * * 5', () => {
     });
 });
 
+cron.schedule('55 06 * * *', () => {
+    let filter = {}
+    filter.lastName = "surra"
+    // it gets all the element in that document
+    Employee.findOne(filter).then((result) => {
+        console.log(result.external);
+    }).catch((error) => { console.log("error: ", error) })
+})
+
 
 // cron.schedule('00 9 * * *', () => {
 //     EmailTemplate.findOne({ use: "weeklyReport" }).then((emailWeeklyReport) => {
@@ -1073,7 +1082,7 @@ app.post('/api/sendEmailEvent', (req, res) => {
 
             var mailOptions = {
                 from: 'idroaltech.bot@gmail.com',
-                to: 'roba.edoardo@gmail.com, logistica@idroaltech.it', // info@idroaltech.it', signoriello.f@gmail.com
+                to: 'roba.edoardo@gmail.com, logistica@idroaltech.it, info@idroaltech.it', // info@idroaltech.it', signoriello.f@gmail.com
                 subject: 'INVIO EMAIL PER APPUNTAMENTI',
                 html: emailEvent.template.replace("{events}", listEventsEmail)
             };
