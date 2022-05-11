@@ -41,6 +41,8 @@ warehouse:
 - aggiusta email carrello: prima dell'installazione, sopr e ass, metti data; type in altra riga rispetto al nome
 - computo che scompare???
 - appuntamenti: visibile ad admin e mirisola solo se è taggato mirisola -> da aggiustare: può vedere dove è taggato (or su mongo?)
+- stampa calendario
+- filtri sul calendario
 
 
 APP:
@@ -50,7 +52,7 @@ APP:
 
 
 
-
+2235552
 
 
 

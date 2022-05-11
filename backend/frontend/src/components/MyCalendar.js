@@ -51,8 +51,8 @@ function MyCalendar() {
     const [emailEvents, setEmailEvents] = React.useState([])
     const [titleEvent, setTitleEvent] = React.useState("");
     const [type, setType] = React.useState("");
-    const [filterCustomer, setFilterCustomer] = React.useState("");
-    const [filterEmployee, setFilterEmployee] = React.useState("");
+    const [filterCustomer, setFilterCustomer] = React.useState(null);
+    const [filterEmployee, setFilterEmployee] = React.useState(null);
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [selectedStartTime, setSelectedStartTime] = React.useState();
@@ -400,7 +400,15 @@ function MyCalendar() {
         setTitleEvent("")
         setType("")
         setCustomerSelected(null)
-        getEvents()
+        if (filterCustomer) {
+            showFilteredCalendar(filterCustomer, "customer")
+        }
+        if (filterEmployee) {
+            showFilteredCalendar(filterEmployee, "employee")
+        }
+        if (!filterCustomer && !filterEmployee) {
+            getEvents()
+        }
         setCheckEmailEvent(false)
         setOpenModal(false)
     }
@@ -479,6 +487,10 @@ function MyCalendar() {
             filter.user = user
             filter[type] = valFilter
             axiosInstance.get('calendar', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: filter }).then((res) => { //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+                for (let e of res.data) {
+                    e.start = new Date(e.start)
+                    e.end = new Date(e.end)
+                }
                 setEvents(res.data)
                 setIsLoading(false)
             }).catch(error => {
@@ -517,21 +529,31 @@ function MyCalendar() {
                                             renderInput={(params) => <TextField {...params} label="filtra per cliente" />}
                                             onChange={(event, value) => {
                                                 showFilteredCalendar(value, "customer")
-                                                setFilterCustomer(value.nome_cognome)
-                                                setFilterEmployee("")
+                                                setFilterCustomer(value)
+                                                setFilterEmployee(null)
                                             }
                                             }
                                         />
-                                        {
-                                            filterCustomer === "" && filterEmployee === "" ? "" : <div>
-                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h7" component="h7">
-                                                    Filtrato per:
-                                                </Typography>
-                                                <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
-                                                    {filterCustomer}{filterEmployee}
-                                                </Typography>
-                                            </div>
-                                        }
+                                        <div>
+                                            {
+                                                !filterCustomer && !filterEmployee ? "" :
+                                                    <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h7" component="h7">
+                                                        Filtrato per:
+                                                    </Typography>
+                                            }
+                                            {
+                                                !filterCustomer ? "" :
+                                                    <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                        {filterCustomer.nome_cognome.toUpperCase()}
+                                                    </Typography>
+                                            }
+                                            {
+                                                !filterEmployee ? "" :
+                                                    <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                        {filterEmployee.label.toUpperCase()}
+                                                    </Typography>
+                                            }
+                                        </div>
                                         <Autocomplete
                                             disablePortal
                                             item xs={12} sm={4}
@@ -543,8 +565,8 @@ function MyCalendar() {
                                             renderInput={(params) => <TextField {...params} label="filtra per dipendente" />}
                                             onChange={(event, value) => {
                                                 showFilteredCalendar(value, "employee")
-                                                setFilterEmployee(value.label)
-                                                setFilterCustomer("")
+                                                setFilterEmployee(value)
+                                                setFilterCustomer(null)
                                             }
                                             }
                                         />
@@ -552,8 +574,8 @@ function MyCalendar() {
                                             <IconButton
                                                 onClick={() => {
                                                     getEvents()
-                                                    setFilterCustomer("")
-                                                    setFilterEmployee("")
+                                                    setFilterCustomer(null)
+                                                    setFilterEmployee(null)
                                                 }}>
                                                 <ReplayIcon style={{ fontSize: "30px" }} />
                                             </IconButton>
