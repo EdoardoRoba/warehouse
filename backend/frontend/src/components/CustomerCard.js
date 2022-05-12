@@ -152,7 +152,7 @@ function CustomerCard(customerPassed) {
             setCustomerSelected(resp.data)
         }).catch(error => {
             // console.log("error")
-            if (error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 userIsAuthenticated()
             }
             setIsLoading(false)
@@ -269,7 +269,7 @@ function CustomerCard(customerPassed) {
                 setStatusColors(scs)
             }).catch(error => {
                 // console.log("error")
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
                 setIsLoading(false)
@@ -353,7 +353,7 @@ function CustomerCard(customerPassed) {
                 handleCloseEditField()
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -375,7 +375,7 @@ function CustomerCard(customerPassed) {
                 handleCloseEditStatus()
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -417,7 +417,7 @@ function CustomerCard(customerPassed) {
                                 handleCloseLoadPdf()
                             }).catch((error) => {
                                 setIsLoading(false)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                             })
@@ -443,13 +443,13 @@ function CustomerCard(customerPassed) {
                         setCustomerSelected(respp.data)
                     }).catch((error) => {
                         setIsLoading(false)
-                        if (error.response.status === 401) {
+                        if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
                     })
                 }).catch((error) => {
                     setIsLoading(false)
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                 })
@@ -486,12 +486,12 @@ function CustomerCard(customerPassed) {
                         setPageAssistenza(1)
                     }).catch((error) => {
                         setIsLoading(false)
-                        if (error.response.status === 401) {
+                        if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
                     })
                 }).catch((error) => {
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     setIsLoading(false)
@@ -543,14 +543,14 @@ function CustomerCard(customerPassed) {
                     handleCloseAskDeleteAll()
                 }).catch((error) => {
                     setIsLoading(false)
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     handleCloseAskDeleteAll()
                 })
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
                 handleCloseAskDeleteAll()
@@ -568,7 +568,7 @@ function CustomerCard(customerPassed) {
                 setCustomerSelected(respp.data)
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -624,13 +624,13 @@ function CustomerCard(customerPassed) {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)
@@ -753,13 +753,13 @@ function CustomerCard(customerPassed) {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)
@@ -810,13 +810,13 @@ function CustomerCard(customerPassed) {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)

@@ -147,7 +147,7 @@ function CustomerCardEndpoint() {
             setCustomerSelected(resp.data)
         }).catch(error => {
             // console.log("error")
-            if (error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 userIsAuthenticated()
             }
             setIsLoading(false)
@@ -247,7 +247,7 @@ function CustomerCardEndpoint() {
                 setStatusColors(scs)
             }).catch(error => {
                 // console.log("error")
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
                 setIsLoading(false)
@@ -275,7 +275,7 @@ function CustomerCardEndpoint() {
                     setIsLoading(false)
                 }).catch(error => {
                     // console.log("error")
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     setIsLoading(false)
@@ -289,7 +289,7 @@ function CustomerCardEndpoint() {
                     setIsLoading(false)
                 }).catch(error => {
                     // console.log("error")
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     setIsLoading(false)
@@ -338,7 +338,7 @@ function CustomerCardEndpoint() {
                 handleCloseEditField()
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -360,7 +360,7 @@ function CustomerCardEndpoint() {
                 handleCloseEditStatus()
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -383,7 +383,7 @@ function CustomerCardEndpoint() {
                     }
                 }).catch(error => {
                     // console.log("error")
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     setIsLoading(false)
@@ -425,7 +425,7 @@ function CustomerCardEndpoint() {
                                 handleCloseLoadPdf()
                             }).catch((error) => {
                                 setIsLoading(false)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                             })
@@ -451,13 +451,13 @@ function CustomerCardEndpoint() {
                         setCustomerSelected(respp.data)
                     }).catch((error) => {
                         setIsLoading(false)
-                        if (error.response.status === 401) {
+                        if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
                     })
                 }).catch((error) => {
                     setIsLoading(false)
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                 })
@@ -495,12 +495,12 @@ function CustomerCardEndpoint() {
                         window.location.reload(false)
                     }).catch((error) => {
                         setIsLoading(false)
-                        if (error.response.status === 401) {
+                        if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
                     })
                 }).catch((error) => {
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     setIsLoading(false)
@@ -552,14 +552,14 @@ function CustomerCardEndpoint() {
                     handleCloseAskDeleteAll()
                 }).catch((error) => {
                     setIsLoading(false)
-                    if (error.response.status === 401) {
+                    if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
                     handleCloseAskDeleteAll()
                 })
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
                 handleCloseAskDeleteAll()
@@ -577,7 +577,7 @@ function CustomerCardEndpoint() {
                 setCustomerSelected(respp.data)
             }).catch((error) => {
                 setIsLoading(false)
-                if (error.response.status === 401) {
+                if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
             })
@@ -633,13 +633,13 @@ function CustomerCardEndpoint() {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)
@@ -690,13 +690,13 @@ function CustomerCardEndpoint() {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)
@@ -742,13 +742,13 @@ function CustomerCardEndpoint() {
                                     setCustomerSelected(respp.data)
                                 }).catch((error) => {
                                     setIsLoading(false)
-                                    if (error.response.status === 401) {
+                                    if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
-                                if (error.response.status === 401) {
+                                if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
                                 setIsLoading(false)
