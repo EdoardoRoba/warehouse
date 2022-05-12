@@ -15,6 +15,7 @@ import Card from '@mui/material/Card';
 import Autocomplete from '@mui/material/Autocomplete';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ReplayIcon from '@material-ui/icons/Replay';
+import AspectRatioIcon from '@material-ui/icons/AspectRatio';
 import IconButton from '@mui/material/IconButton';
 import EmailIcon from '@material-ui/icons/Email';
 import Tooltip from '@mui/material/Tooltip';
@@ -35,7 +36,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
 import './Classes.css'
 import CustomerCard from "./CustomerCard.js";
-import { AiOutlineConsoleSql } from "react-icons/ai";
+import { useScreenshot, createFileName } from 'use-react-screenshot'
 
 function MyCalendar() {
 
@@ -65,6 +66,11 @@ function MyCalendar() {
     const [openModalEmail, setOpenModalEmail] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const openMenu = Boolean(anchorEl);
+    const [image, takeScreenshot] = useScreenshot({
+        type: "image/png",
+        quality: 1.0
+    })
+    const calendarRef = React.createRef()
 
     const useStyles = makeStyles((theme) => ({
         backdrop: {
@@ -276,6 +282,13 @@ function MyCalendar() {
             }
         })
     }
+
+    const downloadScreenshot = (screen, { name = "calendar", extension = "png" } = {}) => { // + Date.now()
+        const a = document.createElement("a");
+        a.href = screen;
+        a.download = createFileName(extension, name);
+        a.click();
+    };
 
     const addCalendar = () => {
         setIsLoading(true)
@@ -598,18 +611,30 @@ function MyCalendar() {
                                                 }
                                             </IconButton>
                                         </Tooltip>
+                                        <Tooltip item xs={12} sm={4} sx={{ marginRight: '1rem' }} title={"Fai lo screen del calendario!"}>
+                                            <IconButton
+                                                onClick={() => {
+                                                    takeScreenshot(calendarRef.current).then(downloadScreenshot)
+                                                }}>
+                                                <AspectRatioIcon style={{ fontSize: "30px" }} />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Grid >
-                                    <Calendar
-                                        localizer={localizer}
-                                        events={events}
-                                        style={{ height: 800 }}
-                                        startAccessor="start"
-                                        endAccessor="end"
-                                        selectable={true}
-                                        onSelectSlot={onSelectSlot}
-                                        onSelectEvent={onSelectEvent}
-                                        views={["month", "week", "day"]} // "week", "day"
-                                    />
+                                    <div
+                                        ref={calendarRef}
+                                    >
+                                        <Calendar
+                                            localizer={localizer}
+                                            events={events}
+                                            style={{ height: 800 }}
+                                            startAccessor="start"
+                                            endAccessor="end"
+                                            selectable={true}
+                                            onSelectSlot={onSelectSlot}
+                                            onSelectEvent={onSelectEvent}
+                                            views={["month", "week", "day"]} // "week", "day"
+                                        />
+                                    </div>
                                     <Modal
                                         open={openModalEmail}
                                         onClose={() => { setOpenModalEmail(false) }}
