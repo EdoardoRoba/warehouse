@@ -2030,11 +2030,11 @@ function CustomerCard(customerPassed) {
                                                                     note assistenza
                                                                 </Typography>
                                                                 <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
-                                                                    {customerSelected.assistenza}
+                                                                    {customerSelected.note_assistenza}
                                                                     {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
-                                                                                setFieldToEdit("assistenza")
+                                                                                setFieldToEdit("note_assistenza")
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />

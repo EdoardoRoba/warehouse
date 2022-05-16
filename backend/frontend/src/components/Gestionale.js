@@ -438,44 +438,21 @@ function Gestionale() {
                                 <CircularProgress color="inherit" />
                             </Backdrop> :
                                 <div style={{ marginBottom: "1rem", marginTop: "2rem", width: "90%", marginLeft: "auto", marginRight: "auto" }}>
-                                    {
-                                        auths["gestionale"] !== "*" ? <div>
-                                            <h2>Gestionale</h2>
-                                            <h3>Inserisci i tuoi orari</h3>
-                                            <Calendar
-                                                localizer={localizer}
-                                                events={events}
-                                                style={{ height: 800 }}
-                                                startAccessor="start"
-                                                endAccessor="end"
-                                                selectable={true}
-                                                onSelectSlot={onSelectSlot}
-                                                onSelectEvent={onSelectEvent}
-                                                views={["month", "week", "day"]} // "week", "day"
-                                            />
-                                        </div> : <div>
-                                            {
-                                                items.length === 0 ? "" : <Timeline
-                                                    groups={groups}
-                                                    items={items}
-                                                    groupRenderer={groupRenderer}
-                                                    // style={{ height: "500px" }}
-                                                    // canMove={false}
-                                                    // canResize={false}
-                                                    // showCursorLine
-                                                    defaultTimeStart={moment().add(-12, 'hour')}
-                                                    defaultTimeEnd={moment().add(12, 'hour')}
-                                                >
-                                                    <TimelineHeaders className={classes.color}>
-                                                        <SidebarHeader className={classes.color}>
-                                                        </SidebarHeader >
-                                                        <DateHeader unit="primaryHeader" className={classes.color} />
-                                                        <DateHeader />
-                                                    </TimelineHeaders>
-                                                </Timeline>
-                                            }
-                                        </div>
-                                    }
+                                    <div>
+                                        <h2>Gestionale</h2>
+                                        <h3>Inserisci i tuoi orari</h3>
+                                        <Calendar
+                                            localizer={localizer}
+                                            events={events}
+                                            style={{ height: 800 }}
+                                            startAccessor="start"
+                                            endAccessor="end"
+                                            selectable={true}
+                                            onSelectSlot={onSelectSlot}
+                                            onSelectEvent={onSelectEvent}
+                                            views={["month", "week", "day"]} // "week", "day"
+                                        />
+                                    </div>
                                 </div >
                         }
                         <Modal
