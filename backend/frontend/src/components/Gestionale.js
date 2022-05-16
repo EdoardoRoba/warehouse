@@ -520,8 +520,8 @@ function Gestionale() {
                                                             <TextField
                                                                 {...params}
                                                                 variant="standard"
-                                                                label="Dipendenti coinvolti"
-                                                                placeholder="dipendenti coinvolti"
+                                                                label="Dipendente"
+                                                                placeholder="dipendente"
                                                             />
                                                         )}
                                                         onChange={(event, value) => {
