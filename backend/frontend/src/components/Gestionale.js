@@ -26,12 +26,12 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { makeStyles } from '@mui/styles';
 import './Classes.css'
-import CustomerCard from "./CustomerCard.js";
-import Timeline, {
-    TimelineHeaders,
-    SidebarHeader,
-    DateHeader,
-} from 'react-calendar-timeline'
+// import CustomerCard from "./CustomerCard.js";
+// import Timeline, {
+//     TimelineHeaders,
+//     SidebarHeader,
+//     DateHeader,
+// } from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
 
 function Gestionale() {
@@ -132,7 +132,7 @@ function Gestionale() {
     React.useEffect(() => {
         if (auths.gestionale) {
             getEvents()
-            getEmployee()
+            // getEmployee()
             getEmployees()
             getRequests()
         }
@@ -176,55 +176,54 @@ function Gestionale() {
 
     const getEvents = () => {
         let user = ""
-        if (auths["gestionale"] === "*") {
-            axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-                .then(ress => {
-                    let its = []
-                    its = ress.data.map((e, idx) => {
-                        let it = {}
-                        it.id = idx
-                        it.group = e.employee.lastName
-                        it.title = e.type
-                        it.start_time = new Date(e.start)
-                        it.end_time = new Date(e.end)
-                        it.itemProps = {
-                            style: {
-                                position: "sticky"
-                            }
-                        }
-                        return it
-                    })
-                    // console.log("its")
-                    // console.log(its)
-                    setItems(its)
-                    setIsLoading(false)
-                }).catch(error => {
-                    console.log("error")
-                    if (error.response.status === 401) {
-                        userIsAuthenticated()
-                    }
-                    setIsLoading(false)
-                    setShowError(true)
-                });
-        } else {
-            axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { lastName: localStorage.getItem("user") } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-                .then(res => {
-                    for (let e of res.data) {
-                        e.start = new Date(e.start)
-                        e.end = new Date(e.end)
-                        e.title = e.type + " (" + e.status + ")"
-                    }
-                    setEvents(res.data)
-                    setIsLoading(false)
-                }).catch(error => {
-                    console.log("error")
-                    if (error.response.status === 401) {
-                        userIsAuthenticated()
-                    }
-                    setIsLoading(false)
-                    setShowError(true)
-                });
-        }
+        // if (auths["gestionale"] === "*") {
+        // axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+        //     .then(ress => {
+        //         let its = []
+        //         its = ress.data.map((e, idx) => {
+        //             let it = {}
+        //             it.id = idx
+        //             it.group = e.employee.lastName
+        //             it.title = e.type
+        //             it.start_time = new Date(e.start)
+        //             it.end_time = new Date(e.end)
+        //             it.itemProps = {
+        //                 style: {
+        //                     position: "sticky"
+        //                 }
+        //             }
+        //             return it
+        //         })
+        //         setItems(its)
+        //         setIsLoading(false)
+        //     }).catch(error => {
+        //         console.log("error")
+        //         if (error.response.status === 401) {
+        //             userIsAuthenticated()
+        //         }
+        //         setIsLoading(false)
+        //         setShowError(true)
+        //     });
+        // } else {
+        axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } } // , params: { lastName: localStorage.getItem("user") }
+            .then(res => {
+                for (let e of res.data) {
+                    e.start = new Date(e.start)
+                    e.end = new Date(e.end)
+                    e.title = e.type + " (" + e.status + ")"
+                    e.employee = e.employee
+                }
+                setEvents(res.data)
+                setIsLoading(false)
+            }).catch(error => {
+                console.log("error")
+                if (error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+                setIsLoading(false)
+                setShowError(true)
+            });
+        // }
 
     }
 
@@ -249,17 +248,17 @@ function Gestionale() {
             });
     }
 
-    const getEmployee = () => {
-        axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { lastName: localStorage.getItem("user") } })
-            .then(res => {
-                setEmployee(res.data[0])
-            }).catch(error => {
-                // console.log("error")
-                if (error.response.status === 401) {
-                    userIsAuthenticated()
-                }
-            });
-    }
+    // const getEmployee = () => {
+    //     axiosInstance.get('employee', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }, params: { lastName: localStorage.getItem("user") } })
+    //         .then(res => {
+    //             setEmployee(res.data[0])
+    //         }).catch(error => {
+    //             // console.log("error")
+    //             if (error.response.status === 401) {
+    //                 userIsAuthenticated()
+    //             }
+    //         });
+    // }
 
     const groupArrayOfObjects = (list, key) => {
         return list.reduce(function (rv, x) {
@@ -307,7 +306,7 @@ function Gestionale() {
 
     const addGestionale = () => {
         setIsLoading(true)
-        let externalEmployees = employeesInvolved.filter((eI) => eI.external)
+        // let externalEmployees = employeesInvolved.filter((eI) => eI.external)
         // nome, tipo app, azienda, termico/eletttrico
         let newEvent = { start: selectedStartTime, end: selectedEndTime, employee: employee, type: type, status: "in attesa" }
         axiosInstance.post('gestionale', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
@@ -405,6 +404,7 @@ function Gestionale() {
             new Date(e.end).getMinutes()
         )
         )
+        setEmployee(e.employee)
         setEmployeesInvolved(e.employees)
         setCustomerInvolved(e.customer)
         setType(e.type)
@@ -506,9 +506,38 @@ function Gestionale() {
 
                                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                     {
-                                        auths["gestionale"] !== "installer" ?
+                                        auths["gestionale"] === "installer" ?
                                             <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '10rem' }} severity="error"><h1>UTENTE NON AUTORIZZATO!</h1></Alert>
                                             : <div>
+                                                {
+                                                    eventSelected === null ? <Autocomplete
+                                                        id="tags-standard"
+                                                        options={employees}
+                                                        style={{ width: "50%", marginLeft: 'auto', marginRight: 'auto', marginTop: '2rem' }}
+                                                        // defaultValue={eventSelected.employees}
+                                                        getOptionLabel={(option) => option.label}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                {...params}
+                                                                variant="standard"
+                                                                label="Dipendenti coinvolti"
+                                                                placeholder="dipendenti coinvolti"
+                                                            />
+                                                        )}
+                                                        onChange={(event, value) => {
+                                                            if (value !== null) {
+                                                                setEmployee(value)
+                                                            }
+                                                        }}
+                                                    /> : <div style={{ justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
+                                                        <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                            Dipendente
+                                                        </Typography>
+                                                        <Typography sx={{ marginBottom: '2rem', display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                            {eventSelected.employee.label}
+                                                        </Typography>
+                                                    </div>
+                                                }
                                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
                                                     {
                                                         eventSelected === null ? <div>
@@ -556,6 +585,10 @@ function Gestionale() {
                                                             setType("orario lavorativo")
                                                             setAnchorEl(null)
                                                         }}>Orario lavorativo</MenuItem> */}
+                                                        <MenuItem onClick={() => {
+                                                            setType("straordinario")
+                                                            setAnchorEl(null)
+                                                        }}>Straordinario</MenuItem>
                                                         <MenuItem onClick={() => {
                                                             setType("ferie")
                                                             setAnchorEl(null)
