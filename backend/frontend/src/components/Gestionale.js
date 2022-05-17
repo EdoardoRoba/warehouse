@@ -597,6 +597,10 @@ function Gestionale() {
                                                             setType("permesso")
                                                             setAnchorEl(null)
                                                         }}>Permesso</MenuItem>
+                                                        <MenuItem onClick={() => {
+                                                            setType("mutua")
+                                                            setAnchorEl(null)
+                                                        }}>Mutua</MenuItem>
                                                     </Menu>
                                                 </div>
 
