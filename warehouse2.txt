@@ -38,14 +38,9 @@ maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
 ----------------------------------------------------------
 
 warehouse:
-- carica pdf e foto nel momento in cui vengono selezionati i file
-- appuntamenti: visibile ad admin e mirisola solo se è taggato mirisola -> da aggiustare: può vedere dove è taggato (or su mongo?)
-- ASCOLTA AUDIO FRA SUGLI APPUNTAMENTI ADMIN!
 
 
 APP:
-- samsung: clienti non cliccabili più di una volta
-- samsung: ricerca tool non selezionabile
 
 
 

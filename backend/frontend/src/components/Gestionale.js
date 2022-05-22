@@ -42,9 +42,9 @@ function Gestionale() {
     const [employees, setEmployees] = React.useState([])
     const [employee, setEmployee] = React.useState({})
     const [selectedEmployee, setSelectedEmployee] = React.useState({})
-    const [requests, setRequests] = React.useState([])
-    const [showRequests, setShowRequests] = React.useState(false)
-    const [requestsToShow, setRequestsToShow] = React.useState([])
+    // const [requests, setRequests] = React.useState([])
+    // const [showRequests, setShowRequests] = React.useState(false)
+    // const [requestsToShow, setRequestsToShow] = React.useState([])
     const [isLoading, setIsLoading] = React.useState(true);
     const [showError, setShowError] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
@@ -134,7 +134,7 @@ function Gestionale() {
             getEvents()
             // getEmployee()
             getEmployees()
-            getRequests()
+            // getRequests()
         }
     }, [auths])
 
@@ -210,7 +210,7 @@ function Gestionale() {
                 for (let e of res.data) {
                     e.start = new Date(e.start)
                     e.end = new Date(e.end)
-                    e.title = e.type + " (" + e.status + ")"
+                    e.title = e.type + " - " + e.employee.lastName // + " (" + e.status + ")"
                     e.employee = e.employee
                 }
                 setEvents(res.data)
@@ -267,19 +267,19 @@ function Gestionale() {
         }, {});
     };
 
-    const getRequests = () => {
-        axiosInstance.get('requests', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
-            .then(res => {
-                let data = res.data
-                let rqsts = groupArrayOfObjects(data, "employee")
-                setRequests(rqsts)
-            }).catch(error => {
-                console.log(error)
-                if (error.response.status === 401) {
-                    userIsAuthenticated()
-                }
-            });
-    }
+    // const getRequests = () => {
+    //     axiosInstance.get('requests', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+    //         .then(res => {
+    //             let data = res.data
+    //             let rqsts = groupArrayOfObjects(data, "employee")
+    //             setRequests(rqsts)
+    //         }).catch(error => {
+    //             console.log(error)
+    //             if (error.response.status === 401) {
+    //                 userIsAuthenticated()
+    //             }
+    //         });
+    // }
 
     const onSelectSlot = (event) => {
         // console.log("select slot")
@@ -312,19 +312,19 @@ function Gestionale() {
         axiosInstance.post('gestionale', newEvent, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 getEvents()
-                let newReq = { employee: employee.lastName, type: type, start: selectedStartTime, end: selectedEndTime }
-                axiosInstance.post('requests', newReq, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
-                    .then(response => {
-                        getEvents()
-                        handleCloseModal()
-                    }).catch(error => {
-                        if (error.response.status === 401) {
-                            userIsAuthenticated()
-                        }
-                        setIsLoading(false)
-                        setShowError(true)
-                        handleCloseModal()
-                    });
+                // let newReq = { employee: employee.lastName, type: type, start: selectedStartTime, end: selectedEndTime }
+                // axiosInstance.post('requests', newReq, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+                //     .then(response => {
+                //         getEvents()
+                //         handleCloseModal()
+                //     }).catch(error => {
+                //         if (error.response.status === 401) {
+                //             userIsAuthenticated()
+                //         }
+                //         setIsLoading(false)
+                //         setShowError(true)
+                //         handleCloseModal()
+                //     });
             }).catch(error => {
                 if (error.response.status === 401) {
                     userIsAuthenticated()
@@ -381,10 +381,10 @@ function Gestionale() {
         setOpenModal(false)
     }
 
-    const handleCloseModalRequests = () => {
-        setRequestsToShow([])
-        setShowRequests(false)
-    }
+    // const handleCloseModalRequests = () => {
+    //     setRequestsToShow([])
+    //     setShowRequests(false)
+    // }
 
     const onSelectEvent = (e) => {
         setEventSelected(e)
@@ -412,18 +412,18 @@ function Gestionale() {
         setOpenModal(true)
     }
 
-    const groupRenderer = ({ group }) => {
-        let marker = ""
-        if (requests[group.title] && requests[group.title].length > 0) {
-            marker = "!"
-        }
-        return <div style={{ display: "flex" }} className="hovered" onClick={() => {
-            setShowRequests(true)
-            setRequestsToShow(requests[group.lastName])
-            // console.log(requests[group.lastName])
-            setSelectedEmployee(group)
-        }}><p>{group.title}</p><p style={{ color: "red", fontWeight: "bold", marginLeft: "5px" }}>{marker}</p></div>;
-    };
+    // const groupRenderer = ({ group }) => {
+    //     let marker = ""
+    //     if (requests[group.title] && requests[group.title].length > 0) {
+    //         marker = "!"
+    //     }
+    //     return <div style={{ display: "flex" }} className="hovered" onClick={() => {
+    //         setShowRequests(true)
+    //         setRequestsToShow(requests[group.lastName])
+    //         // console.log(requests[group.lastName])
+    //         setSelectedEmployee(group)
+    //     }}><p>{group.title}</p><p style={{ color: "red", fontWeight: "bold", marginLeft: "5px" }}>{marker}</p></div>;
+    // };
 
     return (
         <div>
@@ -455,7 +455,7 @@ function Gestionale() {
                                     </div>
                                 </div >
                         }
-                        <Modal
+                        {/* <Modal
                             open={showRequests}
                             onClose={() => { handleCloseModalRequests() }}
                             aria-labelledby="modal-modal-label"
@@ -475,7 +475,7 @@ function Gestionale() {
                                 }
                                 <div>ciao</div>
                             </Card>
-                        </Modal>
+                        </Modal> */}
 
                         <Modal
                             open={openModal}

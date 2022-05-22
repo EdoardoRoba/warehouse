@@ -15,6 +15,7 @@ const Calendar = require('./models/calendar')
 const Gestionale = require('./models/gestionale')
 const Request = require('./models/requests')
 const EmailEvent = require('./models/emailEvent')
+const Register = require('./models/register')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
@@ -588,8 +589,12 @@ app.post('/api/profile', (req, res) => {
 
     const username = req.body.username
     const password = req.body.password
+    var device = false
+    if (req.body.device !== undefined && req.body.device !== null && req.body.device === "mobile") {
+        device = true
+    }
     Profile.find().then((result) => {
-        var profile = result.filter((ress) => ress.password === password && ress.username === username)
+        var profile = result.filter((ress) => ress.password === password && ress.username === username && (device || ress.code !== "external"))
         if (profile.length > 0) {
             const id = res.id
             const token = jwt.sign({ id }, "jwtSecret", {
@@ -1106,6 +1111,23 @@ app.post('/api/sendEmailEvent', (req, res) => {
             });
         }).catch((error) => { console.log("error: ", error) })
     }).catch((error) => { console.log("error: ", error) })
+})
+
+
+//AUTHS
+// POST
+app.post('/api/register', (req, res) => {
+    const profile = new Profile({
+        username: req.body.username,
+        password: req.body.password,
+        code: "external"
+    })
+    profile.save().then((result) => {
+        res.send(result)
+        console.log("registered")
+    }).catch((error) => {
+        console.log("error:", error)
+    })
 })
 
 
