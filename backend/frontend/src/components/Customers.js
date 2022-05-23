@@ -298,20 +298,6 @@ function Customers(props) {
             });
     }
 
-    const handleCloseNote = () => {
-        setOpenNote(false);
-    };
-
-    const changeHandlerPDF = (event) => {
-        setSelectedFilePDF(event.target.files[0]);
-        setIsFilePDFPicked(true);
-    };
-
-    const changeHandlerPhotoSopralluogo = (event) => {
-        setSelectedSopralluogo(event.target.files[0]);
-        setIsSopralluogoPicked(true);
-    };
-
     const getCustomers = (user) => {
         // console.log(user) // undefined
         if (user === undefined) {
@@ -551,151 +537,45 @@ function Customers(props) {
 
     }
 
-    const deleteImage = (ph, phType) => {
-        setIsLoading(true)
-        var new_ph_array = customerSelected[phType].filter((p) => p !== ph)
-        var newField = {}
-        newField[phType] = new_ph_array
-        let phRef = ref(storage, ph);
-        deleteObject(phRef)
-            .then(() => {
-                console.log("Firebase clean!")
-                var new_pdf_array = customerSelected[phType].filter((p) => p !== ph)
-                var newField = {}
-                newField[phType] = new_pdf_array
-                axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
-                    axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
-                        console.log("foto eliminata!")
-                        setIsLoading(false)
-                        setCustomerSelected(respp.data)
-                        setOpenSopralluogo(false)
-                        setOpenInstallazione(false)
-                        setOpenAssistenza(false)
-                        setPageSopralluogo(1)
-                        setPageInstallazione(1)
-                        setPageAssistenza(1)
-                    }).catch((error) => {
-                        setIsLoading(false)
-                        if (error.response.status === 401) {
-                            userIsAuthenticated()
-                        }
-                    })
-                }).catch((error) => {
-                    if (error.response.status === 401) {
-                        userIsAuthenticated()
-                    }
-                    setIsLoading(false)
-                })
-            })
-            .catch((err) => {
-                console.log(err);
-                setIsLoading(false)
-            });
-    }
-
-    const deleteImageOnFirebase = (ph) => {
-        return new Promise(function (resolve, reject) {
-            let phRef = ref(storage, ph);
-            deleteObject(phRef)
-                .then(() => {
-                    resolve(phRef)
-                })
-                .catch((err) => {
-                    console.log(err);
-                    setIsLoading(false)
-                });
-        })
-    }
-
     const downloadCustomers = () => { // csvData, fileName
+        var csvData = []
+        for (let c of customers) {
+            var custForCsv = {}
+            custForCsv["nome"] = c.nome_cognome
+            custForCsv.status = c.status
+            custForCsv.company = c.company
+            custForCsv.telefono = c.telefono
+            custForCsv.cf = c.cf ? c.cf : ""
+            var cap = c.cap ? " - " + c.cap : ""
+            custForCsv["indirizzo (via - comune - provincia - cap)"] = c.indirizzo + " - " + c.comune + " - " + c.provincia + cap
+            custForCsv.bonus = c.bonus
+            custForCsv["termico/elettrico"] = c.termico_elettrico
+            custForCsv["data sopralluogo"] = c.data_sopralluogo
+            custForCsv["tecnico sopralluogo"] = c.tecnico_sopralluogo
+            custForCsv["note sopralluogo"] = c.note_sopralluogo
+            custForCsv["data installazione"] = c.data_installazione
+            custForCsv["tecnico installazione"] = c.tecnico_installazione
+            custForCsv["note installazione"] = c.note_installazione
+            custForCsv["data assistenza"] = c.data_assistenza
+            custForCsv["tecnico assistenza"] = c.tecnico_assistenza
+            custForCsv["note assistenza"] = c.note_assistenza
+            custForCsv.trasferta = c.trasferta
+            custForCsv["ha assistenza?"] = c.isAssisted ? "SI" : "NO"
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            custForCsv.telefono = c.telefono
+            csvData.push(custForCsv)
+        }
         let fileName = "clienti"
-        const ws = XLSX.utils.json_to_sheet(customers);
+        const ws = XLSX.utils.json_to_sheet(csvData);
         const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
         const data = new Blob([excelBuffer], { type: fileType });
         saveAs(data, fileName + fileExtension);
-    }
-
-    const convertToBase64 = (u) => {
-        return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    // return reader.result
-                    resolve(reader.result)
-                }
-                reader.readAsDataURL(xhr.response);
-            };
-            xhr.open('GET', u);
-            xhr.responseType = 'blob';
-            xhr.send();
-        })
-    }
-
-    const downloadFolder = async (urlss, typology) => {
-        var is = []
-        setIsLoading(true)
-        for (let u of urlss) {
-            // console.log(urlss)
-            // let pp = await convertToBase64(u)
-            is.push(convertToBase64(u))
-        }
-        is = await Promise.allSettled(is)
-        let isOk = is.filter((e) => e.status === "fulfilled").map((e) => e.value)
-        let isNotOk = is.filter((e) => e.status !== "fulfilled").map((e) => e.value)
-        // console.log("finito", is)
-        // const timer = setTimeout(() => {
-        //     console.log("finito", is)
-        print64(isOk, typology)
-        //     clearTimeout(timer)
-        // }, 5000);
-
-
-
-        // zip.generateAsync({ type: "blob" }).then(content => {
-        //     saveAs(content, customer.replaceAll(" ", "_") + "_" + typology + ".zip");
-        // });
-
-
-        // const folder = refFirestore + customer.replaceAll(" ", "%20") + "%2F" + typology
-        // let blob = await fetch(folder).then((r) => r.blob());
-        // saveAs(blob, customer.replaceAll(" ", "_") + "_" + typology + ".zip")
-        // https://firebasestorage.googleapis.com/v0/b/magazzino-2a013.appspot.com/o/files%2Ftizio%20caio%2Fsopralluogo%2F1647786582758_arance.jpg?alt=media&token=f74260c5-b676-48c1-bfb4-148db33a1e73
-    }
-
-    const print64 = (images, typology) => {
-        if (images.length === customerSelected["foto_" + typology].length) {
-            let zip = new JSZip();
-            // console.log('fatto!', images)
-            for (let i = 0; i < images.length; i++) {
-                // let files = customerSelected.foto_sopralluogo;
-                // for (let file = 0; file < customerSelected.foto_sopralluogo.length; file++) {
-                // Zip file with the file name.
-                zip.file((i + 1).toString() + ".jpg", images[i].split(",")[1], { base64: true });
-                // }
-            }
-            zip.generateAsync({ type: "blob" })
-                .then(function (content) {
-                    // see FileSaver.js
-                    saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
-
-                    // var link = document.createElement("a")
-                    // link.href = window.URL.createObjectURL(content)
-                    // link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
-                    // link.click()
-
-                    setIsLoading(false)
-                });
-        }
-    }
-
-    const handleChangeAccordion = () => {
-        setOpenAccordion((prev) => !prev)
-    }
-
-    const handleChangeAccordionManual = () => {
-        setOpenAccordionManual((prev) => !prev)
     }
 
     const handleChangeAccordionScheda = () => {
@@ -879,14 +759,16 @@ function Customers(props) {
                                         {
                                             (genericError === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">{genericError}</Alert>
                                         }
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
-                                            <Tooltip style={{ marginRight: '1rem' }} title="Scarica Excel di tutti i clienti">
-                                                <IconButton
-                                                    onClick={() => { downloadCustomers() }}>
-                                                    <GetAppIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </div>
+                                        {
+                                            auths["customers"] === "installer" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: "2rem" }}>
+                                                <Tooltip style={{ marginRight: '1rem' }} title="Scarica Excel di tutti i clienti">
+                                                    <IconButton
+                                                        onClick={() => { downloadCustomers() }}>
+                                                        <GetAppIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                        }
                                         <Autocomplete
                                             disablePortal
                                             id="combo-box-demo"
