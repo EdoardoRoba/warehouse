@@ -546,28 +546,37 @@ function Customers(props) {
             custForCsv.company = c.company
             custForCsv.telefono = c.telefono
             custForCsv.cf = c.cf ? c.cf : ""
-            var cap = c.cap ? " - " + c.cap : ""
-            custForCsv["indirizzo (via - comune - provincia - cap)"] = c.indirizzo + " - " + c.comune + " - " + c.provincia + cap
+            var capCsv = c.cap ? " - " + c.cap : ""
+            custForCsv["indirizzo (via - comune - provincia - cap)"] = c.indirizzo + " - " + c.comune + " - " + c.provincia + capCsv
             custForCsv.bonus = c.bonus
             custForCsv["termico/elettrico"] = c.termico_elettrico
+
             custForCsv["data sopralluogo"] = c.data_sopralluogo
             custForCsv["tecnico sopralluogo"] = c.tecnico_sopralluogo
             custForCsv["note sopralluogo"] = c.note_sopralluogo
+            custForCsv["# foto sopralluogo"] = c.foto_sopralluogo.length
+            custForCsv["# pdf sopralluogo"] = c.pdf_sopralluogo.length
+
             custForCsv["data installazione"] = c.data_installazione
             custForCsv["tecnico installazione"] = c.tecnico_installazione
             custForCsv["note installazione"] = c.note_installazione
+            custForCsv["# foto installazione"] = c.foto_fine_installazione.length
+            custForCsv["# pdf computo"] = c.pdf_computo.length
+            custForCsv["computo (testo)"] = c.computo
+
             custForCsv["data assistenza"] = c.data_assistenza
             custForCsv["tecnico assistenza"] = c.tecnico_assistenza
             custForCsv["note assistenza"] = c.note_assistenza
+            custForCsv["# foto assistenza"] = c.foto_assistenza.length
+            custForCsv["# pdf assistenza"] = c.assistenza.length
+
             custForCsv.trasferta = c.trasferta
             custForCsv["ha assistenza?"] = c.isAssisted ? "SI" : "NO"
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
-            custForCsv.telefono = c.telefono
+            custForCsv["# pdf di.co"] = c.di_co.length
+            custForCsv["# pdf checklist"] = c.check_list.length
+            custForCsv["# pdf fgas"] = c.fgas.length
+            custForCsv["# pdf prova fumi"] = c.prova_fumi.length
+            custForCsv["# pdf collaudo"] = c.collaudo.length
             csvData.push(custForCsv)
         }
         let fileName = "clienti"
