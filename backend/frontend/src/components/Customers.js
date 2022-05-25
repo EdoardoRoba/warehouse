@@ -50,18 +50,11 @@ function Customers(props) {
     const [selectedFile, setSelectedFile] = React.useState();
     const [selectedFilePDF, setSelectedFilePDF] = React.useState();
     const [selectedSopralluogo, setSelectedSopralluogo] = React.useState([{}]);
-    const [selectedInstallazione, setSelectedInstallazione] = React.useState([{}]);
-    const [selectedAssistenza, setSelectedAssistenza] = React.useState([{}]);
     const [isFilePicked, setIsFilePicked] = React.useState(false);
-    const [isFilePDFPicked, setIsFilePDFPicked] = React.useState(false);
-    const [isSopralluogoPicked, setIsSopralluogoPicked] = React.useState(false);
-    const [isInstallazionePicked, setIsInstallazionePicked] = React.useState(false);
-    const [isAssistenzaPicked, setIsAssistenzaPicked] = React.useState(false);
-    const [openAccordion, setOpenAccordion] = React.useState(false);
-    const [openAccordionManual, setOpenAccordionManual] = React.useState(false);
     const [openAccordionScheda, setOpenAccordionScheda] = React.useState(false);
     const [excel, setExcel] = React.useState({});
     const [showError, setShowError] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
     const [confermaAdd, setConfermaAdd] = React.useState(false);
     const [addCustomerRecord, setAddCustomerRecord] = React.useState(false);
     const [addCustomerRecordFile, setAddCustomerRecordFile] = React.useState(false);
@@ -69,9 +62,6 @@ function Customers(props) {
     const [customerSelected, setCustomerSelected] = React.useState(null);
     const [confermaUpdate, setConfermaUpdate] = React.useState(false);
     const [customerSelectedId, setCustomerSelectedId] = React.useState(false);
-    const [openSopralluogo, setOpenSopralluogo] = React.useState(false);
-    const [openInstallazione, setOpenInstallazione] = React.useState(false);
-    const [openAssistenza, setOpenAssistenza] = React.useState(false);
     const [openCustomerCard, setOpenCustomerCard] = React.useState(false);
     const [company, setCompany] = React.useState("");
     const [nome_cognome, setNome_cognome] = React.useState("");
@@ -89,14 +79,8 @@ function Customers(props) {
     const [tecnico_installazione, setTecnico_installazione] = React.useState("");
     const [tecnico_sopralluogo, setTecnico_sopralluogo] = React.useState("");
     const [trasferta, setTrasferta] = React.useState("");
-    const [collaudo, setCollaudo] = React.useState("");
     const [assistenza, setAssistenza] = React.useState([]);
     const [status, setStatus] = React.useState("");
-    const [note_info, setNote_info] = React.useState("");
-    const [note_sopralluogo, setNote_sopralluogo] = React.useState("");
-    const [note_installazione, setNote_installazione] = React.useState("");
-    const [note_assistenza, setNote_assistenza] = React.useState("");
-    const [note_pagamenti, setNote_pagamenti] = React.useState("");
     const [genericError, setGenericError] = React.useState("");
     const [pagamenti_testo, setPagamenti_testo] = React.useState("");
     const [auths, setAuths] = React.useState([])
@@ -112,13 +96,7 @@ function Customers(props) {
     const [openEditStatus, setOpenEditStatus] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const [progress, setProgress] = React.useState(0);
-    const [pageSopralluogo, setPageSopralluogo] = React.useState(1);
-    const [pageInstallazione, setPageInstallazione] = React.useState(1);
-    const [pageAssistenza, setPageAssistenza] = React.useState(1);
-    const [imagesToShow, setImagesToShow] = React.useState([]);
-    const [imagesId, setImagesId] = React.useState(null);
     const [url, setUrl] = React.useState("");
-    const [openNote, setOpenNote] = React.useState(false);
     const [askDeleteAll, setAskDeleteAll] = React.useState(false);
     const [typeToDeleteAll, setTypeToDeleteAll] = React.useState("");
     const [checkTypologyToDelete, setCheckTypologyToDelete] = React.useState("");
@@ -219,6 +197,13 @@ function Customers(props) {
         }, 5000);
         return () => clearTimeout(timer);
     }, [showError]);
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setErrorMessage("")
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [errorMessage]);
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -342,8 +327,14 @@ function Customers(props) {
                 if (error.response.status === 401) {
                     userIsAuthenticated()
                 }
+                if (error.response.status === 406) {
+                    // console.log(error.response.data.message)
+                    setErrorMessage(error.response.data.message)
+                    setShowError(false)
+                } else {
+                    setShowError(true)
+                }
                 setIsLoading(false)
-                setShowError(true)
             });
     }
 
@@ -764,6 +755,9 @@ function Customers(props) {
                                         }
                                         {
                                             (showError === false) ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">Upload fallito. Controlla connessione e formato dei dati.</Alert>
+                                        }
+                                        {
+                                            (errorMessage === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">{errorMessage}</Alert>
                                         }
                                         {
                                             (genericError === "") ? "" : <Alert style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem' }} severity="error">{genericError}</Alert>

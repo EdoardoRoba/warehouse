@@ -685,34 +685,40 @@ app.post('/api/newCustomerFile', (req, res) => {
 // CUSTOMERS
 // POST
 app.post('/api/customer', (req, res) => {
-    const customer = new Customer({
-        company: req.body.company,
-        nome_cognome: req.body.nome_cognome,
-        telefono: req.body.telefono,
-        indirizzo: req.body.indirizzo,
-        comune: req.body.comune,
-        provincia: req.body.provincia,
-        bonus: req.body.bonus,
-        status: req.body.status,
-        termico_elettrico: req.body.termico_elettrico,
-        computo: req.body.computo,
-        data_sopralluogo: req.body.data_sopralluogo,
-        data_installazione: req.body.data_installazione,
-        tecnico_installazione: req.body.tecnico_installazione,
-        tecnico_sopralluogo: req.body.tecnico_sopralluogo,
-        isAssisted: req.body.isAssisted,
-        trasferta: req.body.trasferta,
-        assistenza: req.body.assistenza,
-        note: req.body.note,
-        cf: req.body.cf,
-        pagamenti_testo: req.body.pagamenti_testo
-    })
-    // console.log("customer: ", customer)
-    customer.save().then((result) => {
-        res.send(result)
-    }).catch((error) => {
-        console.log("error:", error)
-    })
+    Customer.findOne({ nome_cognome: req.body.nome_cognome }).then((result) => {
+        if (result) {
+            res.status(406).send({ errorCode: 406, message: "Cliente già esistente!" });
+        } else {
+            const customer = new Customer({
+                company: req.body.company,
+                nome_cognome: req.body.nome_cognome,
+                telefono: req.body.telefono,
+                indirizzo: req.body.indirizzo,
+                comune: req.body.comune,
+                provincia: req.body.provincia,
+                bonus: req.body.bonus,
+                status: req.body.status,
+                termico_elettrico: req.body.termico_elettrico,
+                computo: req.body.computo,
+                data_sopralluogo: req.body.data_sopralluogo,
+                data_installazione: req.body.data_installazione,
+                tecnico_installazione: req.body.tecnico_installazione,
+                tecnico_sopralluogo: req.body.tecnico_sopralluogo,
+                isAssisted: req.body.isAssisted,
+                trasferta: req.body.trasferta,
+                assistenza: req.body.assistenza,
+                note: req.body.note,
+                cf: req.body.cf,
+                pagamenti_testo: req.body.pagamenti_testo
+            })
+            // console.log("customer: ", customer)
+            customer.save().then((result2) => {
+                res.send(result2)
+            }).catch((error2) => {
+                console.log("error2:", error2)
+            })
+        }
+    }).catch((error) => { console.log("error: ", error) })
 })
 
 // GET
