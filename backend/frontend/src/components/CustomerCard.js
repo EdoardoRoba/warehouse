@@ -1031,7 +1031,7 @@ function CustomerCard(customerPassed) {
                                     <div>
                                         <Tooltip sx={{ marginRight: '1rem' }} title={customerSelected.status.toLowerCase()}>
                                             <IconButton>
-                                                <AiFillInfoCircle sx={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
+                                                <AiFillInfoCircle style={{ color: statusColors[customerSelected.status.toLowerCase()], fontSize: 'xx-large' }} />
                                             </IconButton>
                                         </Tooltip>
                                         {

@@ -37,8 +37,6 @@ maps API key: key=API_KEY: AIzaSyDm6NwclD3lf_2Fu22fYUphvHRN7Qcw6cQ
 
 ID PRATICA ritardo app pubblicata: 101708368090
 
-API key YouTube: AIzaSyBT4xYkwd78qXx9B8q-ND40o5CI_FhBjcw
-
 ----------------------------------------------------------
 
 warehouse:
