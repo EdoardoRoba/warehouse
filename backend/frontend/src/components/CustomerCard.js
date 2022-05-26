@@ -855,6 +855,7 @@ function CustomerCard(customerPassed) {
     const downloadImage = async (image, filename) => {
         let blob = await fetch(image).then((r) => r.blob());
         saveAs(blob, filename + ".jpg")
+        setIsLoading(false)
     }
 
     const convertToBase64 = (u) => {
@@ -2122,6 +2123,13 @@ function CustomerCard(customerPassed) {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_sopralluogo.length} shape="rounded" page={pageSopralluogo} onChange={handleChangeFotoSopralluogo} /> */}
@@ -2189,6 +2197,13 @@ function CustomerCard(customerPassed) {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_fine_installazione[currentImage], "foto_fine_installazione")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
@@ -2257,6 +2272,13 @@ function CustomerCard(customerPassed) {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_assistenza[currentImage], "foto_assistenza")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}

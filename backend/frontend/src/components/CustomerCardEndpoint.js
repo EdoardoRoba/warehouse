@@ -13,6 +13,7 @@ import NotesIcon from '@material-ui/icons/Notes';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LinkIcon from '@material-ui/icons/Link';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
@@ -766,6 +767,7 @@ function CustomerCardEndpoint() {
     const downloadImage = async (image, filename) => {
         let blob = await fetch(image).then((r) => r.blob());
         saveAs(blob, filename + ".jpg")
+        setIsLoading(false)
     }
 
     const convertToBase64 = (u) => {
@@ -973,7 +975,7 @@ function CustomerCardEndpoint() {
                                             auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
                                                 onClick={() => {
                                                     setFieldToEdit("nome_cognome")
-                                                    setOpenEditStatus(true)
+                                                    setOpenEditField(true)
                                                 }}>
                                                 <EditIcon style={{ fontSize: "15px" }} />
                                             </IconButton></Tooltip>
@@ -2036,6 +2038,13 @@ function CustomerCardEndpoint() {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]}
                                                                             />
@@ -2104,6 +2113,13 @@ function CustomerCardEndpoint() {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_fine_installazione[currentImage], "foto_fine_installazione")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_fine_installazione.length} shape="rounded" page={pageInstallazione} onChange={handleChangeFotoInstallazione} /> */}
@@ -2172,6 +2188,13 @@ function CustomerCardEndpoint() {
                                                                                         setIsLoading(true)
                                                                                     }}>
                                                                                         <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        // deleteImage(customerSelected.foto_sopralluogo[currentImage], "foto_sopralluogo")
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_assistenza[currentImage], "foto_assistenza")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
