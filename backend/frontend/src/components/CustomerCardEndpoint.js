@@ -107,6 +107,7 @@ function CustomerCardEndpoint() {
     const refSopr = React.useRef(null)
     const refInst = React.useRef(null)
     const refAss = React.useRef(null)
+    const refDoc = React.useRef(null)
     const refArgo = React.useRef(null)
     const refBAuto = React.useRef(null)
 
@@ -1062,24 +1063,35 @@ function CustomerCardEndpoint() {
                                     }}
                                 />
                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center" >
-                                    <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} sm={2}>
+                                    <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} sm={1}>
                                         <Button variant="text">info cliente</Button>
                                     </Grid>
-                                    <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} sm={2}>
+                                    <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} sm={1}>
                                         <Button variant="text">sopralluogo</Button>
                                     </Grid>
-                                    <Grid onClick={() => refInst.current.scrollIntoView()} item xs={12} sm={2}>
+                                    <Grid onClick={() => refInst.current.scrollIntoView()} item xs={12} sm={1}>
                                         <Button variant="text">installazione</Button>
                                     </Grid>
-                                    <Grid onClick={() => refAss.current.scrollIntoView()} item xs={12} sm={2}>
-                                        <Button variant="text">assistenza</Button>
-                                    </Grid>
-                                    <Grid onClick={() => refArgo.current.scrollIntoView()} item xs={12} sm={2}>
-                                        <Button variant="text">argo</Button>
-                                    </Grid>
-                                    <Grid onClick={() => refBAuto.current.scrollIntoView()} item xs={12} sm={2}>
-                                        <Button variant="text">building automation</Button>
-                                    </Grid>
+                                    {
+                                        !customerSelected.isAssisted ? "" : <Grid onClick={() => refAss.current.scrollIntoView()} item xs={12} sm={1}>
+                                            <Button variant="text">assistenza</Button>
+                                        </Grid>
+                                    }
+                                    {
+                                        auths["customers"] !== "*" ? "" : <Grid onClick={() => refDoc.current.scrollIntoView()} item xs={12} sm={1}>
+                                            <Button variant="text">documenti</Button>
+                                        </Grid>
+                                    }
+                                    {
+                                        !customerSelected.isArgo ? "" : <Grid onClick={() => refArgo.current.scrollIntoView()} item xs={12} sm={1}>
+                                            <Button variant="text">argo</Button>
+                                        </Grid>
+                                    }
+                                    {
+                                        !customerSelected.isBuildAutomation ? "" : <Grid onClick={() => refBAuto.current.scrollIntoView()} item xs={12} sm={1.5}>
+                                            <Button variant="text">building automation</Button>
+                                        </Grid>
+                                    }
                                 </Grid>
                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                     <Typography variant="h4" component="div">
@@ -1648,7 +1660,7 @@ function CustomerCardEndpoint() {
                                             </Card>
                                         </div>
                                         {
-                                            auths["customers"] !== "*" ? "" : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                            auths["customers"] !== "*" ? "" : <div ref={refDoc} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
