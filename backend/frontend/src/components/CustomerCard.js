@@ -23,6 +23,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { AiFillInfoCircle } from "react-icons/ai";
@@ -561,6 +563,7 @@ function CustomerCard(customerPassed) {
     const assistCustomer = (flag) => {
         let newField = {}
         newField.isAssisted = flag
+        newField.status = "in attesa di assistenza"
         axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
             axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                 setIsLoading(false)
@@ -1004,6 +1007,33 @@ function CustomerCard(customerPassed) {
         return imagesForGallery
     }
 
+    const updateCustomerStatus = (newStatus) => {
+        setIsLoading(true)
+        var customer = {}
+        customer.status = newStatus
+        axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+            setConfermaUpdate(true)
+            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
+                getCustomers()
+                setIsLoading(false)
+                console.log("customer updated")
+                setCustomerSelected(respp.data)
+            }).catch((error) => {
+                setIsLoading(false)
+                if (error.response && error.response.status === 401) {
+                    userIsAuthenticated()
+                }
+            })
+        }).catch((error) => {
+            // console.log("error: ", error)
+            if (error.response && error.response.status === 401) {
+                userIsAuthenticated()
+            }
+            setIsLoading(false)
+            setShowError(true)
+        });
+    }
+
     return (
         <div style={{ width: "90%", marginLeft: 'auto', marginRight: 'auto' }}>
             {
@@ -1208,28 +1238,18 @@ function CustomerCard(customerPassed) {
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                         <div>
                                                             Sopralluogo
-                                                            {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note sopralluogo"}>
-                                                        <IconButton onClick={() => {
-                                                            setNoteType("note_sopralluogo")
-                                                            setOpenNote(true)
-                                                        }}>
-                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("note_sopralluogo")
-                                                                setOpenEditField(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton></Tooltip>
-                                                    } */}
                                                         </div>
                                                     </Typography>
-                                                    {/* <Typography variant="body2">
-                                                <SettingsIcon sx={{ marginBottom: '2rem' }} />
-                                            </Typography> */}
+                                                    {
+                                                        customerSelected.status !== "sopralluogo programmato" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={12}>
+                                                                <FormControlLabel
+                                                                    label="Sopralluogo terminato?"
+                                                                    control={<Checkbox onChange={() => updateCustomerStatus("in attesa di installazione")} />}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    }
                                                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                         {/* <div> */}
                                                         <Grid item xs={12} sm={6}>
@@ -1380,25 +1400,38 @@ function CustomerCard(customerPassed) {
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                         <div>
                                                             Installazione
-                                                            {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note installazione"}>
-                                                        <IconButton onClick={() => {
-                                                            setNoteType("note_installazione")
-                                                            setOpenNote(true)
-                                                        }}>
-                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("note_installazione")
-                                                                setOpenEditField(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton></Tooltip>
-                                                    } */}
                                                         </div>
                                                     </Typography>
+                                                    {
+                                                        customerSelected.status !== "installazione programmata" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={12}>
+                                                                <FormControlLabel
+                                                                    label="Installazione terminata? Vai allo stato di fatturazione."
+                                                                    control={<Checkbox onChange={() => updateCustomerStatus("da fatturare")} />}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    }
+                                                    {
+                                                        customerSelected.status !== "da fatturare" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={12}>
+                                                                <FormControlLabel
+                                                                    label="Fatturazione terminata?"
+                                                                    control={<Checkbox onChange={() => updateCustomerStatus("in attesa di pagamento")} />}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    }
+                                                    {
+                                                        customerSelected.status !== "in attesa di pagamento" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={12}>
+                                                                <FormControlLabel
+                                                                    label="Pagato?"
+                                                                    control={<Checkbox onChange={() => updateCustomerStatus("pagato")} />}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                    }
                                                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                         {/* <div> */}
                                                         <Grid item xs={12} sm={6}>
@@ -1888,25 +1921,18 @@ function CustomerCard(customerPassed) {
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
                                                                 Assistenza
-                                                                {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note assistenza"}>
-                                                            <IconButton onClick={() => {
-                                                                setNoteType("note_assistenza")
-                                                                setOpenNote(true)
-                                                            }}>
-                                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note_assistenza")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton></Tooltip>
-                                                        } */}
                                                             </div>
                                                         </Typography>
+                                                        {
+                                                            customerSelected.status !== "assistenza in corso" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                                <Grid item xs={12} sm={12}>
+                                                                    <FormControlLabel
+                                                                        label="Assistenza terminata?"
+                                                                        control={<Checkbox onChange={() => updateCustomerStatus("assistenza terminata")} />}
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        }
                                                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
                                                             <Grid item xs={12} sm={4}>
                                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
@@ -2376,7 +2402,7 @@ function CustomerCard(customerPassed) {
                                                                 <AiFillInfoCircle style={{ color: statusColors[valueToEdit.toLowerCase()], fontSize: 'xx-large' }} />
                                                             </div>
                                                         }
-                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
+                                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '2rem' }}>
                                                             <Button sx={{ color: 'white', backgroundColor: 'green' }} onClick={() => {
                                                                 editStatus()
                                                                 setIsLoading(true)

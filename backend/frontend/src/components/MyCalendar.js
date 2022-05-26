@@ -262,9 +262,12 @@ function MyCalendar() {
         console.log("dipendenti esterni aggiornati!")
     }
 
-    const updateCustomer = () => {
+    const updateCustomer = (newStatus) => {
         let newField = {}
         newField["tecnico_" + type] = employeesInvolved.map((eI) => eI.lastName.toUpperCase()).join("-")
+        if (newStatus) {
+            newField.status = newStatus
+        }
         if (type === "installazione" && (new Date(selectedStartTime).getDate()) !== (new Date(selectedEndTime).getDate())) {
             newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
         } else {
@@ -305,7 +308,15 @@ function MyCalendar() {
             .then(response => {
                 getEvents()
                 if (type !== "appuntamento") {
-                    updateCustomer()
+                    var newStatus = ""
+                    if (type === "sopralluogo") {
+                        newStatus = "sopralluogo programmato"
+                    } else if (type === "installazione") {
+                        newStatus = "installazione programmata"
+                    } else {
+                        newStatus = "assistenza in corso"
+                    }
+                    updateCustomer(newStatus)
                 }
                 if (externalEmployees.length > 0) {
                     updateExternalEmployees(externalEmployees)

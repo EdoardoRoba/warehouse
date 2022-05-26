@@ -318,7 +318,7 @@ function Customers(props) {
 
     let addCustomer = () => {
         setIsLoading(true)
-        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: status, isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "", cf: cf }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+        axiosInstance.post('customer', { company: company, nome_cognome: nome_cognome, telefono: telefono, indirizzo: indirizzo, comune: comune, provincia: provincia, cap: cap, bonus: bonus, termico_elettrico: termico_elettrico, computo: computo, data_sopralluogo: data_sopralluogo, data_installazione: data_installazione, tecnico_installazione: tecnico_installazione, tecnico_sopralluogo: tecnico_sopralluogo, trasferta: trasferta, assistenza: assistenza, pagamenti_testo: pagamenti_testo, status: "in attesa di sopralluogo", isAssisted: false, note_info: "", note_sopralluogo: "", note_installazione: "", note_assistenza: "", note_pagamenti: "", cf: cf }, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
             .then(response => {
                 setConfermaAdd(true)
                 getCustomers()
@@ -683,14 +683,14 @@ function Customers(props) {
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                                             {/* <input style={{ margin: '1rem', width: '50%' }} placeholder="stato" onChange={(event) => { setStatus(event.target.value.toLowerCase()) }} /> */}
-                                                                            <Autocomplete
+                                                                            {/* <Autocomplete
                                                                                 disablePortal
                                                                                 id="combo-box-demo"
                                                                                 options={possibleStatuses}
                                                                                 sx={{ width: 300 }}
                                                                                 renderInput={(params) => <TextField {...params} label="stato" />}
                                                                                 onChange={(event, value) => { setStatus(value.label) }}
-                                                                            />
+                                                                            /> */}
                                                                             <input style={{ margin: '1rem', width: '50%' }} placeholder="pagamenti (testo)" onChange={(event) => { setPagamenti_testo(event.target.value) }} />
                                                                         </div>
                                                                         <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>

@@ -48,7 +48,8 @@ DA FARE:
 - sopralluogo e installazione tipo isAssisted a comparsa
 
 --- quando crea un cliente: in attesa di sopr
---- quando aggiungo evento sopr: in attesa di installazione
+--- quando aggiungo evento sopr: "sopralluogo programmato"
+--- flag sopralluogo: in attesa di installazione
 --- quando aggiungo evento inst: in attesa di pagamento
 --- metti flag su documenti, quando sarà pagato, andrà in: "pagato"
 --- quando si aggiunge assistenza: in attesa di assistenza
