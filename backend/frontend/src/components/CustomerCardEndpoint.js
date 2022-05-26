@@ -103,6 +103,13 @@ function CustomerCardEndpoint() {
     const [touchStart, setTouchStart] = React.useState(0);
     const [touchEnd, setTouchEnd] = React.useState(0);
 
+    const refInfo = React.useRef(null)
+    const refSopr = React.useRef(null)
+    const refInst = React.useRef(null)
+    const refAss = React.useRef(null)
+    const refArgo = React.useRef(null)
+    const refBAuto = React.useRef(null)
+
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
         { field: 'status', headerName: 'stato', flex: 1 }
@@ -1054,6 +1061,26 @@ function CustomerCardEndpoint() {
                                         setCustomerSelected(value)
                                     }}
                                 />
+                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center" >
+                                    <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">info cliente</Button>
+                                    </Grid>
+                                    <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">sopralluogo</Button>
+                                    </Grid>
+                                    <Grid onClick={() => refInst.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">installazione</Button>
+                                    </Grid>
+                                    <Grid onClick={() => refAss.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">assistenza</Button>
+                                    </Grid>
+                                    <Grid onClick={() => refArgo.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">argo</Button>
+                                    </Grid>
+                                    <Grid onClick={() => refBAuto.current.scrollIntoView()} item xs={12} sm={2}>
+                                        <Button variant="text">building automation</Button>
+                                    </Grid>
+                                </Grid>
                                 <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1rem' }}>
                                     <Typography variant="h4" component="div">
                                         {customerSelected.nome_cognome.toUpperCase()}
@@ -1091,7 +1118,7 @@ function CustomerCardEndpoint() {
                                         <CircularProgress color="inherit" />
                                     </Backdrop> : <div>
 
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div id="info" ref={refInfo} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', width: '100%', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1233,7 +1260,7 @@ function CustomerCardEndpoint() {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div id="sopralluogo" ref={refSopr} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1395,7 +1422,7 @@ function CustomerCardEndpoint() {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div id="installazione" ref={refInst} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1914,7 +1941,7 @@ function CustomerCardEndpoint() {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi assistenza
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div id="assistenza" ref={refAss} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -2075,7 +2102,7 @@ function CustomerCardEndpoint() {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi ARGO
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div id="argo" ref={refArgo} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -2226,7 +2253,7 @@ function CustomerCardEndpoint() {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi BUILDING AUTOMATION
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div id="buildAutomation" ref={refBAuto} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
