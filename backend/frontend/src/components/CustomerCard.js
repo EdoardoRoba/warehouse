@@ -54,11 +54,15 @@ function CustomerCard(customerPassed) {
     const [selectedSopralluogo, setSelectedSopralluogo] = React.useState([{}]);
     const [selectedInstallazione, setSelectedInstallazione] = React.useState([{}]);
     const [selectedAssistenza, setSelectedAssistenza] = React.useState([{}]);
+    const [selectedArgo, setSelectedArgo] = React.useState([{}]);
+    const [selectedBuildAutomation, setSelectedBuildAutomation] = React.useState([{}]);
     const [isFilePicked, setIsFilePicked] = React.useState(false);
     const [isFilePDFPicked, setIsFilePDFPicked] = React.useState(false);
     const [isSopralluogoPicked, setIsSopralluogoPicked] = React.useState(false);
     const [isInstallazionePicked, setIsInstallazionePicked] = React.useState(false);
     const [isAssistenzaPicked, setIsAssistenzaPicked] = React.useState(false);
+    const [isArgoPicked, setIsArgoPicked] = React.useState(false);
+    const [isBuildAutomationPicked, setIsBuildAutomationPicked] = React.useState(false);
     const [excel, setExcel] = React.useState({});
     const [showError, setShowError] = React.useState(false);
     const [confermaAdd, setConfermaAdd] = React.useState(false);
@@ -79,11 +83,15 @@ function CustomerCard(customerPassed) {
     const [openEditField, setOpenEditField] = React.useState(false);
     const [openLoadPdf, setOpenLoadPdf] = React.useState(false);
     const [openEditStatus, setOpenEditStatus] = React.useState(false);
+    const [openArgo, setOpenArgo] = React.useState(false);
+    const [openBuildAutomation, setOpenBuildAutomation] = React.useState(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const [progress, setProgress] = React.useState(0);
     const [pageSopralluogo, setPageSopralluogo] = React.useState(1);
     const [pageInstallazione, setPageInstallazione] = React.useState(1);
     const [pageAssistenza, setPageAssistenza] = React.useState(1);
+    const [pageArgo, setPageArgo] = React.useState(1);
+    const [pageBuildAutomation, setPageBuildAutomation] = React.useState(1);
     const [imagesToShow, setImagesToShow] = React.useState([]);
     const [openNote, setOpenNote] = React.useState(false);
     const [askDeleteAll, setAskDeleteAll] = React.useState(false);
@@ -483,9 +491,13 @@ function CustomerCard(customerPassed) {
                         setOpenSopralluogo(false)
                         setOpenInstallazione(false)
                         setOpenAssistenza(false)
+                        setOpenArgo(false)
+                        setOpenBuildAutomation(false)
                         setPageSopralluogo(1)
                         setPageInstallazione(1)
                         setPageAssistenza(1)
+                        setPageArgo(1)
+                        setPageBuildAutomation(1)
                     }).catch((error) => {
                         setIsLoading(false)
                         if (error.response && error.response.status === 401) {
@@ -560,10 +572,12 @@ function CustomerCard(customerPassed) {
         }
     }
 
-    const assistCustomer = (flag) => {
+    const assistCustomer = (flag, key) => {
         let newField = {}
-        newField.isAssisted = flag
-        newField.status = "in attesa di assistenza"
+        newField[key] = flag
+        if (key === "isAssisted") {
+            newField.status = "in attesa di assistenza"
+        }
         axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
             axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                 setIsLoading(false)
@@ -581,20 +595,6 @@ function CustomerCard(customerPassed) {
             console.log(error)
         })
     }
-
-    // const getImages = (type) => {
-    //     setIsLoading(true)
-    //     axiosInstance.get('images', { params: { type: type, customer: customerSelected.nome_cognome } })
-    //         .then(response => {
-    //             // console.log("images: ", response)
-    //             setImagesToShow(response.data[0].images)
-    //             setIsLoading(false)
-    //             setImagesId(response.data[0]._id)
-    //         }).catch(error => {
-    //             setIsLoading(false)
-    //             setShowError(true)
-    //         });
-    // }
 
     const handleSubmissionSopralluogo = (e) => {
         var imgs = {}
@@ -834,26 +834,109 @@ function CustomerCard(customerPassed) {
         }
     };
 
-    const downloadCustomers = () => { // csvData, fileName
-        // var csvData = [{ name: 'name1', lastName: 'lastName1' }, { name: 'name2', lastName: 'lastName2' }]
-        // var csvData = []
-        // for (let c of customers) {
-        //     var customerForCsv = {}
-        //     customerForCsv.company = c.company
-        //     customerForCsv.nome_cognome = c.nome
-        //     customerForCsv.attrezzo = c.label
-        //     customerForCsv.codice = c.code
-        //     customerForCsv.quantita = c.quantity
-        //     customerForCsv.quantita_minima = c.lowerBound
-        //     csvData.push(customerForCsv)
-        // }
-        let fileName = "clienti"
-        const ws = XLSX.utils.json_to_sheet(customers);
-        const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
-        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-        const data = new Blob([excelBuffer], { type: fileType });
-        saveAs(data, fileName + fileExtension);
-    }
+    const handleSubmissionArgo = (e) => {
+        var imgs = {}
+        imgs.images = imagesToShow
+        var customer = {}
+        customer.foto_argo = customerSelected.foto_argo
+        if (imageTypes.includes(selectedArgo[0].type)) {
+            for (let s of selectedArgo) {
+                // customer.foto_argo.push(s.base64)
+                // imgs.images.push(s.base64)
+
+                const now = Date.now()
+                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/argo/' + now + "_" + s.name)
+                const uploadTask = uploadBytesResumable(storageRef, s)
+                uploadTask.on("state_changed", (snapshot) => {
+                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setProgress(progr)
+                }, (error) => console.log("error: ", error),
+                    () => {
+                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                            console.log("fileUrl: ", fileUrl)
+                            customer.foto_argo.push(fileUrl)
+                            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                                setConfermaUpdate(true)
+                                getCustomers()
+                                axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
+                                    setIsLoading(false)
+                                    console.log("customer updated")
+                                    setCustomerSelected(respp.data)
+                                }).catch((error) => {
+                                    setIsLoading(false)
+                                    if (error.response && error.response.status === 401) {
+                                        userIsAuthenticated()
+                                    }
+                                })
+                            }).catch((error) => {
+                                // console.log("error: ", error)
+                                if (error.response && error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                        })
+                    }
+                )
+            }
+        } else {
+            setGenericError("Tipo file non riconosciuto.")
+        }
+    };
+
+    const handleSubmissionBuildAutomation = (e) => {
+        var imgs = {}
+        imgs.images = imagesToShow
+        var customer = {}
+        customer.foto_buildAutomation = customerSelected.foto_buildAutomation
+        if (imageTypes.includes(selectedBuildAutomation[0].type)) {
+            for (let s of selectedBuildAutomation) {
+                // customer.foto_buildAutomation.push(s.base64)
+                // imgs.images.push(s.base64)
+
+                const now = Date.now()
+                const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/buildAutomation/' + now + "_" + s.name)
+                const uploadTask = uploadBytesResumable(storageRef, s)
+                uploadTask.on("state_changed", (snapshot) => {
+                    const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+                    setProgress(progr)
+                }, (error) => console.log("error: ", error),
+                    () => {
+                        //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
+                        getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
+                            console.log("fileUrl: ", fileUrl)
+                            customer.foto_buildAutomation.push(fileUrl)
+                            axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
+                                setConfermaUpdate(true)
+                                getCustomers()
+                                axiosInstance.put("customer/" + customerSelected._id, customer, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
+                                    setIsLoading(false)
+                                    console.log("customer updated")
+                                    setCustomerSelected(respp.data)
+                                }).catch((error) => {
+                                    setIsLoading(false)
+                                    if (error.response && error.response.status === 401) {
+                                        userIsAuthenticated()
+                                    }
+                                })
+                            }).catch((error) => {
+                                // console.log("error: ", error)
+                                if (error.response && error.response.status === 401) {
+                                    userIsAuthenticated()
+                                }
+                                setIsLoading(false)
+                                setShowError(true)
+                            });
+                        })
+                    }
+                )
+            }
+        } else {
+            setGenericError("Tipo file non riconosciuto.")
+        }
+    };
 
     const downloadImage = async (image, filename) => {
         let blob = await fetch(image).then((r) => r.blob());
@@ -893,20 +976,6 @@ function CustomerCard(customerPassed) {
         // const timer = setTimeout(() => {
         //     console.log("finito", is)
         print64(isOk, typology)
-        //     clearTimeout(timer)
-        // }, 5000);
-
-
-
-        // zip.generateAsync({ type: "blob" }).then(content => {
-        //     saveAs(content, customer.replaceAll(" ", "_") + "_" + typology + ".zip");
-        // });
-
-
-        // const folder = refFirestore + customer.replaceAll(" ", "%20") + "%2F" + typology
-        // let blob = await fetch(folder).then((r) => r.blob());
-        // saveAs(blob, customer.replaceAll(" ", "_") + "_" + typology + ".zip")
-        // https://firebasestorage.googleapis.com/v0/b/magazzino-2a013.appspot.com/o/files%2Ftizio%20caio%2Fsopralluogo%2F1647786582758_arance.jpg?alt=media&token=f74260c5-b676-48c1-bfb4-148db33a1e73
     }
 
     const print64 = (images, typology) => {
@@ -925,47 +994,8 @@ function CustomerCard(customerPassed) {
                     // see FileSaver.js
                     saveAs(content, customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip");
 
-                    // var link = document.createElement("a")
-                    // link.href = window.URL.createObjectURL(content)
-                    // link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
-                    // link.click()
-
                     setIsLoading(false)
                 });
-        }
-    }
-
-    const handleTouchStart = (e) => {
-        setTouchStart(e.targetTouches[0].clientX);
-    }
-
-    const handleTouchMove = (e) => {
-        setTouchEnd(e.targetTouches[0].clientX);
-    }
-
-    const handleTouchEnd = (type) => {
-        if (touchStart - touchEnd > 75) {
-            if (type === "sopralluogo" && pageSopralluogo < customerSelected.foto_sopralluogo.length) {
-                setPageSopralluogo(pageSopralluogo + 1)
-            }
-            if (type === "installazione" && pageInstallazione < customerSelected.foto_fine_installazione.length) {
-                setPageInstallazione(pageInstallazione + 1)
-            }
-            if (type === "assistenza" && pageAssistenza < customerSelected.foto_fine_assistenza.length) {
-                setPageAssistenza(pageAssistenza + 1)
-            }
-        }
-
-        if (touchStart - touchEnd < -75) {
-            if (type === "sopralluogo" && pageSopralluogo > 1) {
-                setPageSopralluogo(pageSopralluogo - 1)
-            }
-            if (type === "installazione" && pageInstallazione > 1) {
-                setPageInstallazione(pageInstallazione - 1)
-            }
-            if (type === "assistenza" && pageAssistenza > 1) {
-                setPageAssistenza(pageAssistenza - 1)
-            }
         }
     }
 
@@ -1909,7 +1939,7 @@ function CustomerCard(customerPassed) {
                                         {
                                             !customerSelected.isAssisted ? <div sx={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
                                                 <IconButton onClick={() => {
-                                                    assistCustomer(true)
+                                                    assistCustomer(true, "isAssisted")
                                                 }}>
                                                     <AddCircleIcon />
                                                 </IconButton>
@@ -2024,13 +2054,6 @@ function CustomerCard(customerPassed) {
                                                                 </div>
                                                                 <div>
                                                                     <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                        {/* <FileBase64
-                                                                            multiple={true}
-                                                                            onDone={(event) => {
-                                                                                setSelectedAssistenza(event)
-                                                                                setIsAssistenzaPicked(true)
-                                                                            }}
-                                                                        /> */}
                                                                         <input type="file" multiple onChange={(event) => {
                                                                             setSelectedAssistenza(event.target.files)
                                                                             setIsAssistenzaPicked(true)
@@ -2075,6 +2098,308 @@ function CustomerCard(customerPassed) {
                                             </div>
                                         }
                                         {
+                                            !customerSelected.isArgo ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                                <IconButton onClick={() => {
+                                                    assistCustomer(true, "isArgo")
+                                                }}>
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    aggiungi ARGO
+                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
+                                                    <CardContent>
+                                                        <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                                            <div>
+                                                                ARGO
+                                                            </div>
+                                                        </Typography>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    ARGO (pdf)
+                                                                </Typography>
+                                                                {
+                                                                    !(customerSelected.argo_pdf && !(customerSelected.argo_pdf.length === 0 || customerSelected.argo_pdf === "" || customerSelected.argo_pdf === null || customerSelected.argo_pdf === undefined)) ? "" :
+                                                                        <Typography variant="h7" component="div">
+                                                                            {
+                                                                                customerSelected.argo_pdf.map(pf => {
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
+                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "argo_pdf")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
+                                                                                    </Grid >
+                                                                                })
+                                                                            }
+                                                                        </Typography>
+                                                                }
+                                                                {
+                                                                    auths["customers"] !== "*" ? "" : <IconButton
+                                                                        onClick={() => {
+                                                                            setFieldToEdit("argo_pdf")
+                                                                            setOpenLoadPdf(true)
+                                                                        }}>
+                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                    </IconButton>
+                                                                }
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    data ARGO
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.data_argo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("data_argo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    tecnico ARGO
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.tecnico_argo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("tecnico_argo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <div>
+                                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                    <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
+                                                                        foto
+                                                                    </Typography>
+                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_argo, "argo") }}>
+                                                                        <GetAppIcon />
+                                                                    </IconButton>
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" :
+                                                                            <IconButton onClick={() => {
+                                                                                setAskDeleteAll(true)
+                                                                                setTypeToDeleteAll("argo")
+                                                                            }}>
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                            </IconButton>
+                                                                    }
+                                                                </div>
+                                                                <div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                        <input type="file" multiple onChange={(event) => {
+                                                                            setSelectedArgo(event.target.files)
+                                                                            setIsArgoPicked(true)
+                                                                        }} />
+                                                                    </div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                        <Button disabled={!isArgoPicked} onClick={(event) => {
+                                                                            handleSubmissionArgo(event)
+                                                                            setIsLoading(true)
+                                                                        }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    </div>
+                                                                </div>
+                                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                    <Button onClick={(event) => {
+                                                                        setOpenArgo(event)
+                                                                        setPageArgo(1)
+                                                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {!customerSelected.foto_argo ? "0" : customerSelected.foto_argo.length} foto</Button>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                            <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                                <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    note argo
+                                                                </Typography>
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
+                                                                    {customerSelected.note_argo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("note_argo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
+                                            !customerSelected.isBuildAutomation ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                                <IconButton onClick={() => {
+                                                    assistCustomer(true, "isBuildAutomation")
+                                                }}>
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    aggiungi BUILDING AUTOMATION
+                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
+                                                    <CardContent>
+                                                        <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                                            <div>
+                                                                BUILDING AUTOMATION
+                                                            </div>
+                                                        </Typography>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    building automation (pdf)
+                                                                </Typography>
+                                                                {
+                                                                    !(customerSelected.buildAutomation_pdf && !(customerSelected.buildAutomation_pdf.length === 0 || customerSelected.buildAutomation_pdf === "" || customerSelected.buildAutomation_pdf === null || customerSelected.buildAutomation_pdf === undefined)) ? "" :
+                                                                        <Typography variant="h7" component="div">
+                                                                            {
+                                                                                customerSelected.buildAutomation_pdf.map(pf => {
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
+                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "buildAutomation_pdf")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
+                                                                                    </Grid >
+                                                                                })
+                                                                            }
+                                                                        </Typography>
+                                                                }
+                                                                {
+                                                                    auths["customers"] !== "*" ? "" : <IconButton
+                                                                        onClick={() => {
+                                                                            setFieldToEdit("buildAutomation_pdf")
+                                                                            setOpenLoadPdf(true)
+                                                                        }}>
+                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                    </IconButton>
+                                                                }
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    data building automation
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.data_buildAutomation}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("data_buildAutomation")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={4}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    tecnico di building automation
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.tecnico_buildAutomation}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("tecnico_buildAutomation")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <div>
+                                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                    <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
+                                                                        foto
+                                                                    </Typography>
+                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_buildAutomation, "buildAutomation") }}>
+                                                                        <GetAppIcon />
+                                                                    </IconButton>
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" :
+                                                                            <IconButton onClick={() => {
+                                                                                setAskDeleteAll(true)
+                                                                                setTypeToDeleteAll("buildAutomation")
+                                                                            }}>
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                            </IconButton>
+                                                                    }
+                                                                </div>
+                                                                <div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                        <input type="file" multiple onChange={(event) => {
+                                                                            setSelectedBuildAutomation(event.target.files)
+                                                                            setIsBuildAutomationPicked(true)
+                                                                        }} />
+                                                                    </div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                        <Button disabled={!isBuildAutomationPicked} onClick={(event) => {
+                                                                            handleSubmissionBuildAutomation(event)
+                                                                            setIsLoading(true)
+                                                                        }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    </div>
+                                                                </div>
+                                                                <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                    <Button onClick={(event) => {
+                                                                        setOpenBuildAutomation(event)
+                                                                        setPageBuildAutomation(1)
+                                                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {!customerSelected.foto_buildAutomation ? "0" : customerSelected.foto_buildAutomation.length} foto</Button>
+                                                                </div>
+                                                            </div>
+                                                        </Grid>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                            <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                                <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    note buildAutomation
+                                                                </Typography>
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
+                                                                    {customerSelected.note_buildAutomation}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("note_buildAutomation")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
                                             customerSelected === null ? "" : <Dialog onClose={handleCloseNote} open={openNote}>
                                                 <DialogTitle>{noteType.toUpperCase().replace("_", " ")}:</DialogTitle>
                                                 <DialogContent>
@@ -2103,43 +2428,6 @@ function CustomerCard(customerPassed) {
                                                                 {
                                                                     customerSelected.foto_sopralluogo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                         <div>
-                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageSopralluogo > 1) {
-                                                            setPageSopralluogo(pageSopralluogo - 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowBackIosIcon />
-                                                    </IconButton>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageSopralluogo < customerSelected.foto_sopralluogo.length) {
-                                                            setPageSopralluogo(pageSopralluogo + 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowForwardIosIcon />
-                                                    </IconButton>
-                                                </Grid>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img
-                                                        onTouchStart={(e) => { handleTouchStart(e) }}
-                                                        onTouchMove={(e) => { handleTouchMove(e) }}
-                                                        onTouchEnd={() => handleTouchEnd("sopralluogo")}
-                                                        item xs={12} sm={6}
-                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
-                                                        src={customerSelected.foto_sopralluogo[pageSopralluogo - 1]} ù
-                                                        alt="Logo" />
-                                                </Grid>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                                    <IconButton onClick={() => {
-                                                        deleteImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], "foto_sopralluogo")
-                                                        setIsLoading(true)
-                                                    }}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={() => { downloadImage(customerSelected.foto_sopralluogo[pageSopralluogo - 1], customerSelected.nome_cognome.replace(" ", "_") + "_sopralluogo_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
-                                                        <GetAppIcon />
-                                                    </IconButton>
-                                                </div> */}
                                                                             <Gallery
                                                                                 images={convertToGallery(customerSelected.foto_sopralluogo)}
                                                                                 currentImageWillChange={onCurrentImageChange}
@@ -2178,42 +2466,6 @@ function CustomerCard(customerPassed) {
                                                                 {
                                                                     customerSelected.foto_fine_installazione.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                         <div>
-                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageInstallazione > 1) {
-                                                            setPageInstallazione(pageInstallazione - 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowBackIosIcon />
-                                                    </IconButton>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageInstallazione < customerSelected.foto_fine_installazione.length) {
-                                                            setPageInstallazione(pageInstallazione + 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowForwardIosIcon />
-                                                    </IconButton>
-                                                </Grid>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img
-                                                        onTouchStart={(e) => { handleTouchStart(e) }}
-                                                        onTouchMove={(e) => { handleTouchMove(e) }}
-                                                        onTouchEnd={() => handleTouchEnd("installazione")}
-                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
-                                                        src={customerSelected.foto_fine_installazione[pageInstallazione - 1]}
-                                                        alt="Logo" />
-                                                </Grid>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                                    <IconButton onClick={() => {
-                                                        deleteImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], "foto_fine_installazione")
-                                                        setIsLoading(true)
-                                                    }}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={() => { downloadImage(customerSelected.foto_fine_installazione[pageInstallazione - 1], customerSelected.nome_cognome.replace(" ", "_") + "_fine_installazione_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
-                                                        <GetAppIcon />
-                                                    </IconButton>
-                                                </div> */}
                                                                             <Gallery
                                                                                 images={convertToGallery(customerSelected.foto_fine_installazione, "foto_fine_installazione")}
                                                                                 currentImageWillChange={onCurrentImageChange}
@@ -2253,42 +2505,6 @@ function CustomerCard(customerPassed) {
                                                                 {
                                                                     customerSelected.foto_assistenza.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
                                                                         <div>
-                                                                            {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageAssistenza > 1) {
-                                                            setPageAssistenza(pageAssistenza - 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowBackIosIcon />
-                                                    </IconButton>
-                                                    <IconButton item xs={12} sm={6} onClick={() => {
-                                                        if (pageAssistenza < customerSelected.foto_assistenza.length) {
-                                                            setPageAssistenza(pageAssistenza + 1)
-                                                        }
-                                                    }}>
-                                                        <ArrowForwardIosIcon />
-                                                    </IconButton>
-                                                </Grid>
-                                                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }}>
-                                                    <img
-                                                        onTouchStart={(e) => { handleTouchStart(e) }}
-                                                        onTouchMove={(e) => { handleTouchMove(e) }}
-                                                        onTouchEnd={() => handleTouchEnd("assistenza")}
-                                                        style={{ maxHeight: '600px', maxWidth: window.innerWidth, marginRight: 'auto', marginLeft: 'auto' }}
-                                                        src={customerSelected.foto_assistenza[pageAssistenza - 1]}
-                                                        alt="Logo" />
-                                                </Grid>
-                                                <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '2rem' }}>
-                                                    <IconButton onClick={() => {
-                                                        deleteImage(customerSelected.foto_assistenza[pageAssistenza - 1], "foto_assistenza")
-                                                        setIsLoading(true)
-                                                    }}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={() => { downloadImage(customerSelected.foto_assistenza[pageAssistenza - 1], customerSelected.nome_cognome.replace(" ", "_") + "_assistenza_" + customerSelected.createdAt.slice(0, 10).replace("-", "_").replace("-", "_")) }}>
-                                                        <GetAppIcon />
-                                                    </IconButton>
-                                                </div> */}
                                                                             <Gallery
                                                                                 images={convertToGallery(customerSelected.foto_assistenza, "foto_assistenza")}
                                                                                 currentImageWillChange={onCurrentImageChange}
@@ -2308,6 +2524,78 @@ function CustomerCard(customerPassed) {
                                                                                     </IconButton>
                                                                                 ]} />
                                                                             {/* <Pagination style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginTop: '3rem' }} count={customerSelected.foto_assistenza.length} shape="rounded" page={pageAssistenza} onChange={handleChangeFotoAssistenza} /> */}
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Box>
+                                                </Modal>
+                                                <Modal
+                                                    open={openArgo}
+                                                    onClose={() => { setOpenArgo(false) }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        {
+                                                            !(customerSelected.foto_argo && customerSelected.foto_argo.length !== 0) ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                                <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto argo</h2>
+                                                                {
+                                                                    customerSelected.foto_argo.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                        <div>
+                                                                            <Gallery
+                                                                                images={convertToGallery(customerSelected.foto_argo, "foto_argo")}
+                                                                                currentImageWillChange={onCurrentImageChange}
+                                                                                customControls={[
+                                                                                    <IconButton color="error" onClick={(event) => {
+                                                                                        deleteImage(customerSelected.foto_argo[currentImage], "foto_argo")
+                                                                                        setIsLoading(true)
+                                                                                    }}>
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_argo[currentImage], "foto_argo")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
+                                                                                    </IconButton>
+                                                                                ]} />
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </Box>
+                                                </Modal>
+                                                <Modal
+                                                    open={openBuildAutomation}
+                                                    onClose={() => { setOpenBuildAutomation(false) }}
+                                                    aria-labelledby="modal-modal-label"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style}>
+                                                        {
+                                                            !(customerSelected.foto_argo && customerSelected.foto_buildAutomation.length !== 0) ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> : <div>
+                                                                <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Foto buildAutomation</h2>
+                                                                {
+                                                                    customerSelected.foto_buildAutomation.length === 0 ? <h2 style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '1.5rem' }}>Vuoto</h2> :
+                                                                        <div>
+                                                                            <Gallery
+                                                                                images={convertToGallery(customerSelected.foto_buildAutomation, "foto_buildAutomation")}
+                                                                                currentImageWillChange={onCurrentImageChange}
+                                                                                customControls={[
+                                                                                    <IconButton color="error" onClick={(event) => {
+                                                                                        deleteImage(customerSelected.foto_buildAutomation[currentImage], "foto_buildAutomation")
+                                                                                        setIsLoading(true)
+                                                                                    }}>
+                                                                                        <DeleteIcon />
+                                                                                    </IconButton>,
+                                                                                    <IconButton color="primary" onClick={(event) => {
+                                                                                        setIsLoading(true)
+                                                                                        downloadImage(customerSelected.foto_buildAutomation[currentImage], "foto_buildAutomation")
+                                                                                    }}>
+                                                                                        <GetAppIcon />
+                                                                                    </IconButton>
+                                                                                ]} />
                                                                         </div>
                                                                 }
                                                             </div>

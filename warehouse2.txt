@@ -41,10 +41,11 @@ ID PRATICA ritardo app pubblicata: 101708368090
 
 warehouse:
 - girare l'immagine (non penso si possa)
+- go to a section of the page
 
 DA FARE:
 - nuovi tipi di appuntamento: ARGO, BUILDING AUTOMATION
-- nuove sezioni: aggiungi ARGO e BUILDING AUTOMATION (campi simili ad automation) (data, tecnico stessa logica di assistenza)
+- nuove sezioni: aggiungi ARGO e BUILDING AUTOMATION (campi simili ad installazione) (data, tecnico stessa logica di assistenza)
 - sopralluogo e installazione tipo isAssisted a comparsa
 
 --- quando crea un cliente: in attesa di sopr

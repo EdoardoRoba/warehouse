@@ -176,35 +176,6 @@ function Gestionale() {
 
     const getEvents = () => {
         let user = ""
-        // if (auths["gestionale"] === "*") {
-        // axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
-        //     .then(ress => {
-        //         let its = []
-        //         its = ress.data.map((e, idx) => {
-        //             let it = {}
-        //             it.id = idx
-        //             it.group = e.employee.lastName
-        //             it.title = e.type
-        //             it.start_time = new Date(e.start)
-        //             it.end_time = new Date(e.end)
-        //             it.itemProps = {
-        //                 style: {
-        //                     position: "sticky"
-        //                 }
-        //             }
-        //             return it
-        //         })
-        //         setItems(its)
-        //         setIsLoading(false)
-        //     }).catch(error => {
-        //         console.log("error")
-        //         if (error.response.status === 401) {
-        //             userIsAuthenticated()
-        //         }
-        //         setIsLoading(false)
-        //         setShowError(true)
-        //     });
-        // } else {
         axiosInstance.get('gestionale', { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }) //, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } } // , params: { lastName: localStorage.getItem("user") }
             .then(res => {
                 for (let e of res.data) {

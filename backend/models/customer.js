@@ -111,6 +111,38 @@ const customerSchema = new Schema({
         type: Boolean,
         required: false
     },
+    isArgo: {
+        type: Boolean,
+        required: false
+    },
+    isBuildAutomation: {
+        type: Boolean,
+        required: false
+    },
+    tecnico_argo: {
+        type: String,
+        required: false
+    },
+    tecnico_buildAutomation: {
+        type: String,
+        required: false
+    },
+    data_argo: {
+        type: String,
+        required: false
+    },
+    data_buildAutomation: {
+        type: String,
+        required: false
+    },
+    foto_argo: {
+        type: Array,
+        required: false
+    },
+    foto_buildAutomation: {
+        type: Array,
+        required: false
+    },
     assistenza: {
         type: Array,
         required: false
@@ -139,6 +171,14 @@ const customerSchema = new Schema({
         type: String,
         required: false
     },
+    note_argo: {
+        type: String,
+        required: false
+    },
+    note_buildAutomation: {
+        type: String,
+        required: false
+    },
     note_pagamenti: {
         type: String,
         required: false
@@ -153,6 +193,14 @@ const customerSchema = new Schema({
     },
     status: {
         type: String,
+        required: false
+    },
+    argo_pdf: {
+        type: Array,
+        required: false
+    },
+    buildAutomation_pdf: {
+        type: Array,
         required: false
     }
 }, { timestamps: true });
