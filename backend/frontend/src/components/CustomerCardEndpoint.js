@@ -13,6 +13,7 @@ import NotesIcon from '@material-ui/icons/Notes';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import LinkIcon from '@material-ui/icons/Link';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -28,6 +29,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
 import { AiFillInfoCircle } from "react-icons/ai";
 import Pagination from '@mui/material/Pagination';
 import TextField from '@mui/material/TextField';
@@ -590,16 +592,15 @@ function CustomerCardEndpoint() {
         }
     }
 
-    const assistCustomer = (flag, key) => {
+    const assistCustomer = (flag, key, action) => {
         let newField = {}
         newField[key] = flag
-        if (key === "isAssisted") {
+        if (key === "isAssisted" && action !== "remove") {
             newField.status = "in attesa di assistenza"
         }
         axiosInstance.put("customer/" + customerSelected._id, newField, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((resp) => {
             axiosInstance.get("customer/" + customerSelected._id, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }).then((respp) => {
                 setIsLoading(false)
-                console.log("phs eliminate!")
                 setCustomerSelected(respp.data)
             }).catch((error) => {
                 setIsLoading(false)
@@ -1064,7 +1065,7 @@ function CustomerCardEndpoint() {
                                 />
                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center" >
                                     <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} sm={1}>
-                                        <Button variant="text">info cliente</Button>
+                                        <Button variant="text">info</Button>
                                     </Grid>
                                     <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} sm={1}>
                                         <Button variant="text">sopralluogo</Button>
@@ -1272,175 +1273,216 @@ function CustomerCardEndpoint() {
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                        <div id="sopralluogo" ref={refSopr} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
-                                            <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
-                                                <CardContent>
-                                                    <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                        <div>
-                                                            Sopralluogo
-                                                        </div>
-                                                    </Typography>
+                                        {
+                                            customerSelected.isSopralluogo === false && customerSelected.isSopralluogo !== null && customerSelected.isSopralluogo !== undefined ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                                <IconButton onClick={() => {
+                                                    assistCustomer(true, "isSopralluogo")
+                                                }}>
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    aggiungi sopralluogo
+                                                </Typography></div> : <div id="sopralluogo" ref={refSopr} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     {
-                                                        customerSelected.status !== "sopralluogo programmato" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                            <Grid item xs={12} sm={12}>
-                                                                <FormControlLabel
-                                                                    label="Sopralluogo terminato?"
-                                                                    control={<Checkbox onChange={() => updateCustomerStatus("in attesa di installazione")} />}
-                                                                />
+                                                        auths["customers"] !== "*" ? "" : <CardHeader
+                                                            action={
+                                                                <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi sopralluogo"}>
+                                                                    <IconButton onClick={() => { assistCustomer(false, "isSopralluogo") }} aria-label="settings">
+                                                                        <RemoveCircleIcon />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    }
+                                                    <CardContent>
+                                                        <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                                            <div>
+                                                                Sopralluogo
+                                                            </div>
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.status !== "sopralluogo programmato" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                                <Grid item xs={12} sm={12}>
+                                                                    <FormControlLabel
+                                                                        label="Sopralluogo terminato?"
+                                                                        control={<Checkbox onChange={() => updateCustomerStatus("in attesa di installazione")} />}
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        }
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            {/* <div> */}
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    data sopralluogo
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.data_sopralluogo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("data_sopralluogo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    tecnico sopralluogo
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.tecnico_sopralluogo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("tecnico_sopralluogo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    pdf
+                                                                </Typography>
+                                                                {
+                                                                    customerSelected.pdf_sopralluogo.length === 0 && customerSelected.pdf_sopralluogo === "" || customerSelected.pdf_sopralluogo === null || customerSelected.pdf_sopralluogo === undefined ? "" :
+                                                                        <Typography variant="h7" component="div">
+                                                                            {
+                                                                                customerSelected.pdf_sopralluogo.map(pf => {
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
+                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "pdf_sopralluogo")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
+                                                                                    </Grid >
+                                                                                })
+                                                                            }
+                                                                        </Typography>
+                                                                }
+                                                                {
+                                                                    auths["customers"] !== "*" ? "" : <IconButton
+                                                                        onClick={() => {
+                                                                            setFieldToEdit("pdf_sopralluogo")
+                                                                            setOpenLoadPdf(true)
+                                                                        }}>
+                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                    </IconButton>
+                                                                }
                                                             </Grid>
                                                         </Grid>
-                                                    }
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                        {/* <div> */}
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                data sopralluogo
-                                                            </Typography>
-                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.data_sopralluogo}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("data_sopralluogo")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                tecnico sopralluogo
-                                                            </Typography>
-                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.tecnico_sopralluogo}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("tecnico_sopralluogo")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                pdf
-                                                            </Typography>
-                                                            {
-                                                                customerSelected.pdf_sopralluogo.length === 0 || customerSelected.pdf_sopralluogo === "" || customerSelected.pdf_sopralluogo === null || customerSelected.pdf_sopralluogo === undefined ? "" :
-                                                                    <Typography variant="h7" component="div">
-                                                                        {
-                                                                            customerSelected.pdf_sopralluogo.map(pf => {
-                                                                                return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                                                                                    <IconButton item xs={12} sm={6}>
-                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
-                                                                                    </IconButton>
-                                                                                    {
-                                                                                        auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "pdf_sopralluogo")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
-                                                                                    }
-                                                                                </Grid >
-                                                                            })
-                                                                        }
-                                                                    </Typography>
-                                                            }
-                                                            {
-                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                    onClick={() => {
-                                                                        setFieldToEdit("pdf_sopralluogo")
-                                                                        setOpenLoadPdf(true)
-                                                                    }}>
-                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                </IconButton>
-                                                            }
-                                                        </Grid>
-                                                    </Grid>
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <div style={{ marginTop: '3rem' }}>
-                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
-                                                                    foto
-                                                                </Typography>
-                                                                <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
-                                                                    <GetAppIcon />
-                                                                </IconButton>
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" :
-                                                                        <IconButton onClick={() => {
-                                                                            setAskDeleteAll(true)
-                                                                            setTypeToDeleteAll("sopralluogo")
-                                                                        }}>
-                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                }
-                                                            </div>
-                                                            <div>
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                            <div style={{ marginTop: '3rem' }}>
                                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                    {/* <FileBase64
+                                                                    <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
+                                                                        foto
+                                                                    </Typography>
+                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
+                                                                        <GetAppIcon />
+                                                                    </IconButton>
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" :
+                                                                            <IconButton onClick={() => {
+                                                                                setAskDeleteAll(true)
+                                                                                setTypeToDeleteAll("sopralluogo")
+                                                                            }}>
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                            </IconButton>
+                                                                    }
+                                                                </div>
+                                                                <div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                        {/* <FileBase64
                                                                             multiple={true}
                                                                             onDone={(event) => {
                                                                                 setSelectedSopralluogo(event)
                                                                                 setIsSopralluogoPicked(true)
                                                                             }}
                                                                         /> */}
-                                                                    <input type="file" multiple onChange={(event) => {
-                                                                        setSelectedSopralluogo(event.target.files)
-                                                                        setIsSopralluogoPicked(true)
-                                                                    }} />
+                                                                        <input type="file" multiple onChange={(event) => {
+                                                                            setSelectedSopralluogo(event.target.files)
+                                                                            setIsSopralluogoPicked(true)
+                                                                        }} />
+                                                                    </div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                        <Button disabled={!isSopralluogoPicked} onClick={(event) => {
+                                                                            handleSubmissionSopralluogo(event)
+                                                                            setIsLoading(true)
+                                                                        }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    </div>
                                                                 </div>
                                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
-                                                                    <Button disabled={!isSopralluogoPicked} onClick={(event) => {
-                                                                        handleSubmissionSopralluogo(event)
-                                                                        setIsLoading(true)
-                                                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    <Button onClick={(event) => {
+                                                                        setOpenSopralluogo(event)
+                                                                        setPageSopralluogo(1)
+                                                                    }}
+                                                                        variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
                                                                 </div>
                                                             </div>
-                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
-                                                                <Button onClick={(event) => {
-                                                                    setOpenSopralluogo(event)
-                                                                    setPageSopralluogo(1)
-                                                                }}
-                                                                    variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_sopralluogo.length} foto</Button>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
-                                                        <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                            <Typography display="inline-block" style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                note sopralluogo
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
-                                                                {customerSelected.note_sopralluogo}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("note_sopralluogo")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                            <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                                <Typography display="inline-block" style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    note sopralluogo
+                                                                </Typography>
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
+                                                                    {customerSelected.note_sopralluogo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("note_sopralluogo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
                                                         </Grid>
-                                                    </Grid>
-                                                </CardContent>
-                                            </Card>
-                                        </div>
-                                        <div id="installazione" ref={refInst} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
-                                            <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
-                                                <CardContent>
-                                                    <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
-                                                        <div>
-                                                            Installazione
-                                                            {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note installazione"}>
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                        }
+                                        {
+                                            customerSelected.isInstallazione === false && customerSelected.isInstallazione !== null && customerSelected.isInstallazione !== undefined ? <div style={{ justifyContent: 'center', textAlign: 'center', marginBottom: "8rem" }}>
+                                                <IconButton onClick={() => {
+                                                    assistCustomer(true, "isInstallazione")
+                                                }}>
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                    aggiungi installazione
+                                                </Typography></div> : <div id="installazione" ref={refInst} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <CardHeader
+                                                            action={
+                                                                <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi installazione"}>
+                                                                    <IconButton onClick={() => { assistCustomer(false, "isInstallazione") }} aria-label="settings">
+                                                                        <RemoveCircleIcon />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    }
+                                                    <CardContent>
+                                                        <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
+                                                            <div>
+                                                                Installazione
+                                                                {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note installazione"}>
                                                         <IconButton onClick={() => {
                                                             setNoteType("note_installazione")
                                                             setOpenNote(true)
@@ -1457,208 +1499,209 @@ function CustomerCardEndpoint() {
                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                         </IconButton></Tooltip>
                                                     } */}
-                                                        </div>
-                                                    </Typography>
-                                                    {
-                                                        customerSelected.status !== "installazione programmata" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                            <Grid item xs={12} sm={12}>
-                                                                <FormControlLabel
-                                                                    label="Installazione terminata? Vai allo stato di fatturazione."
-                                                                    control={<Checkbox onChange={() => updateCustomerStatus("da fatturare")} />}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
-                                                    }
-                                                    {
-                                                        customerSelected.status !== "da fatturare" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                            <Grid item xs={12} sm={12}>
-                                                                <FormControlLabel
-                                                                    label="Fatturazione terminata?"
-                                                                    control={<Checkbox onChange={() => updateCustomerStatus("in attesa di pagamento")} />}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
-                                                    }
-                                                    {
-                                                        customerSelected.status !== "in attesa di pagamento" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                            <Grid item xs={12} sm={12}>
-                                                                <FormControlLabel
-                                                                    label="Pagato?"
-                                                                    control={<Checkbox onChange={() => updateCustomerStatus("pagato")} />}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
-                                                    }
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                        {/* <div> */}
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                computo
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line", textAlign: "left" }} variant="body2">
-                                                                {customerSelected.computo}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("computo")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                data installazione
-                                                            </Typography>
-                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.data_installazione}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("data_installazione")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                tecnico installazione
-                                                            </Typography>
-                                                            <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
-                                                                {customerSelected.tecnico_installazione}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("tecnico_installazione")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-                                                    {/* </div> */}
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                        {/* <div> */}
-                                                        {/* <div> */}
-                                                    </Grid>
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                                        <Grid item xs={12} sm={6}>
-                                                            <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                computo (pdf)
-                                                            </Typography>
-                                                            {
-                                                                customerSelected.pdf_computo.length === 0 || customerSelected.pdf_computo === "" || customerSelected.pdf_computo === null || customerSelected.pdf_computo === undefined ? "" :
-                                                                    <Typography variant="h7" component="div">
-                                                                        {
-                                                                            customerSelected.pdf_computo.map(pf => {
-                                                                                return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                                                                                    {/* <p item xs={12} sm={6}></p> */}
-                                                                                    <IconButton item xs={12} sm={6}>
-                                                                                        <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
-                                                                                    </IconButton>
-                                                                                    {
-                                                                                        auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                            deletePdf(pf, "pdf_computo")
-                                                                                            setIsLoading(true)
-                                                                                        }}>
-                                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                                        </IconButton>
-                                                                                    }
-                                                                                </Grid>
-                                                                            })
-                                                                        }
-                                                                    </Typography>
-                                                            }
-                                                            {
-                                                                auths["customers"] !== "*" ? "" : <IconButton
-                                                                    onClick={() => {
-                                                                        setFieldToEdit("pdf_computo")
-                                                                        setOpenLoadPdf(true)
-                                                                    }}>
-                                                                    <EditIcon style={{ fontSize: "15px" }} />
-                                                                </IconButton>
-                                                            }
-                                                        </Grid>
-                                                    </Grid>
-                                                    {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
-                                            </Grid> */}
-                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                        <div>
-                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
-                                                                    foto
-                                                                </Typography>
-                                                                <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
-                                                                    <GetAppIcon />
-                                                                </IconButton>
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" :
-                                                                        <IconButton onClick={() => {
-                                                                            setAskDeleteAll(true)
-                                                                            setTypeToDeleteAll("fine_installazione")
-                                                                        }}>
-                                                                            <DeleteIcon style={{ fontSize: "15px" }} />
-                                                                        </IconButton>
-                                                                }
                                                             </div>
+                                                        </Typography>
+                                                        {
+                                                            customerSelected.status !== "installazione programmata" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                                <Grid item xs={12} sm={12}>
+                                                                    <FormControlLabel
+                                                                        label="Installazione terminata? Vai allo stato di fatturazione."
+                                                                        control={<Checkbox onChange={() => updateCustomerStatus("da fatturare")} />}
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        }
+                                                        {
+                                                            customerSelected.status !== "da fatturare" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                                <Grid item xs={12} sm={12}>
+                                                                    <FormControlLabel
+                                                                        label="Fatturazione terminata?"
+                                                                        control={<Checkbox onChange={() => updateCustomerStatus("in attesa di pagamento")} />}
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        }
+                                                        {
+                                                            customerSelected.status !== "in attesa di pagamento" ? "" : <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                                <Grid item xs={12} sm={12}>
+                                                                    <FormControlLabel
+                                                                        label="Pagato?"
+                                                                        control={<Checkbox onChange={() => updateCustomerStatus("pagato")} />}
+                                                                    />
+                                                                </Grid>
+                                                            </Grid>
+                                                        }
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            {/* <div> */}
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    computo
+                                                                </Typography>
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line", textAlign: "left" }} variant="body2">
+                                                                    {customerSelected.computo}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("computo")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    data installazione
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.data_installazione}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("data_installazione")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    tecnico installazione
+                                                                </Typography>
+                                                                <Typography sx={{ fontSize: 18, marginBottom: '1rem' }} variant="body2">
+                                                                    {customerSelected.tecnico_installazione}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("tecnico_installazione")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                        {/* </div> */}
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            {/* <div> */}
+                                                            {/* <div> */}
+                                                        </Grid>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    computo (pdf)
+                                                                </Typography>
+                                                                {
+                                                                    customerSelected.pdf_computo.length === 0 || customerSelected.pdf_computo === "" || customerSelected.pdf_computo === null || customerSelected.pdf_computo === undefined ? "" :
+                                                                        <Typography variant="h7" component="div">
+                                                                            {
+                                                                                customerSelected.pdf_computo.map(pf => {
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        {/* <p item xs={12} sm={6}></p> */}
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
+                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "pdf_computo")
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
+                                                                                    </Grid>
+                                                                                })
+                                                                            }
+                                                                        </Typography>
+                                                                }
+                                                                {
+                                                                    auths["customers"] !== "*" ? "" : <IconButton
+                                                                        onClick={() => {
+                                                                            setFieldToEdit("pdf_computo")
+                                                                            setOpenLoadPdf(true)
+                                                                        }}>
+                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                    </IconButton>
+                                                                }
+                                                            </Grid>
+                                                        </Grid>
+                                                        {/* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" >
+                                            </Grid> */}
+                                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
                                                             <div>
                                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
-                                                                    {/* <FileBase64
+                                                                    <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
+                                                                        foto
+                                                                    </Typography>
+                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
+                                                                        <GetAppIcon />
+                                                                    </IconButton>
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" :
+                                                                            <IconButton onClick={() => {
+                                                                                setAskDeleteAll(true)
+                                                                                setTypeToDeleteAll("fine_installazione")
+                                                                            }}>
+                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                            </IconButton>
+                                                                    }
+                                                                </div>
+                                                                <div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                                        {/* <FileBase64
                                                                             multiple={true}
                                                                             onDone={(event) => {
                                                                                 setSelectedInstallazione(event)
                                                                                 setIsInstallazionePicked(true)
                                                                             }}
                                                                         /> */}
-                                                                    <input type="file" multiple onChange={(event) => {
-                                                                        setSelectedInstallazione(event.target.files)
-                                                                        setIsInstallazionePicked(true)
-                                                                    }} />
+                                                                        <input type="file" multiple onChange={(event) => {
+                                                                            setSelectedInstallazione(event.target.files)
+                                                                            setIsInstallazionePicked(true)
+                                                                        }} />
+                                                                    </div>
+                                                                    <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
+                                                                        <Button disabled={!isInstallazionePicked} onClick={(event) => {
+                                                                            handleSubmissionInstallazione(event)
+                                                                            setIsLoading(true)
+                                                                        }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    </div>
                                                                 </div>
                                                                 <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
-                                                                    <Button disabled={!isInstallazionePicked} onClick={(event) => {
-                                                                        handleSubmissionInstallazione(event)
-                                                                        setIsLoading(true)
-                                                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Carica</Button>
+                                                                    <Button onClick={(event) => {
+                                                                        setOpenInstallazione(event)
+                                                                        setPageInstallazione(1)
+                                                                    }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
                                                                 </div>
                                                             </div>
-                                                            <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} style={{ marginTop: '1.5rem' }}>
-                                                                <Button onClick={(event) => {
-                                                                    setOpenInstallazione(event)
-                                                                    setPageInstallazione(1)
-                                                                }} variant="outlined" sx={{ color: 'white', backgroundColor: 'green' }}>Apri {customerSelected.foto_fine_installazione.length} foto</Button>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
-                                                        <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
-                                                            <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
-                                                                note installazione
-                                                            </Typography>
-                                                            <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
-                                                                {customerSelected.note_installazione}
-                                                                {
-                                                                    auths["customers"] !== "*" ? "" : <IconButton
-                                                                        onClick={() => {
-                                                                            setFieldToEdit("note_installazione")
-                                                                            setOpenEditField(true)
-                                                                        }}>
-                                                                        <EditIcon style={{ fontSize: "15px" }} />
-                                                                    </IconButton>
-                                                                }
-                                                            </Typography>
+                                                        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
+                                                            <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>
+                                                                <Typography style={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    note installazione
+                                                                </Typography>
+                                                                <Typography style={{ fontSize: 18, marginBottom: '1rem', whiteSpace: "pre-line" }} variant="body2">
+                                                                    {customerSelected.note_installazione}
+                                                                    {
+                                                                        auths["customers"] !== "*" ? "" : <IconButton
+                                                                            onClick={() => {
+                                                                                setFieldToEdit("note_installazione")
+                                                                                setOpenEditField(true)
+                                                                            }}>
+                                                                            <EditIcon style={{ fontSize: "15px" }} />
+                                                                        </IconButton>
+                                                                    }
+                                                                </Typography>
+                                                            </Grid>
                                                         </Grid>
-                                                    </Grid>
-                                                </CardContent>
-                                            </Card>
-                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                        }
                                         {
                                             auths["customers"] !== "*" ? "" : <div ref={refDoc} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
@@ -1955,6 +1998,17 @@ function CustomerCardEndpoint() {
                                                     aggiungi assistenza
                                                 </Typography></div> : <div id="assistenza" ref={refAss} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <CardHeader
+                                                            action={
+                                                                <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi assistenza"}>
+                                                                    <IconButton onClick={() => { assistCustomer(false, "isAssisted", "remove") }} aria-label="settings">
+                                                                        <RemoveCircleIcon />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    }
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
@@ -2116,6 +2170,17 @@ function CustomerCardEndpoint() {
                                                     aggiungi ARGO
                                                 </Typography></div> : <div id="argo" ref={refArgo} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <CardHeader
+                                                            action={
+                                                                <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi argo"}>
+                                                                    <IconButton onClick={() => { assistCustomer(false, "isArgo") }} aria-label="settings">
+                                                                        <RemoveCircleIcon />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    }
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
@@ -2267,6 +2332,17 @@ function CustomerCardEndpoint() {
                                                     aggiungi BUILDING AUTOMATION
                                                 </Typography></div> : <div id="buildAutomation" ref={refBAuto} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
+                                                    {
+                                                        auths["customers"] !== "*" ? "" : <CardHeader
+                                                            action={
+                                                                <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi building automation"}>
+                                                                    <IconButton onClick={() => { assistCustomer(false, "isBuildAutomation") }} aria-label="settings">
+                                                                        <RemoveCircleIcon />
+                                                                    </IconButton>
+                                                                </Tooltip>
+                                                            }
+                                                        />
+                                                    }
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>

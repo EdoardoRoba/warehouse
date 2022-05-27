@@ -337,6 +337,8 @@ function Customers(props) {
             assistenza: assistenza,
             pagamenti_testo: pagamenti_testo,
             status: "in attesa di sopralluogo",
+            isSopralluogo: false,
+            isInstallazione: false,
             isAssisted: false,
             isArgo: false,
             isBuildAutomation: false,

@@ -704,6 +704,8 @@ app.post('/api/customer', (req, res) => {
                 data_installazione: req.body.data_installazione,
                 tecnico_installazione: req.body.tecnico_installazione,
                 tecnico_sopralluogo: req.body.tecnico_sopralluogo,
+                isSopralluogo: req.body.isSopralluogo,
+                isInstallazione: req.body.isInstallazione,
                 isAssisted: req.body.isAssisted,
                 isArgo: req.body.isArgo,
                 isBuildAutomation: req.body.isBuildAutomation,

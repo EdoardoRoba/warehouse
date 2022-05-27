@@ -41,26 +41,12 @@ ID PRATICA ritardo app pubblicata: 101708368090
 
 warehouse:
 - girare l'immagine (non penso si possa)
-- go to a section of the page
-
-DA FARE:
-- nuovi tipi di appuntamento: ARGO, BUILDING AUTOMATION
-- nuove sezioni: aggiungi ARGO e BUILDING AUTOMATION (campi simili ad installazione) (data, tecnico stessa logica di assistenza)
-- sopralluogo e installazione tipo isAssisted a comparsa
-
---- quando crea un cliente: in attesa di sopr
---- quando aggiungo evento sopr: "sopralluogo programmato"
---- flag sopralluogo: in attesa di installazione
---- quando aggiungo evento inst: in attesa di pagamento
---- metti flag su documenti, quando sarà pagato, andrà in: "pagato"
---- quando si aggiunge assistenza: in attesa di assistenza
---- quando aggiungo evento ass: assistenza in corso
---- quando flaggato "fine assistenza" (AGGIUNGI): fine assistenza
---- ARGO, BUILDING AUTOMATION come assistenza
+- scroll alla section collassa
+- quando aggiungo
 
 
 APP:
-
+- argo e building automation
 
 
 

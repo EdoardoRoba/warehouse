@@ -107,6 +107,18 @@ const customerSchema = new Schema({
         type: Array,
         required: false
     },
+    isArgo: {
+        type: Boolean,
+        required: false
+    },
+    isSopralluogo: {
+        type: Boolean,
+        required: false
+    },
+    isInstallazione: {
+        type: Boolean,
+        required: false
+    },
     isAssisted: {
         type: Boolean,
         required: false
