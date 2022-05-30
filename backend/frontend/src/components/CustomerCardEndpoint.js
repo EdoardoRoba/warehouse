@@ -104,6 +104,7 @@ function CustomerCardEndpoint() {
     const [noteType, setNoteType] = React.useState("");
     const [touchStart, setTouchStart] = React.useState(0);
     const [touchEnd, setTouchEnd] = React.useState(0);
+    const [refSectionState, setRefSectionState] = React.useState();
 
     const refInfo = React.useRef(null)
     const refSopr = React.useRef(null)
@@ -279,6 +280,7 @@ function CustomerCardEndpoint() {
     const handleCloseNote = () => {
         setNoteType("")
         setOpenNote(false);
+        setRefSectionState()
     };
 
     const changeHandlerPDF = (event) => {
@@ -324,6 +326,7 @@ function CustomerCardEndpoint() {
         setValueToEdit("")
         getCustomers()
         setOpenEditField(false)
+        setRefSectionState()
     };
 
     const handleCloseLoadPdf = () => {
@@ -332,6 +335,7 @@ function CustomerCardEndpoint() {
         setSelectedFilePDF({})
         getCustomers()
         setOpenLoadPdf(false)
+        setRefSectionState()
     };
 
     const handleCloseAskDeleteAll = () => {
@@ -339,6 +343,7 @@ function CustomerCardEndpoint() {
         setTypeToDeleteAll("")
         setCheckTypologyToDelete("")
         setAskDeleteAll(false)
+        setRefSectionState()
     }
 
     const handleCloseEditStatus = () => {
@@ -346,6 +351,7 @@ function CustomerCardEndpoint() {
         setValueToEdit("")
         getCustomers()
         setOpenEditStatus(false)
+        setRefSectionState()
     };
 
     const editField = () => {
@@ -357,16 +363,19 @@ function CustomerCardEndpoint() {
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditField()
+                refSectionState.current.scrollIntoView()
             }).catch((error) => {
                 setIsLoading(false)
                 if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
+                refSectionState.current.scrollIntoView()
             })
         }).catch((error) => {
             console.log("error")
             console.log(error)
             setIsLoading(false)
+            refSectionState.current.scrollIntoView()
         })
     }
 
@@ -444,11 +453,13 @@ function CustomerCardEndpoint() {
                                 console.log("customer updated")
                                 setCustomerSelected(respp.data)
                                 handleCloseLoadPdf()
+                                refSectionState.current.scrollIntoView()
                             }).catch((error) => {
                                 setIsLoading(false)
                                 if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
+                                refSectionState.current.scrollIntoView()
                             })
                         })
                     })
@@ -457,7 +468,8 @@ function CustomerCardEndpoint() {
         }
     };
 
-    const deletePdf = (pdf, pdfType) => {
+    const deletePdf = (pdf, pdfType, refSection) => {
+        // refSopr.current.scrollIntoView()
         let pdfRef = ref(storage, pdf);
         deleteObject(pdfRef)
             .then(() => {
@@ -470,14 +482,17 @@ function CustomerCardEndpoint() {
                         setIsLoading(false)
                         console.log("pdf eliminato!")
                         setCustomerSelected(respp.data)
+                        refSection.current.scrollIntoView()
                     }).catch((error) => {
                         setIsLoading(false)
+                        refSection.current.scrollIntoView()
                         if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
                     })
                 }).catch((error) => {
                     setIsLoading(false)
+                    refSection.current.scrollIntoView()
                     if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
@@ -486,6 +501,7 @@ function CustomerCardEndpoint() {
             .catch((err) => {
                 console.log(err);
                 setIsLoading(false)
+                refSection.current.scrollIntoView()
             });
 
     }
@@ -574,12 +590,14 @@ function CustomerCardEndpoint() {
                     setIsLoading(false)
                     console.log("phs eliminate!")
                     setCustomerSelected(respp.data)
+                    refSectionState.current.scrollIntoView()
                     handleCloseAskDeleteAll()
                 }).catch((error) => {
                     setIsLoading(false)
                     if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
+                    refSectionState.current.scrollIntoView()
                     handleCloseAskDeleteAll()
                 })
             }).catch((error) => {
@@ -587,6 +605,7 @@ function CustomerCardEndpoint() {
                 if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
+                refSectionState.current.scrollIntoView()
                 handleCloseAskDeleteAll()
             })
         }
@@ -644,10 +663,12 @@ function CustomerCardEndpoint() {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refSopr.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
+                                        refSopr.current.scrollIntoView()
                                     }
                                 })
                             }).catch((error) => {
@@ -657,6 +678,7 @@ function CustomerCardEndpoint() {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refSopr.current.scrollIntoView()
                             });
                         })
                     }
@@ -728,12 +750,14 @@ function CustomerCardEndpoint() {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refInst.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
+                                refInst.current.scrollIntoView()
                             }).catch((error) => {
                                 // console.log("error: ", error)
                                 if (error.response && error.response.status === 401) {
@@ -741,6 +765,7 @@ function CustomerCardEndpoint() {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refInst.current.scrollIntoView()
                             });
                         })
                     }
@@ -780,12 +805,14 @@ function CustomerCardEndpoint() {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refAss.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
+                                refAss.current.scrollIntoView()
                             }).catch((error) => {
                                 // console.log("error: ", error)
                                 if (error.response && error.response.status === 401) {
@@ -793,6 +820,7 @@ function CustomerCardEndpoint() {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refAss.current.scrollIntoView()
                             });
                         })
                     }
@@ -832,12 +860,14 @@ function CustomerCardEndpoint() {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refArgo.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
+                                refArgo.current.scrollIntoView()
                             }).catch((error) => {
                                 // console.log("error: ", error)
                                 if (error.response && error.response.status === 401) {
@@ -845,6 +875,7 @@ function CustomerCardEndpoint() {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refArgo.current.scrollIntoView()
                             });
                         })
                     }
@@ -884,12 +915,14 @@ function CustomerCardEndpoint() {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refBAuto.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
                                 })
+                                refBAuto.current.scrollIntoView()
                             }).catch((error) => {
                                 // console.log("error: ", error)
                                 if (error.response && error.response.status === 401) {
@@ -897,6 +930,7 @@ function CustomerCardEndpoint() {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refBAuto.current.scrollIntoView()
                             });
                         })
                     }
@@ -968,6 +1002,7 @@ function CustomerCardEndpoint() {
                     // link.download = customerSelected.nome_cognome.replaceAll(" ", "_") + "_" + typology + ".zip"
                     // link.click()
 
+                    // refSectionState.current.scrollIntoView()
                     setIsLoading(false)
                 });
         }
@@ -1324,6 +1359,7 @@ function CustomerCardEndpoint() {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_sopralluogo")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refSopr)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1341,6 +1377,7 @@ function CustomerCardEndpoint() {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_sopralluogo")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refSopr)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1362,7 +1399,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pdf_sopralluogo")
+                                                                                                deletePdf(pf, "pdf_sopralluogo", refSopr)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1377,6 +1414,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("pdf_sopralluogo")
+                                                                            setRefSectionState(refSopr)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1390,13 +1428,17 @@ function CustomerCardEndpoint() {
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto
                                                                     </Typography>
-                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo") }}>
+                                                                    <IconButton onClick={() => {
+                                                                        setRefSectionState(refSopr)
+                                                                        downloadFolder(customerSelected.foto_sopralluogo, "sopralluogo")
+                                                                    }}>
                                                                         <GetAppIcon />
                                                                     </IconButton>
                                                                     {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refSopr)
                                                                                 setTypeToDeleteAll("sopralluogo")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1445,6 +1487,7 @@ function CustomerCardEndpoint() {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_sopralluogo")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refSopr)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1482,23 +1525,6 @@ function CustomerCardEndpoint() {
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
                                                                 Installazione
-                                                                {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note installazione"}>
-                                                        <IconButton onClick={() => {
-                                                            setNoteType("note_installazione")
-                                                            setOpenNote(true)
-                                                        }}>
-                                                            <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    {
-                                                        auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                            onClick={() => {
-                                                                setFieldToEdit("note_installazione")
-                                                                setOpenEditField(true)
-                                                            }}>
-                                                            <EditIcon style={{ fontSize: "15px" }} />
-                                                        </IconButton></Tooltip>
-                                                    } */}
                                                             </div>
                                                         </Typography>
                                                         {
@@ -1543,6 +1569,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("computo")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1560,6 +1587,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_installazione")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1577,6 +1605,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_installazione")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1607,7 +1636,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pdf_computo")
+                                                                                                deletePdf(pf, "pdf_computo", refInst)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1622,6 +1651,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("pdf_computo")
+                                                                            setRefSectionState(refInst)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1637,13 +1667,17 @@ function CustomerCardEndpoint() {
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto
                                                                     </Typography>
-                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione") }}>
+                                                                    <IconButton onClick={() => {
+                                                                        setRefSectionState(refInst)
+                                                                        downloadFolder(customerSelected.foto_fine_installazione, "fine_installazione")
+                                                                    }}>
                                                                         <GetAppIcon />
                                                                     </IconButton>
                                                                     {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refInst)
                                                                                 setTypeToDeleteAll("fine_installazione")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1691,6 +1725,7 @@ function CustomerCardEndpoint() {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_installazione")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refInst)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1723,6 +1758,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("pagamenti_testo")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1745,7 +1781,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pagamenti_pdf")
+                                                                                                deletePdf(pf, "pagamenti_pdf", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1760,6 +1796,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("pagamenti_pdf")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1776,6 +1813,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("trasferta")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1798,7 +1836,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "collaudo")
+                                                                                                deletePdf(pf, "collaudo", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1813,6 +1851,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("collaudo")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1834,7 +1873,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "check_list")
+                                                                                                deletePdf(pf, "check_list", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1849,6 +1888,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("check_list")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1870,7 +1910,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "fgas")
+                                                                                                deletePdf(pf, "fgas", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1885,6 +1925,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("fgas")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1906,7 +1947,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "prova_fumi")
+                                                                                                deletePdf(pf, "prova_fumi", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1921,6 +1962,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("prova_fumi")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1942,7 +1984,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "di_co")
+                                                                                                deletePdf(pf, "di_co", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1957,6 +1999,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("di_co")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1975,6 +2018,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_pagamenti")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2041,7 +2085,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "assistenza")
+                                                                                                deletePdf(pf, "assistenza", refAss)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2056,6 +2100,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("assistenza")
+                                                                            setRefSectionState(refAss)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2072,6 +2117,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2089,6 +2135,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2101,13 +2148,17 @@ function CustomerCardEndpoint() {
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto
                                                                     </Typography>
-                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_assistenza, "assistenza") }}>
+                                                                    <IconButton onClick={() => {
+                                                                        setRefSectionState(refAss)
+                                                                        downloadFolder(customerSelected.foto_assistenza, "assistenza")
+                                                                    }}>
                                                                         <GetAppIcon />
                                                                     </IconButton>
                                                                     {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refAss)
                                                                                 setTypeToDeleteAll("assistenza")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2147,6 +2198,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2203,7 +2255,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "argo_pdf")
+                                                                                                deletePdf(pf, "argo_pdf", refArgo)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2218,6 +2270,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("argo_pdf")
+                                                                            setRefSectionState(refArgo)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2234,6 +2287,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2251,6 +2305,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2263,13 +2318,17 @@ function CustomerCardEndpoint() {
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto
                                                                     </Typography>
-                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_argo, "argo") }}>
+                                                                    <IconButton onClick={() => {
+                                                                        setRefSectionState(refArgo)
+                                                                        downloadFolder(customerSelected.foto_argo, "argo")
+                                                                    }}>
                                                                         <GetAppIcon />
                                                                     </IconButton>
                                                                     {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refArgo)
                                                                                 setTypeToDeleteAll("argo")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2309,6 +2368,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2365,7 +2425,7 @@ function CustomerCardEndpoint() {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "buildAutomation_pdf")
+                                                                                                deletePdf(pf, "buildAutomation_pdf", refBAuto)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2380,6 +2440,7 @@ function CustomerCardEndpoint() {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("buildAutomation_pdf")
+                                                                            setRefSectionState(refBAuto)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2396,6 +2457,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2413,6 +2475,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2425,13 +2488,17 @@ function CustomerCardEndpoint() {
                                                                     <Typography sx={{ color: "rgba(0, 0, 0, 0.4)", fontSize: 20, fontWeight: 'bold' }} style={{ marginTop: '1rem' }} color="text.primary" gutterBottom>
                                                                         foto
                                                                     </Typography>
-                                                                    <IconButton onClick={() => { downloadFolder(customerSelected.foto_buildAutomation, "buildAutomation") }}>
+                                                                    <IconButton onClick={() => {
+                                                                        setRefSectionState(refBAuto)
+                                                                        downloadFolder(customerSelected.foto_buildAutomation, "buildAutomation")
+                                                                    }}>
                                                                         <GetAppIcon />
                                                                     </IconButton>
                                                                     {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refBAuto)
                                                                                 setTypeToDeleteAll("buildAutomation")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2471,6 +2538,7 @@ function CustomerCardEndpoint() {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />

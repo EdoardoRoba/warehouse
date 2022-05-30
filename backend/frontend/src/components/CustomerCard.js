@@ -103,6 +103,15 @@ function CustomerCard(customerPassed) {
     const [touchStart, setTouchStart] = React.useState(0);
     const [touchEnd, setTouchEnd] = React.useState(0);
     const [currentImage, setCurrentImage] = React.useState({});
+    const [refSectionState, setRefSectionState] = React.useState();
+
+    const refInfo = React.useRef(null)
+    const refSopr = React.useRef(null)
+    const refInst = React.useRef(null)
+    const refAss = React.useRef(null)
+    const refDoc = React.useRef(null)
+    const refArgo = React.useRef(null)
+    const refBAuto = React.useRef(null)
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
@@ -292,6 +301,7 @@ function CustomerCard(customerPassed) {
     const handleCloseNote = () => {
         setNoteType("")
         setOpenNote(false);
+        setRefSectionState()
     };
 
     const changeHandlerPDF = (event) => {
@@ -330,6 +340,7 @@ function CustomerCard(customerPassed) {
         setValueToEdit("")
         getCustomers()
         setOpenEditField(false)
+        setRefSectionState()
     };
 
     const handleCloseLoadPdf = () => {
@@ -338,6 +349,7 @@ function CustomerCard(customerPassed) {
         setSelectedFilePDF({})
         getCustomers()
         setOpenLoadPdf(false)
+        setRefSectionState()
     };
 
     const handleCloseAskDeleteAll = () => {
@@ -345,6 +357,7 @@ function CustomerCard(customerPassed) {
         setTypeToDeleteAll("")
         setCheckTypologyToDelete("")
         setAskDeleteAll(false)
+        setRefSectionState()
     }
 
     const handleCloseEditStatus = () => {
@@ -352,6 +365,7 @@ function CustomerCard(customerPassed) {
         setValueToEdit("")
         getCustomers()
         setOpenEditStatus(false)
+        setRefSectionState()
     };
 
     const editField = () => {
@@ -363,16 +377,19 @@ function CustomerCard(customerPassed) {
                 setIsLoading(false)
                 setCustomerSelected(resp.data)
                 handleCloseEditField()
+                refSectionState.current.scrollIntoView()
             }).catch((error) => {
                 setIsLoading(false)
                 if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
+                refSectionState.current.scrollIntoView()
             })
         }).catch((error) => {
             console.log("error")
             console.log(error)
             setIsLoading(false)
+            refSectionState.current.scrollIntoView()
         })
     }
 
@@ -427,11 +444,13 @@ function CustomerCard(customerPassed) {
                                 console.log("customer updated")
                                 setCustomerSelected(respp.data)
                                 handleCloseLoadPdf()
+                                refSectionState.current.scrollIntoView()
                             }).catch((error) => {
                                 setIsLoading(false)
                                 if (error.response && error.response.status === 401) {
                                     userIsAuthenticated()
                                 }
+                                refSectionState.current.scrollIntoView()
                             })
                         })
                     })
@@ -440,7 +459,7 @@ function CustomerCard(customerPassed) {
         }
     };
 
-    const deletePdf = (pdf, pdfType) => {
+    const deletePdf = (pdf, pdfType, refSection) => {
         let pdfRef = ref(storage, pdf);
         deleteObject(pdfRef)
             .then(() => {
@@ -453,22 +472,26 @@ function CustomerCard(customerPassed) {
                         setIsLoading(false)
                         console.log("pdf eliminato!")
                         setCustomerSelected(respp.data)
+                        refSection.current.scrollIntoView()
                     }).catch((error) => {
                         setIsLoading(false)
                         if (error.response && error.response.status === 401) {
                             userIsAuthenticated()
                         }
+                        refSection.current.scrollIntoView()
                     })
                 }).catch((error) => {
                     setIsLoading(false)
                     if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
+                    refSection.current.scrollIntoView()
                 })
             })
             .catch((err) => {
                 console.log(err);
                 setIsLoading(false)
+                refSection.current.scrollIntoView()
             });
 
     }
@@ -556,12 +579,14 @@ function CustomerCard(customerPassed) {
                     setIsLoading(false)
                     console.log("phs eliminate!")
                     setCustomerSelected(respp.data)
+                    refSectionState.current.scrollIntoView()
                     handleCloseAskDeleteAll()
                 }).catch((error) => {
                     setIsLoading(false)
                     if (error.response && error.response.status === 401) {
                         userIsAuthenticated()
                     }
+                    refSectionState.current.scrollIntoView()
                     handleCloseAskDeleteAll()
                 })
             }).catch((error) => {
@@ -569,6 +594,7 @@ function CustomerCard(customerPassed) {
                 if (error.response && error.response.status === 401) {
                     userIsAuthenticated()
                 }
+                refSectionState.current.scrollIntoView()
                 handleCloseAskDeleteAll()
             })
         }
@@ -627,11 +653,13 @@ function CustomerCard(customerPassed) {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refSopr.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
+                                    refSopr.current.scrollIntoView()
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
@@ -640,6 +668,7 @@ function CustomerCard(customerPassed) {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refSopr.current.scrollIntoView()
                             });
                         })
                     }
@@ -648,82 +677,6 @@ function CustomerCard(customerPassed) {
         } else {
             setGenericError("Tipo file non riconosciuto.")
         }
-
-
-
-
-
-        // for (let s of selectedSopralluogo) {
-        //     // customer.foto_sopralluogo.push(s.base64)
-        //     imgs.images.push(s.base64)
-
-        //     const now = Date.now()
-        //     const storageRef = ref(storage, '/files/' + customerSelected.nome_cognome + '/sopralluogo/' + now + "_" + s.name)
-        //     // storageRef.put(s).on('state_changed', (snap) => {
-        //     //     let percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
-        //     //     setProgress(percentage);
-        //     // }, (err) => {
-        //     //     setShowError(true)
-        //     // }, async () => {
-        //     //     const urll = await storageRef.getDownloadURL();
-        //     //     setUrl(urll);
-        //     // });
-        //     const uploadTask = uploadBytesResumable(storageRef, s)
-        //     uploadTask.on("state_changed", (snapshot) => {
-        //         const progr = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-        //         setProgress(progr)
-        //         setIsLoading(false)
-        //     }, (error) => console.log("error: ", error),
-        //         () => {
-        //             //when the file is uploaded we want to download it. uploadTask.snapshot.ref is the reference to the pdf
-        //             getDownloadURL(uploadTask.snapshot.ref).then((fileUrl) => {
-        //                 console.log("fileUrl: ", fileUrl)
-        //                 // const image = new Image();
-        //                 // image.onload = () => {
-        //                 //     setSrc(fileUrl)
-        //                 // };
-        //                 // image.src = fileUrl;
-        //                 // console.log("image", image)
-        //                 // customer.foto_sopralluogo.push(image)
-        //                 customer.foto_sopralluogo.push(fileUrl)
-        //                 // var newField = {}
-        //                 // newField[fieldToEdit] = customerSelected[fieldToEdit]
-        //                 // if (newField[fieldToEdit] === undefined) {
-        //                 //     newField[fieldToEdit] = [fileUrl]
-        //                 // } else {
-        //                 //     newField[fieldToEdit].push(fileUrl)
-        //                 // }
-        //                 // axiosInstance.put("customer/" + customerSelected._id, customer).then((resp) => {
-        //                 //     setConfermaUpdate(true)
-        //                 //     getCustomers()
-        //                 //     axiosInstance.put("customer/" + customerSelected._id, customer).then((respp) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("customer updated")
-        //                 //         setCustomerSelected(respp.data)
-        //                 //     }).catch((error) => {
-        //                 //         setIsLoading(false)
-        //                 //         console.log("error")
-        //                 //         console.log(error)
-        //                 //     })
-        //                 // }).catch((error) => {
-        //                 //     // console.log("error: ", error)
-        //                 //     setIsLoading(false)
-        //                 //     setShowError(true)
-        //                 // });
-        //             })
-        //         }
-        //     )
-        // }
-        // axiosInstance.put("images/" + imagesId, imgs).then(response => {
-        //     // console.log("Fatto!", response)
-        //     setConfermaUpdate(true)
-        //     getImages("sopralluogo")
-        //     setIsLoading(false)
-        // }).catch((error) => {
-        //     // console.log("error: ", error)
-        //     setIsLoading(false)
-        //     setShowError(true)
-        // });
 
     };
 
@@ -756,11 +709,13 @@ function CustomerCard(customerPassed) {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refInst.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
+                                    refInst.current.scrollIntoView()
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
@@ -769,6 +724,7 @@ function CustomerCard(customerPassed) {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refInst.current.scrollIntoView()
                             });
                         })
                     }
@@ -813,11 +769,13 @@ function CustomerCard(customerPassed) {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refAss.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
+                                    refAss.current.scrollIntoView()
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
@@ -826,6 +784,7 @@ function CustomerCard(customerPassed) {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refAss.current.scrollIntoView()
                             });
                         })
                     }
@@ -865,11 +824,13 @@ function CustomerCard(customerPassed) {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refArgo.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
+                                    refArgo.current.scrollIntoView()
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
@@ -878,6 +839,7 @@ function CustomerCard(customerPassed) {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refArgo.current.scrollIntoView()
                             });
                         })
                     }
@@ -917,11 +879,13 @@ function CustomerCard(customerPassed) {
                                     setIsLoading(false)
                                     console.log("customer updated")
                                     setCustomerSelected(respp.data)
+                                    refBAuto.current.scrollIntoView()
                                 }).catch((error) => {
                                     setIsLoading(false)
                                     if (error.response && error.response.status === 401) {
                                         userIsAuthenticated()
                                     }
+                                    refBAuto.current.scrollIntoView()
                                 })
                             }).catch((error) => {
                                 // console.log("error: ", error)
@@ -930,6 +894,7 @@ function CustomerCard(customerPassed) {
                                 }
                                 setIsLoading(false)
                                 setShowError(true)
+                                refBAuto.current.scrollIntoView()
                             });
                         })
                     }
@@ -1113,7 +1078,7 @@ function CustomerCard(customerPassed) {
                                         <CircularProgress color="inherit" />
                                     </Backdrop> : <div>
 
-                                        <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                        <div ref={refInfo} sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto', width: '100%' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                             <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                 <CardContent>
                                                     <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
@@ -1273,7 +1238,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi sopralluogo
-                                                </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div ref={refSopr} sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
@@ -1315,6 +1280,7 @@ function CustomerCard(customerPassed) {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_sopralluogo")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refSopr)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1332,6 +1298,7 @@ function CustomerCard(customerPassed) {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_sopralluogo")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refSopr)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1353,7 +1320,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pdf_sopralluogo")
+                                                                                                deletePdf(pf, "pdf_sopralluogo", refSopr)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1388,6 +1355,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refSopr)
                                                                                 setTypeToDeleteAll("sopralluogo")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1435,6 +1403,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_sopralluogo")
+                                                                                setRefSectionState(refSopr)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1456,7 +1425,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi installazione
-                                                </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div ref={refInst} sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
@@ -1517,6 +1486,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("computo")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1534,6 +1504,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_installazione")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1551,6 +1522,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_installazione")
+                                                                                setRefSectionState(refInst)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1580,7 +1552,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pdf_computo")
+                                                                                                deletePdf(pf, "pdf_computo", refInst)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1595,6 +1567,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("pdf_computo")
+                                                                            setRefSectionState(refInst)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1617,6 +1590,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refInst)
                                                                                 setTypeToDeleteAll("fine_installazione")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1664,6 +1638,7 @@ function CustomerCard(customerPassed) {
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_installazione")
                                                                                 setOpenEditField(true)
+                                                                                setRefSectionState(refInst)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
                                                                         </IconButton>
@@ -1676,29 +1651,12 @@ function CustomerCard(customerPassed) {
                                             </div>
                                         }
                                         {
-                                            auths["customers"] !== "*" ? "" : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                            auths["customers"] !== "*" ? "" : <div ref={refDoc} sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }}>
                                                     <CardContent>
                                                         <Typography sx={{ fontSize: 24, fontWeight: 'bold' }} color="text.secondary" gutterBottom>
                                                             <div>
                                                                 Documenti
-                                                                {/* <Tooltip sx={{ marginRight: '1rem' }} title={"note pagamenti"}>
-                                                            <IconButton onClick={() => {
-                                                                setNoteType("note_pagamenti")
-                                                                setOpenNote(true)
-                                                            }}>
-                                                                <NotesIcon sx={{ fontSize: 'xx-large' }} />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                        {
-                                                            auths["customers"] !== "*" ? "" : <Tooltip sx={{ marginRight: '1rem' }} title={"Modifica"}><IconButton
-                                                                onClick={() => {
-                                                                    setFieldToEdit("note_pagamenti")
-                                                                    setOpenEditField(true)
-                                                                }}>
-                                                                <EditIcon style={{ fontSize: "15px" }} />
-                                                            </IconButton></Tooltip>
-                                                        } */}
                                                             </div>
                                                         </Typography>
                                                         {/* <Typography variant="body2">
@@ -1716,6 +1674,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("pagamenti_testo")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1738,7 +1697,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "pagamenti_pdf")
+                                                                                                deletePdf(pf, "pagamenti_pdf", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1753,6 +1712,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("pagamenti_pdf")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1769,6 +1729,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("trasferta")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1791,7 +1752,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "collaudo")
+                                                                                                deletePdf(pf, "collaudo", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1806,6 +1767,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("collaudo")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1827,7 +1789,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "check_list")
+                                                                                                deletePdf(pf, "check_list", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1842,6 +1804,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("check_list")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1863,7 +1826,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "fgas")
+                                                                                                deletePdf(pf, "fgas", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1878,6 +1841,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("fgas")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1899,7 +1863,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "prova_fumi")
+                                                                                                deletePdf(pf, "prova_fumi", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1914,6 +1878,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("prova_fumi")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1935,7 +1900,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "di_co")
+                                                                                                deletePdf(pf, "di_co", refDoc)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -1950,6 +1915,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("di_co")
+                                                                            setRefSectionState(refDoc)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -1968,6 +1934,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_pagamenti")
+                                                                                setRefSectionState(refDoc)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -1989,7 +1956,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi assistenza
-                                                </Typography></div> : <div sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div ref={refAss} sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', overflowX: 'auto' }} style={{ marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
@@ -2034,7 +2001,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "assistenza")
+                                                                                                deletePdf(pf, "assistenza", refAss)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2049,6 +2016,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("assistenza")
+                                                                            setRefSectionState(refAss)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2065,6 +2033,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2082,6 +2051,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2101,6 +2071,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refAss)
                                                                                 setTypeToDeleteAll("assistenza")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2140,6 +2111,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_assistenza")
+                                                                                setRefSectionState(refAss)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2161,7 +2133,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi ARGO
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div ref={refArgo} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
@@ -2196,7 +2168,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "argo_pdf")
+                                                                                                deletePdf(pf, "argo_pdf", refArgo)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2211,6 +2183,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("argo_pdf")
+                                                                            setRefSectionState(refArgo)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2227,6 +2200,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2244,6 +2218,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2263,6 +2238,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refArgo)
                                                                                 setTypeToDeleteAll("argo")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2302,6 +2278,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_argo")
+                                                                                setRefSectionState(refArgo)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2323,7 +2300,7 @@ function CustomerCard(customerPassed) {
                                                 </IconButton>
                                                 <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
                                                     aggiungi BUILDING AUTOMATION
-                                                </Typography></div> : <div style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
+                                                </Typography></div> : <div ref={refBAuto} style={{ display: 'flex', justifyContent: 'center', textAlign: 'center', marginBottom: '3rem', marginTop: '3rem' }}>
                                                 <Card sx={{ width: "100%", borderRadius: 2, boxShadow: 3, border: "1px solid black", marginRight: "1rem" }} style={{ marginBottom: '3rem' }}>
                                                     {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
@@ -2358,7 +2335,7 @@ function CustomerCard(customerPassed) {
                                                                                         </IconButton>
                                                                                         {
                                                                                             auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
-                                                                                                deletePdf(pf, "buildAutomation_pdf")
+                                                                                                deletePdf(pf, "buildAutomation_pdf", refBAuto)
                                                                                                 setIsLoading(true)
                                                                                             }}>
                                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2373,6 +2350,7 @@ function CustomerCard(customerPassed) {
                                                                     auths["customers"] !== "*" ? "" : <IconButton
                                                                         onClick={() => {
                                                                             setFieldToEdit("buildAutomation_pdf")
+                                                                            setRefSectionState(refBAuto)
                                                                             setOpenLoadPdf(true)
                                                                         }}>
                                                                         <EditIcon style={{ fontSize: "15px" }} />
@@ -2389,6 +2367,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("data_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2406,6 +2385,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("tecnico_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
@@ -2425,6 +2405,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" :
                                                                             <IconButton onClick={() => {
                                                                                 setAskDeleteAll(true)
+                                                                                setRefSectionState(refBAuto)
                                                                                 setTypeToDeleteAll("buildAutomation")
                                                                             }}>
                                                                                 <DeleteIcon style={{ fontSize: "15px" }} />
@@ -2464,6 +2445,7 @@ function CustomerCard(customerPassed) {
                                                                         auths["customers"] !== "*" ? "" : <IconButton
                                                                             onClick={() => {
                                                                                 setFieldToEdit("note_buildAutomation")
+                                                                                setRefSectionState(refBAuto)
                                                                                 setOpenEditField(true)
                                                                             }}>
                                                                             <EditIcon style={{ fontSize: "15px" }} />
