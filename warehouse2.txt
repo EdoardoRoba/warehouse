@@ -41,12 +41,9 @@ ID PRATICA ritardo app pubblicata: 101708368090
 
 warehouse:
 - girare l'immagine (non penso si possa)
-- scroll alla section collassa
-- quando aggiungo
 
 
 APP:
-- argo e building automation
 
 
 

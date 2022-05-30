@@ -1064,32 +1064,32 @@ function CustomerCardEndpoint() {
                                     }}
                                 />
                                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center" >
-                                    <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} sm={1}>
+                                    <Grid onClick={() => refInfo.current.scrollIntoView()} item xs={12} md={1}>
                                         <Button variant="text">info</Button>
                                     </Grid>
-                                    <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} sm={1}>
+                                    <Grid onClick={() => refSopr.current.scrollIntoView()} item xs={12} md={2}>
                                         <Button variant="text">sopralluogo</Button>
                                     </Grid>
-                                    <Grid onClick={() => refInst.current.scrollIntoView()} item xs={12} sm={1}>
+                                    <Grid onClick={() => refInst.current.scrollIntoView()} item xs={12} md={2}>
                                         <Button variant="text">installazione</Button>
                                     </Grid>
                                     {
-                                        !customerSelected.isAssisted ? "" : <Grid onClick={() => refAss.current.scrollIntoView()} item xs={12} sm={1}>
+                                        !customerSelected.isAssisted ? "" : <Grid onClick={() => refAss.current.scrollIntoView()} item xs={12} md={2}>
                                             <Button variant="text">assistenza</Button>
                                         </Grid>
                                     }
                                     {
-                                        auths["customers"] !== "*" ? "" : <Grid onClick={() => refDoc.current.scrollIntoView()} item xs={12} sm={1}>
+                                        auths["customers"] !== "*" ? "" : <Grid onClick={() => refDoc.current.scrollIntoView()} item xs={12} md={2}>
                                             <Button variant="text">documenti</Button>
                                         </Grid>
                                     }
                                     {
-                                        !customerSelected.isArgo ? "" : <Grid onClick={() => refArgo.current.scrollIntoView()} item xs={12} sm={1}>
+                                        !customerSelected.isArgo ? "" : <Grid onClick={() => refArgo.current.scrollIntoView()} item xs={12} md={1}>
                                             <Button variant="text">argo</Button>
                                         </Grid>
                                     }
                                     {
-                                        !customerSelected.isBuildAutomation ? "" : <Grid onClick={() => refBAuto.current.scrollIntoView()} item xs={12} sm={1.5}>
+                                        !customerSelected.isBuildAutomation ? "" : <Grid onClick={() => refBAuto.current.scrollIntoView()} item xs={12} md={2}>
                                             <Button variant="text">building automation</Button>
                                         </Grid>
                                     }
