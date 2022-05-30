@@ -24,6 +24,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Card from '@mui/material/Card';
@@ -104,6 +105,9 @@ function CustomerCard(customerPassed) {
     const [touchEnd, setTouchEnd] = React.useState(0);
     const [currentImage, setCurrentImage] = React.useState({});
     const [refSectionState, setRefSectionState] = React.useState();
+    const [sectionToClose, setSectionToClose] = React.useState("");
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [toRemove, setToRemove] = React.useState(null);
 
     const refInfo = React.useRef(null)
     const refSopr = React.useRef(null)
@@ -112,6 +116,14 @@ function CustomerCard(customerPassed) {
     const refDoc = React.useRef(null)
     const refArgo = React.useRef(null)
     const refBAuto = React.useRef(null)
+
+    const sectionsMap = {
+        isSopralluogo: "sopralluogo",
+        isInstallazione: "installazione",
+        isAssisted: "assistenza",
+        isArgo: "argo",
+        isBuildAutomation: "building automation",
+    }
 
     const columns = [
         { field: 'nome_cognome', headerName: 'nome e cognome', flex: 1 },
@@ -302,6 +314,12 @@ function CustomerCard(customerPassed) {
         setNoteType("")
         setOpenNote(false);
         setRefSectionState()
+    };
+
+    const handleCloseDialog = () => {
+        setSectionToClose("")
+        setToRemove(null)
+        setOpenDialog(false)
     };
 
     const changeHandlerPDF = (event) => {
@@ -1244,7 +1262,11 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
                                                             action={
                                                                 <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi sopralluogo"}>
-                                                                    <IconButton onClick={() => { assistCustomer(false, "isSopralluogo") }} aria-label="settings">
+                                                                    <IconButton onClick={() => {
+                                                                        // assistCustomer(false, "isSopralluogo")
+                                                                        setSectionToClose("isSopralluogo")
+                                                                        setOpenDialog(true)
+                                                                    }} aria-label="settings">
                                                                         <RemoveCircleIcon />
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -1431,7 +1453,11 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
                                                             action={
                                                                 <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi installazione"}>
-                                                                    <IconButton onClick={() => { assistCustomer(false, "isInstallazione") }} aria-label="settings">
+                                                                    <IconButton onClick={() => {
+                                                                        // assistCustomer(false, "isSopralluogo")
+                                                                        setSectionToClose("isInstallazione")
+                                                                        setOpenDialog(true)
+                                                                    }} aria-label="settings">
                                                                         <RemoveCircleIcon />
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -1962,7 +1988,12 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
                                                             action={
                                                                 <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi assistenza"}>
-                                                                    <IconButton onClick={() => { assistCustomer(false, "isAssisted") }} aria-label="settings">
+                                                                    <IconButton onClick={() => {
+                                                                        // assistCustomer(false, "isSopralluogo")
+                                                                        setSectionToClose("isAssisted")
+                                                                        setToRemove("remove")
+                                                                        setOpenDialog(true)
+                                                                    }} aria-label="settings">
                                                                         <RemoveCircleIcon />
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -2139,7 +2170,11 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
                                                             action={
                                                                 <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi argo"}>
-                                                                    <IconButton onClick={() => { assistCustomer(false, "isArgo") }} aria-label="settings">
+                                                                    <IconButton onClick={() => {
+                                                                        // assistCustomer(false, "isSopralluogo")
+                                                                        setSectionToClose("isArgo")
+                                                                        setOpenDialog(true)
+                                                                    }} aria-label="settings">
                                                                         <RemoveCircleIcon />
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -2306,7 +2341,11 @@ function CustomerCard(customerPassed) {
                                                         auths["customers"] !== "*" ? "" : <CardHeader
                                                             action={
                                                                 <Tooltip sx={{ marginRight: '1rem' }} title={"rimuovi building automation"}>
-                                                                    <IconButton onClick={() => { assistCustomer(false, "isBuildAutomation") }} aria-label="settings">
+                                                                    <IconButton onClick={() => {
+                                                                        // assistCustomer(false, "isSopralluogo")
+                                                                        setSectionToClose("isBuildAutomation")
+                                                                        setOpenDialog(true)
+                                                                    }} aria-label="settings">
                                                                         <RemoveCircleIcon />
                                                                     </IconButton>
                                                                 </Tooltip>
@@ -2780,6 +2819,17 @@ function CustomerCard(customerPassed) {
                                                         </div>
                                                     </Box>
                                                 </Modal>
+
+                                                <Dialog fullWidth={true} onClose={handleCloseDialog} open={openDialog}>
+                                                    <DialogTitle>Sicura di voler togliere la sezione {sectionsMap[sectionToClose]}?</DialogTitle>
+                                                    <ButtonGroup variant="text" aria-label="text button group" style={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+                                                        <Button color="error" onClick={handleCloseDialog}>Annulla</Button>
+                                                        <Button color="success" onClick={() => {
+                                                            assistCustomer(false, sectionToClose, toRemove)
+                                                            handleCloseDialog()
+                                                        }}>Conferma</Button>
+                                                    </ButtonGroup>
+                                                </Dialog>
                                             </div>
                                         }
                                     </div>
