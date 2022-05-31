@@ -1948,6 +1948,43 @@ function CustomerCard(customerPassed) {
                                                                     </IconButton>
                                                                 }
                                                             </Grid>
+                                                            <Grid item xs={12} sm={12}>
+                                                                <Typography sx={{ fontSize: "15px", color: "rgba(0, 0, 0, 0.4)" }} variant="body2">
+                                                                    modulo di avviamento
+                                                                </Typography>
+                                                                {
+                                                                    customerSelected.avviamento_pdf.length === 0 || customerSelected.avviamento_pdf === "" || customerSelected.avviamento_pdf === null || customerSelected.avviamento_pdf === undefined ? "" :
+                                                                        <Typography variant="h7" component="div">
+                                                                            {
+                                                                                customerSelected.avviamento_pdf.map(pf => {
+                                                                                    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                                                                        <IconButton item xs={12} sm={6}>
+                                                                                            <a style={{ fontSize: "15px" }} href={pf} target="_blank">{pf.split("%2F")[2].split("?alt")[0].replaceAll("%20", " ")}</a>
+                                                                                        </IconButton>
+                                                                                        {
+                                                                                            auths["customers"] !== "*" ? "" : <IconButton item xs={12} sm={6} onClick={() => {
+                                                                                                deletePdf(pf, "avviamento_pdf", refDoc)
+                                                                                                setIsLoading(true)
+                                                                                            }}>
+                                                                                                <DeleteIcon style={{ fontSize: "15px" }} />
+                                                                                            </IconButton>
+                                                                                        }
+                                                                                    </Grid >
+                                                                                })
+                                                                            }
+                                                                        </Typography>
+                                                                }
+                                                                {
+                                                                    auths["customers"] !== "*" ? "" : <IconButton
+                                                                        onClick={() => {
+                                                                            setFieldToEdit("avviamento_pdf")
+                                                                            setRefSectionState(refDoc)
+                                                                            setOpenLoadPdf(true)
+                                                                        }}>
+                                                                        <EditIcon style={{ fontSize: "15px" }} />
+                                                                    </IconButton>
+                                                                }
+                                                            </Grid>
                                                         </Grid>
                                                         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent="center" style={{ marginTop: '2rem' }} >
                                                             <Grid item xs={12} sm={6} style={{ marginTop: '1rem' }}>

@@ -40,7 +40,7 @@ ID PRATICA ritardo app pubblicata: 101708368090
 ----------------------------------------------------------
 
 warehouse:
-- girare l'immagine (non penso si possa)
+- modulo di avviamento su Documenti
 
 
 APP:

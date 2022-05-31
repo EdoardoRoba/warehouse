@@ -214,6 +214,10 @@ const customerSchema = new Schema({
     buildAutomation_pdf: {
         type: Array,
         required: false
+    },
+    avviamento_pdf: {
+        type: Array,
+        required: false
     }
 }, { timestamps: true });
 
