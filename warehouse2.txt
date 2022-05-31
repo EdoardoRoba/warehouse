@@ -40,11 +40,11 @@ ID PRATICA ritardo app pubblicata: 101708368090
 ----------------------------------------------------------
 
 warehouse:
-- modulo di avviamento su Documenti
 
 
 APP:
-
+- CREA E COMPILA PDF
+- modulo di avviamento su Documenti
 
 
 

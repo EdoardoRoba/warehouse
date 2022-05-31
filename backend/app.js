@@ -71,6 +71,7 @@ app.use("/api/colorStatus", middleware)
 app.use("/api/calendar", middleware)
 app.use("/api/gestionale", middleware)
 app.use("/api/requests", middleware)
+app.use("/api/pdf", middleware)
 
 app.use(express.json({ limit: '1000mb' }));
 app.use(express.urlencoded({ extended: false, limit: '1000mb' }));
@@ -1138,6 +1139,15 @@ app.post('/api/register', (req, res) => {
     }).catch((error) => {
         console.log("error:", error)
     })
+})
+
+
+// PDF
+// GET
+app.get('/api/pdf', (req, res) => {
+    EmailTemplate.findOne({ use: req.query.type }).then((template) => {
+        res.send(template)
+    }).catch((error) => { console.log("error: ", error) })
 })
 
 
