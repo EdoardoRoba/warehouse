@@ -1,15 +1,15 @@
 <body>
-    <h4
-        style="display:flex;justify-content: center;text-align: center;margin-bottom:2rem;font-stretch: ultra-condensed">
+    <h1
+        style="display:flex;justify-content: center;text-align: center;margin-bottom:2rem;font-stretch: ultra-condensed;font-size: 50;">
         <u>SOPRALLUOGO TERMICO</u>
-    </h4>
+    </h1>
     <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
         style='margin-bottom:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top'>
         <tr style='border-collapse:collapse;margin-right: auto;margin-left: auto;'>
             <td valign='top' style='padding:0;Margin:0;text-align: center;width:40%'>
                 <h1>
                     <span
-                        style="background-color: black;color: white;padding-right: 1.5rem;padding-left: 1.5rem;font-family: sans-serif;font-stretch: ultra-condensed;font-size: xxx-large">
+                        style="background-color: black;color: white;padding-right: 3.5rem;padding-left: 3.5rem;padding-top: 0.5rem;padding-bottom: 0.5rem;font-family: sans-serif;font-stretch: ultra-condensed;font-size: 100">
                         IDROALTECH
                     </span>
                 </h1>
@@ -21,12 +21,12 @@
                         style='border-collapse:collapse;margin-right: auto;margin-left: auto;vertical-align: middle;height:1.8rem;'>
                         <td valign='top'
                             style='padding:0;Margin:0;text-align: center;width:40%;border: 1px solid black;vertical-align: middle'>
-                            <span style="font-size: 20;font-weight: bold;">
+                            <span style="font-size: 40;font-weight: bold;">
                                 CLIENTE
                             </span>
                         </td>
                         <td valign='top'
-                            style='padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
+                            style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
                             {nome_cognome}
                         </td>
                     </tr>
@@ -34,12 +34,12 @@
                         style='border-collapse:collapse;margin-right: auto;margin-left: auto;vertical-align: middle;height:1.8rem;'>
                         <td valign='top'
                             style='padding:0;Margin:0;text-align: center;width:40%;border: 1px solid black;vertical-align: middle'>
-                            <span style="font-size: 20;font-weight: bold;">
+                            <span style="font-size: 40;font-weight: bold;">
                                 INDIRIZZO
                             </span>
                         </td>
                         <td valign='top'
-                            style='padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
+                            style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
                             {indirizzo}
                         </td>
                     </tr>
@@ -47,12 +47,12 @@
                         style='border-collapse:collapse;margin-right: auto;margin-left: auto;vertical-align: middle;height:1.8rem;'>
                         <td valign='top'
                             style='padding:0;Margin:0;text-align: center;width:40%;border: 1px solid black;vertical-align: middle'>
-                            <span style="font-size: 20;font-weight: bold;">
+                            <span style="font-size: 40;font-weight: bold;">
                                 DATA
                             </span>
                         </td>
                         <td valign='top'
-                            style='padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
+                            style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
                             {date}
                         </td>
                     </tr>
@@ -70,22 +70,94 @@
         <tr style='border-collapse:collapse;'>
             <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
                 <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: large;">
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
                         CARATTERISTICHE ABITATIVE E TIPOLOGIA EDIFICIO
                     </u>
                 </h5>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
-                Numero di componenti nel nucleo familiare: ____ &nbsp;&nbsp;&nbsp;&nbsp; Anno di costruzione
-                dell'edificio: ____
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 40;'>
+                Numero di componenti nel nucleo familiare: {nucleo_familiare} &nbsp;&nbsp;&nbsp;&nbsp; Anno di
+                costruzione
+                dell'edificio: {anno_costruzione}
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;'>
-                Numero di bagni: ____ &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: ____ &nbsp;&nbsp;&nbsp;&nbsp; Metri
-                quadri: ____
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
+                Numero di bagni: {n_bagni} &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: {n_piani} &nbsp;&nbsp;&nbsp;&nbsp;
+                Metri
+                quadri: {mq}
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
+                <div style="display:flex">
+                    Numero di bagni: &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {condominio};"></div>
+                    &nbsp;
+                    condominio &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {villa };"></div>
+                    &nbsp;
+                    villa &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {villa };"></div>
+                    &nbsp;
+                    villetta a schiera &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {villa };"></div>
+                    &nbsp;
+                    altro &nbsp;&nbsp; <u>{altro}</u>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <u>Foto</u>&nbsp;abitazione
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
+                        DETTAGLI GENERATORE DI CALORE ESISTENTE
+                    </u>
+                </h5>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 40;'>
+                Marca: {marca} &nbsp;&nbsp;&nbsp;&nbsp; Potenza termica: {potenza_termica} [kW] &nbsp;&nbsp;&nbsp;&nbsp;
+                Ubicazione caldaia esistente: {ubicazione_caldaia} [kW]
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
+                Numero di bagni: {n_bagni} &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: {n_piani} &nbsp;&nbsp;&nbsp;&nbsp;
+                Metri
+                quadri: {mq}
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
+                <div style="display:flex">
+                    Numero di bagni: &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {condominio};"></div>
+                    &nbsp;
+                    condominio &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {villa};"></div>
+                    &nbsp;
+                    villa &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {villetta};"></div>
+                    &nbsp;
+                    villetta a schiera &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {altro};"></div>
+                    &nbsp;
+                    altro &nbsp;&nbsp; <u>{altro}</u>
+                </div>
             </td>
         </tr>
     </table>
