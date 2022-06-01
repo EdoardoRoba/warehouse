@@ -21,19 +21,20 @@ require('dotenv').config();
 var nodemailer = require('nodemailer');
 const multer = require("multer");
 const path = require('path');
+var pdf = require('html-pdf');
 var cron = require('node-cron');
 var cors = require('cors')
 const middleware = require('./middleware/middleware')
 const jwt = require("jsonwebtoken")
 const app = express();
-const feUrl = "http://localhost:3000"
-// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+// const feUrl = "http://localhost:3000"
+const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.use(express.static(path.join(__dirname, "/frontend/build")));
-// app.use(cors())
+app.use(express.static(path.join(__dirname, "/frontend/build")));
+app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -47,19 +48,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-const whitelist = [feUrl]
-// enable CORS policy
-const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error("Not allowed by CORS"))
-        }
-    },
-    credentials: true,
-}
-app.use(cors(corsOptions))
+// const whitelist = [feUrl]
+// // enable CORS policy
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//         if (!origin || whitelist.indexOf(origin) !== -1) {
+//             callback(null, true)
+//         } else {
+//             callback(new Error("Not allowed by CORS"))
+//         }
+//     },
+//     credentials: true,
+// }
+// app.use(cors(corsOptions))
 
 app.use("/api/auth", middleware)
 app.use("/api/structure", middleware)
@@ -1150,9 +1151,23 @@ app.get('/api/pdf', (req, res) => {
     }).catch((error) => { console.log("error: ", error) })
 })
 
+//POST
+// POST
+app.post('/api/pdf', (req, res) => {
+    const html = req.body.template;
+    const options = { format: 'Letter' };
+    pdf.create(html, options).toFile('./businesscard.pdf', function (err, result) {
+        if (err) return console.log(err);
+        // console.log(res); // { filename: '/app/businesscard.pdf' }
+        res.send({
+            code: 200, message: "succeeded"
+        })
+    });
+})
+
 
 
 // COMMENT WHEN RUNNING LOCALLY
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+});
