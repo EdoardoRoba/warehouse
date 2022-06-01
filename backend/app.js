@@ -19,6 +19,8 @@ const Register = require('./models/register')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
 var nodemailer = require('nodemailer');
+var mime = require('mime-types');
+var uuidv1 = require('uuidv1')
 const multer = require("multer");
 const path = require('path');
 var pdf = require('html-pdf');
@@ -26,15 +28,16 @@ var cron = require('node-cron');
 var cors = require('cors')
 const middleware = require('./middleware/middleware')
 const jwt = require("jsonwebtoken")
+const { Storage } = require('@google-cloud/storage');
 const app = express();
-// const feUrl = "http://localhost:3000"
-const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
+const feUrl = "http://localhost:3000"
+// const feUrl = "https://my-warehouse-app-heroku.herokuapp.com"
 const port = process.env.PORT || 8050
 // const idEmailAlert = '62086ab09422a5466157fe5a'
 
 // COMMENT WHEN RUNNING LOCALLY
-app.use(express.static(path.join(__dirname, "/frontend/build")));
-app.use(cors())
+// app.use(express.static(path.join(__dirname, "/frontend/build")));
+// app.use(cors())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", '*');
@@ -48,19 +51,19 @@ app.use(function (req, res, next) {
 // app.use(bodyParser.json())
 
 // COMMENT WHEN BUILDING TO HEROKU next 13 lines
-// const whitelist = [feUrl]
-// // enable CORS policy
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//         if (!origin || whitelist.indexOf(origin) !== -1) {
-//             callback(null, true)
-//         } else {
-//             callback(new Error("Not allowed by CORS"))
-//         }
-//     },
-//     credentials: true,
-// }
-// app.use(cors(corsOptions))
+const whitelist = [feUrl]
+// enable CORS policy
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (!origin || whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error("Not allowed by CORS"))
+        }
+    },
+    credentials: true,
+}
+app.use(cors(corsOptions))
 
 app.use("/api/auth", middleware)
 app.use("/api/structure", middleware)
@@ -1154,20 +1157,81 @@ app.get('/api/pdf', (req, res) => {
 //POST
 // POST
 app.post('/api/pdf', (req, res) => {
+    const storage = new Storage();
     const html = req.body.template;
     const options = { format: 'Letter' };
-    pdf.create(html, options).toFile('./businesscard.pdf', function (err, result) {
-        if (err) return console.log(err);
+    pdf.create(html, options).toFile('./temporarypdf.pdf', function (err, result) {
+        if (err) return console.log("errore: ", err);
         // console.log(res); // { filename: '/app/businesscard.pdf' }
-        res.send({
-            code: 200, message: "succeeded"
-        })
+        // res.send({
+        //     code: 200, message: "succeeded"
+        // })
+        const bucketName = "magazzino-2a013.appspot.com";
+        const destFileName = './temporarypdf.pdf'
+        const remoteFile = "test_sopralluogo_termico.pdf"
+        const fileMime = mime.lookup(destFileName);
+        // uploadFile(bucketName, destFileName, remoteFile, fileMime)
+        uploadFile(bucketName, destFileName, remoteFile, fileMime).then(downloadURL => {
+            console.log(downloadURL);
+            res.send({
+                code: 200, message: "succeeded"
+            })
+        });
     });
 })
+
+// async function uploadFile(res) {
+//     const storage = new Storage();
+//     const bucketName = "magazzino-2a013.appspot.com";
+//     const destFileName = './temporarypdf.pdf'
+//     const contents = 'these are my contents'
+//     const fileMime = mime.lookup(destFileName);
+//     await storage.bucket(bucketName).upload(destFileName, {
+//         destination: "test_sopralluogo_termico.pdf",
+//         uploadType: "media",
+//         metadata: {
+//             contentType: fileMime
+//         }
+//     });
+//     // await storage.bucket(bucketName).file(destFileName).save(contents);
+
+//     console.log(`${"temporarypdf.pdf"} uploaded to ${bucketName}`);
+//     res.send({
+//         code: 200, message: "succeeded"
+//     })
+// }
+
+var uploadFile = (bucketName, filePath, remoteFile, fileMime) => {
+
+    // const storage = new Storage();
+    const gcs = new Storage({
+        projectId: "magazzino-2a013",
+        keyFilename: 'C:\\Users\\edoar\\Desktop\\ITAUROS\\MyProjects\\warehouse\\backend\\magazzino-2a013-4e56ad95ed9c.json'
+    });
+    const bucket = gcs.bucket(bucketName);
+    let uuid = uuidv1();
+
+    return bucket.upload(filePath, {
+        destination: remoteFile,
+        uploadType: "media",
+        metadata: {
+            contentType: fileMime,
+            metadata: {
+                firebaseStorageDownloadTokens: uuid
+            }
+        }
+    })
+        .then((data) => {
+
+            let file = data[0];
+
+            return Promise.resolve("https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uuid);
+        });
+}
 
 
 
 // COMMENT WHEN RUNNING LOCALLY
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
+// });
