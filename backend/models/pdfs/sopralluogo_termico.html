@@ -27,7 +27,7 @@
                         </td>
                         <td valign='top'
                             style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
-                            {nome_cognome}
+                            <u>{nome_cognome}</u>
                         </td>
                     </tr>
                     <tr
@@ -40,7 +40,7 @@
                         </td>
                         <td valign='top'
                             style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
-                            {indirizzo}
+                            <u>{indirizzo}</u>
                         </td>
                     </tr>
                     <tr
@@ -53,7 +53,7 @@
                         </td>
                         <td valign='top'
                             style='font-size: 40;padding:0;Margin:0;text-align: center;width:60%;border: 1px solid black;vertical-align: middle'>
-                            {date}
+                            <u>{date}</u>
                         </td>
                     </tr>
                 </table>
@@ -77,23 +77,84 @@
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 40;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;'>
                 Numero di componenti nel nucleo familiare: {nucleo_familiare} &nbsp;&nbsp;&nbsp;&nbsp; Anno di
                 costruzione
-                dell'edificio: {anno_costruzione}
+                dell'edificio: <u>{anno_costruzione}</u>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
-                Numero di bagni: {n_bagni} &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: {n_piani} &nbsp;&nbsp;&nbsp;&nbsp;
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                Numero di bagni: <u>{n_bagni}</u> &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: <u>{n_piani}</u>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 Metri
-                quadri: {mq}
+                quadri: <u>{mq}</u>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
-                <div style="display:flex">
-                    Numero di bagni: &nbsp;&nbsp; <div
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                <div style="display:flex;">
+                    <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                        style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                        <tr style='border-collapse:collapse;'>
+                            <td valign='top' style='padding:0;Margin:0;text-align: left;width:90%;font-size: 30'>
+                                <div style="display: flex">
+                                    Tipologia:
+                                    <div style="display: flex">
+                                        <div
+                                            style="margin-left:2rem;border:1px black solid;width:35px;height:35px; background-color: {condominio};">
+                                        </div> condominio
+                                    </div>
+                                    <div style="display: flex">
+                                        <div
+                                            style="margin-left:2rem;border:1px black solid;width:35px;height:35px; background-color: {villa };">
+                                        </div>villa
+                                    </div>
+                                    <div style="display: flex">
+                                        <div
+                                            style="margin-left:2rem;border:1px black solid;width:35px;height:35px; background-color: {villetta };">
+                                        </div>villetta a schiera
+                                    </div>
+                                    <div style="display: flex">
+                                        <div
+                                            style="margin-left:2rem;border:1px black solid;width:35px;height:35px; background-color: {altro_tipologia };">
+                                        </div>
+                                        &nbsp;
+                                        altro &nbsp;&nbsp; <u>{altro_tipologia_text}</u>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td valign='top' style='padding:0;Margin:0;text-align: left;width:20%;font-size: 30'>
+                                <div style="display: flex">
+                                    <div
+                                        style="border:1px black solid;width:35px;height:35px; background-color: {villa };">
+                                    </div>villa
+                                </div>
+                            </td>
+                            <td valign='top' style='padding:0;Margin:0;text-align: left;width:20%;font-size: 30'>
+                                <div style="display: flex">
+                                    <div
+                                        style="border:1px black solid;width:35px;height:35px; background-color: {villetta };">
+                                    </div>villetta a schiera
+                                </div>
+                            </td>
+                            <td valign='top' style='padding:0;Margin:0;text-align: left;width:20%;font-size: 30'>
+                                <div style="display: flex">
+                                    <div
+                                        style="border:1px black solid;width:35px;height:35px; background-color: {altro_tipologia };">
+                                    </div>
+                                    &nbsp;
+                                    altro &nbsp;&nbsp; <u>{altro_tipologia_text}</u>
+                                </div>
+                            </td> -->
+                        </tr>
+                        <tr style='border-collapse:collapse;'>
+                            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                                <b style="font-size: xx-large;"><u>Foto</u>&nbsp;abitazione</b>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- Tipologia: &nbsp;&nbsp; <div
                         style="border:1px black solid;width:35px;height:35px; background-color: {condominio};"></div>
                     &nbsp;
                     condominio &nbsp;&nbsp; <div
@@ -107,7 +168,7 @@
                     &nbsp;
                     altro &nbsp;&nbsp; <u>{altro}</u>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <u>Foto</u>&nbsp;abitazione
+                    <b style="font-size: xx-large;"><u>Foto</u>&nbsp;abitazione</b> -->
                 </div>
             </td>
         </tr>
@@ -129,36 +190,308 @@
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 40;'>
-                Marca: {marca} &nbsp;&nbsp;&nbsp;&nbsp; Potenza termica: {potenza_termica} [kW] &nbsp;&nbsp;&nbsp;&nbsp;
-                Ubicazione caldaia esistente: {ubicazione_caldaia} [kW]
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;'>
+                Marca: <u>{marca}</u> &nbsp;&nbsp;&nbsp;&nbsp; Potenza termica: <u>{potenza_termica}</u> [kW]
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                Ubicazione caldaia esistente: <u>{ubicazione_caldaia}</u> [kW]
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
-                Numero di bagni: {n_bagni} &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: {n_piani} &nbsp;&nbsp;&nbsp;&nbsp;
-                Metri
-                quadri: {mq}
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 40;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
                 <div style="display:flex">
-                    Numero di bagni: &nbsp;&nbsp; <div
-                        style="border:1px black solid;width:35px;height:35px; background-color: {condominio};"></div>
+                    Combustibile: &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {metano};"></div>
                     &nbsp;
-                    condominio &nbsp;&nbsp; <div
-                        style="border:1px black solid;width:35px;height:35px; background-color: {villa};"></div>
+                    metano &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {gpl};"></div>
                     &nbsp;
-                    villa &nbsp;&nbsp; <div
-                        style="border:1px black solid;width:35px;height:35px; background-color: {villetta};"></div>
+                    gas GPL &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {gasolio};"></div>
                     &nbsp;
-                    villetta a schiera &nbsp;&nbsp; <div
-                        style="border:1px black solid;width:35px;height:35px; background-color: {altro};"></div>
+                    gasolio &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {altro_combustibile};">
+                    </div>
                     &nbsp;
-                    altro &nbsp;&nbsp; <u>{altro}</u>
+                    altro &nbsp;&nbsp; <u>{altro_combustibilie_text}</u>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b style="font-size: xx-large;"><u>Foto</u>&nbsp;generatore + etichetta + luogo di installazione</b>
                 </div>
             </td>
         </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                Tipologia di scarico condensa (se presente): <u>{condensa}</u> &nbsp;&nbsp;&nbsp;&nbsp; Termostati
+                ambiente
+                esistenti: <u>{n_termostati}</u>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="font-size: xx-large;"><u>Foto</u>&nbsp;scarico condensa + termostati</b>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: center;width:40%;padding-top: 2rem;font-size: 30;'>
+                <b style="font-size: xx-large;"><u>Foto</u>&nbsp;generatore ACS e dell'etichetta se separato dal
+                    generatore principale</b>
+            </td>
+        </tr>
     </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
+                        DETTAGLI IMPIANTO RADIANTE ESISTENTE
+                    </u>
+                </h5>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                <div style="display:flex;flex-wrap: nowrap">
+                    Tipologia impianto radiante:
+                </div>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                <div style="display:flex;flex-wrap: nowrap">
+                    <div style="border:1px black solid;width:35px;height:35px; background-color: {ghisa};"></div>
+                    &nbsp;
+                    termosifoni in ghisa &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {alluminio};"></div>
+                    &nbsp;
+                    termosifoni in alluminio &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {acciaio};"></div>
+                    &nbsp;
+                    termosifoni acciaio &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {radiante};"></div>
+                    &nbsp;
+                    pavimentio radiante &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {fancoil};"></div>
+                    &nbsp;
+                    fancoil &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {altro_impianto};">
+                    </div>
+                    &nbsp;
+                    altro &nbsp;&nbsp; <u>{altro_impianto_text}</u>
+                </div>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                Numero di elementi radianti (termosifoni/termoarredi e/o fancoil): <u>{n_el_radianti}</u>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="font-size: xx-large;"><u>Foto</u>&nbsp;ogni elemento e valvola</b>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                <div style="display:flex">
+                    Sono già presenti valvole termostatiche per ogni elemento radiante? &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {Sì_valvole};"></div>
+                    &nbsp;
+                    Sì &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {No_valvole};">
+                    </div>
+                    &nbsp;
+                    No
+                </div>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 30;'>
+                <div style="display:flex">
+                    Le valvole presenti sono termostatizzabili? &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {Sì};"></div>
+                    &nbsp;
+                    Sì &nbsp;&nbsp; <div style="border:1px black solid;width:35px;height:35px; background-color: {No};">
+                    </div>
+                    &nbsp;
+                    No &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {Non_tutte};">
+                    </div>
+                    &nbsp;
+                    Non tutte
+                </div>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                Indicare il numero di valvole da sostituire per renderle termostatizzabili: <u>{n_valvole}</u>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
+                        DETTAGLI NUOVA INSTALLAZIONE (informazioni da condividere con cliente)
+                    </u>
+                </h5>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h7>
+                    <span style="font-weight: bold;font-stretch: ultra-condensed;font-size: 30;">
+                        Posizionamento unita interna ed esterna
+                    </span>
+                </h7>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                Luogo di posizionamento unita interna: <u>{posizionamento_interno}</u>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="font-size: xx-large;"><u>Foto</u></b>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                <div style="display:flex">
+                    E' necessario prevedere un box coibentato? &nbsp;
+                    <div style="border:1px black solid;width:35px;height:35px; background-color: {Sì_coibentato};">
+                    </div>
+                    &nbsp;
+                    Sì &nbsp;&nbsp; <div
+                        style="border:1px black solid;width:35px;height:35px; background-color: {No_coibentato};">
+                    </div>
+                    &nbsp;
+                    No
+                </div>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                Luogo di posizionamento unita esterna: <u>{posizionamento_esterno}</u>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b style="font-size: xx-large;"><u>Foto</u></b>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
+                        SOLARE TERMICO
+                    </u>
+                </h5>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h7>
+                    <span style="font-weight: bold;font-stretch: ultra-condensed;font-size: 30;">
+                        Verificare fattibilità, spazi accumulo, esposizione pannelli, passaggio tubazioni e spazio a
+                        tetto
+                    </span>
+                </h7>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                __________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                __________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%;font-size: 30;padding-top: 2rem;'>
+                __________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 40;">
+                        EVENTUALMENTE NOTE O BOZZA DI SCHEMA IDRAULICO
+                    </u>
+                </h5>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <div style="border:1px black solid;width:80%;height:20rem; background-color: transparent;"></div>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;margin-left:4rem'>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding:0;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Con la seguente il cliente e l'installatore confermano di aver condiviso e approvato tutte le
+                    informazioni utili
+                    al fine dell'installazione del prodotto.
+                </span>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Data sopralluogo: <u>{data_sopralluogo}</u>
+                </span>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Tecnico: <u>{tecnico}</u>
+                </span>
+            </td>
+            <td valign='top' style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Firma tecnico: <u>{firma_tecnico}</u>
+                </span>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td valign='top' style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Cliente: <u>{cliente}</u>
+                </span>
+            </td>
+            <td valign='top' style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
+                <span style="font-size: 40;">
+                    Firma cliente: <u>{firma_cliente}</u>
+                </span>
+            </td>
+        </tr>
+    </table>
+
 </body>
