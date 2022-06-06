@@ -836,6 +836,9 @@ app.get('/api/calendar', (req, res) => {
     if (req.query.employee !== null && req.query.employee !== undefined) {
         filter["employees.lastName"] = req.query.employee
     }
+    if (req.query.type !== null && req.query.type !== undefined) {
+        filter["type"] = req.query.type
+    }
     if (req.query.user !== null && req.query.user !== undefined) {
         // it gets all the element in that document with employee requested
         usr = req.query.user.replace("_", " ").replace("_", " ")
@@ -1179,27 +1182,6 @@ app.post('/api/pdf', (req, res) => {
         });
     });
 })
-
-// async function uploadFile(res) {
-//     const storage = new Storage();
-//     const bucketName = "magazzino-2a013.appspot.com";
-//     const destFileName = './temporarypdf.pdf'
-//     const contents = 'these are my contents'
-//     const fileMime = mime.lookup(destFileName);
-//     await storage.bucket(bucketName).upload(destFileName, {
-//         destination: "test_sopralluogo_termico.pdf",
-//         uploadType: "media",
-//         metadata: {
-//             contentType: fileMime
-//         }
-//     });
-//     // await storage.bucket(bucketName).file(destFileName).save(contents);
-
-//     console.log(`${"temporarypdf.pdf"} uploaded to ${bucketName}`);
-//     res.send({
-//         code: 200, message: "succeeded"
-//     })
-// }
 
 var uploadFile = (bucketName, filePath, remoteFile, fileMime) => {
 

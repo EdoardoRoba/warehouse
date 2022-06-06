@@ -54,6 +54,7 @@ function MyCalendar() {
     const [type, setType] = React.useState("");
     const [filterCustomer, setFilterCustomer] = React.useState(null);
     const [filterEmployee, setFilterEmployee] = React.useState(null);
+    const [filterType, setFilterType] = React.useState(null);
     const [selectedStartDate, setSelectedStartDate] = React.useState();
     const [selectedEndDate, setSelectedEndDate] = React.useState();
     const [selectedStartTime, setSelectedStartTime] = React.useState();
@@ -78,6 +79,33 @@ function MyCalendar() {
             color: '#fff',
         },
     }));
+
+    const allTypes = [
+        {
+            id: "sopralluogo",
+            label: "Sopralluogo"
+        },
+        {
+            id: "installazione",
+            label: "Installazione"
+        },
+        {
+            id: "assistenza",
+            label: "Assistenza"
+        },
+        {
+            id: "argo",
+            label: "Argo"
+        },
+        {
+            id: "buildAutomation",
+            label: "Building Automation"
+        },
+        {
+            id: "appuntamento",
+            label: "Appuntamento"
+        }
+    ]
 
     moment.locale('ko', {
         week: {
@@ -445,7 +473,10 @@ function MyCalendar() {
         if (filterEmployee) {
             showFilteredCalendar(filterEmployee, "employee")
         }
-        if (!filterCustomer && !filterEmployee) {
+        if (filterType) {
+            showFilteredCalendar(filterType, "type")
+        }
+        if (!filterCustomer && !filterEmployee && !filterType) {
             getEvents()
         }
         setCheckEmailEvent(false)
@@ -520,8 +551,10 @@ function MyCalendar() {
             let valFilter = ""
             if (type === "customer") {
                 valFilter = value.nome_cognome
-            } else {
+            } else if (type === "employee") {
                 valFilter = value.lastName
+            } else {
+                valFilter = value.id
             }
             filter.user = user
             filter[type] = valFilter
@@ -559,7 +592,7 @@ function MyCalendar() {
                                     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} style={{ marginBottom: "2rem" }} justifyContent="center">
                                         <Autocomplete
                                             disablePortal
-                                            item xs={12} sm={4}
+                                            item xs={12} sm={3}
                                             id="combo-box-demo"
                                             options={customers}
                                             style={{ marginLeft: 'auto', marginRight: "auto" }}
@@ -570,12 +603,47 @@ function MyCalendar() {
                                                 showFilteredCalendar(value, "customer")
                                                 setFilterCustomer(value)
                                                 setFilterEmployee(null)
+                                                setFilterType(null)
+                                            }
+                                            }
+                                        />
+                                        <Autocomplete
+                                            disablePortal
+                                            item xs={12} sm={3}
+                                            id="combo-box-demo"
+                                            options={employees}
+                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                            sx={{ width: 300 }}
+                                            getOptionLabel={option => option.label.toUpperCase()}
+                                            renderInput={(params) => <TextField {...params} label="filtra per dipendente" />}
+                                            onChange={(event, value) => {
+                                                showFilteredCalendar(value, "employee")
+                                                setFilterEmployee(value)
+                                                setFilterCustomer(null)
+                                                setFilterType(null)
+                                            }
+                                            }
+                                        />
+                                        <Autocomplete
+                                            disablePortal
+                                            item xs={12} sm={3}
+                                            id="combo-box-demo"
+                                            options={allTypes}
+                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
+                                            sx={{ width: 300 }}
+                                            getOptionLabel={option => option.label.toUpperCase()}
+                                            renderInput={(params) => <TextField {...params} label="filtra per tipologia di appuntamento" />}
+                                            onChange={(event, value) => {
+                                                showFilteredCalendar(value, "type")
+                                                setFilterType(value)
+                                                setFilterCustomer(null)
+                                                setFilterEmployee(null)
                                             }
                                             }
                                         />
                                         <div>
                                             {
-                                                !filterCustomer && !filterEmployee ? "" :
+                                                !filterCustomer && !filterEmployee && !filterType ? "" :
                                                     <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h7" component="h7">
                                                         Filtrato per:
                                                     </Typography>
@@ -592,29 +660,20 @@ function MyCalendar() {
                                                         {filterEmployee.label.toUpperCase()}
                                                     </Typography>
                                             }
+                                            {
+                                                !filterType ? "" :
+                                                    <Typography sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center' }} id="modal-modal-label" variant="h6" component="h6">
+                                                        {filterType.label}
+                                                    </Typography>
+                                            }
                                         </div>
-                                        <Autocomplete
-                                            disablePortal
-                                            item xs={12} sm={4}
-                                            id="combo-box-demo"
-                                            options={employees}
-                                            style={{ marginLeft: 'auto', marginRight: "auto" }}
-                                            sx={{ width: 300 }}
-                                            getOptionLabel={option => option.label.toUpperCase()}
-                                            renderInput={(params) => <TextField {...params} label="filtra per dipendente" />}
-                                            onChange={(event, value) => {
-                                                showFilteredCalendar(value, "employee")
-                                                setFilterEmployee(value)
-                                                setFilterCustomer(null)
-                                            }
-                                            }
-                                        />
                                         <Tooltip item xs={12} sm={4} sx={{ marginRight: '1rem' }} title={"Azzera filtri"}>
                                             <IconButton
                                                 onClick={() => {
                                                     getEvents()
                                                     setFilterCustomer(null)
                                                     setFilterEmployee(null)
+                                                    setFilterType(null)
                                                 }}>
                                                 <ReplayIcon style={{ fontSize: "30px" }} />
                                             </IconButton>
