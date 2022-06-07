@@ -1215,6 +1215,7 @@ var uploadFile = (bucketName, filePath, remoteFile, fileMime) => {
 app.post('/api/pdf/form', (req, res) => {
     const formPdf = new FormPdf({
         name: req.body.name,
+        label: req.body.label,
         form: req.body.form
     })
     // console.log("formPdf: ", formPdf)
@@ -1227,9 +1228,27 @@ app.post('/api/pdf/form', (req, res) => {
 
 // GET
 app.get('/api/pdf/form', (req, res) => {
-    FormPdf.findOne({ name: req.query.type }).then((template) => {
+    let filter = {}
+    if (req.query.type !== null && req.query.type !== undefined) {
+        filter["name"] = req.query.type
+    }
+    FormPdf.find(filter).then((template) => {
         res.send(template)
     }).catch((error) => { console.log("error: ", error) })
+})
+
+// PUT
+app.put('/api/pdf/form/:id', (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+    FormPdf.findByIdAndUpdate(
+        { _id: id },
+        body
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
 })
 
 

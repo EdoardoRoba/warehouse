@@ -7,6 +7,10 @@ const formPdfSchema = new Schema({
         type: String,
         required: true
     },
+    label: {
+        type: String,
+        required: true
+    },
     form: {
         type: Array,
         required: true
