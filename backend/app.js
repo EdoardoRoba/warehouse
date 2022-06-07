@@ -15,6 +15,7 @@ const Calendar = require('./models/calendar')
 const Gestionale = require('./models/gestionale')
 const Request = require('./models/requests')
 const EmailEvent = require('./models/emailEvent')
+const FormPdf = require('./models/formPdf')
 const Register = require('./models/register')
 // const bodyParser = require('body-parser')
 require('dotenv').config();
@@ -1157,7 +1158,6 @@ app.get('/api/pdf', (req, res) => {
     }).catch((error) => { console.log("error: ", error) })
 })
 
-//POST
 // POST
 app.post('/api/pdf', (req, res) => {
     const storage = new Storage();
@@ -1210,6 +1210,27 @@ var uploadFile = (bucketName, filePath, remoteFile, fileMime) => {
             return Promise.resolve("https://firebasestorage.googleapis.com/v0/b/" + bucketName + "/o/" + encodeURIComponent(file.name) + "?alt=media&token=" + uuid);
         });
 }
+
+// POST FORM
+app.post('/api/pdf/form', (req, res) => {
+    const formPdf = new FormPdf({
+        name: req.body.name,
+        form: req.body.form
+    })
+    // console.log("formPdf: ", formPdf)
+    formPdf.save().then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error:", error)
+    })
+})
+
+// GET
+app.get('/api/pdf/form', (req, res) => {
+    FormPdf.findOne({ name: req.query.type }).then((template) => {
+        res.send(template)
+    }).catch((error) => { console.log("error: ", error) })
+})
 
 
 
