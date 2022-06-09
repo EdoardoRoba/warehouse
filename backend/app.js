@@ -1178,7 +1178,7 @@ app.post('/api/pdf', (req, res) => {
         const fileMime = mime.lookup(destFileName);
         // uploadFile(bucketName, destFileName, remoteFile, fileMime)
         uploadFile(bucketName, destFileName, remoteFile, fileMime).then(downloadURL => {
-            console.log(downloadURL);
+            // console.log(downloadURL);
             res.send({
                 code: 200, message: "succeeded", refUrl: downloadURL
             })
@@ -1191,7 +1191,7 @@ var uploadFile = (bucketName, filePath, remoteFile, fileMime) => {
     // const storage = new Storage();
     const gcs = new Storage({
         projectId: "magazzino-2a013",
-        keyFilename: 'C:\\Users\\edoar\\Desktop\\ITAUROS\\MyProjects\\warehouse\\backend\\magazzino-2a013-4e56ad95ed9c.json'
+        keyFilename: './magazzino-2a013-4e56ad95ed9c.json'
     });
     const bucket = gcs.bucket(bucketName);
     let uuid = uuidv1();
