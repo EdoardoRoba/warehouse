@@ -1161,6 +1161,7 @@ app.get('/api/pdf', (req, res) => {
 // POST
 app.post('/api/pdf', (req, res) => {
     const storage = new Storage();
+    const customer = req.query.customer
     const html = req.body.template;
     const options = { format: 'Letter' };
     pdf.create(html, options).toFile('./temporarypdf.pdf', function (err, result) {
@@ -1171,13 +1172,13 @@ app.post('/api/pdf', (req, res) => {
         // })
         const bucketName = "magazzino-2a013.appspot.com";
         const destFileName = './temporarypdf.pdf'
-        const remoteFile = "test_sopralluogo_termico.pdf"
+        const remoteFile = "files/" + customer + "test_sopralluogo_termico.pdf"
         const fileMime = mime.lookup(destFileName);
         // uploadFile(bucketName, destFileName, remoteFile, fileMime)
         uploadFile(bucketName, destFileName, remoteFile, fileMime).then(downloadURL => {
             console.log(downloadURL);
             res.send({
-                code: 200, message: "succeeded"
+                code: 200, message: "succeeded", refUrl: downloadURL
             })
         });
     });
