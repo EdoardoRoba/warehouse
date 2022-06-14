@@ -643,6 +643,18 @@ const verifyJWT = (req, res, next) => {
     }
 }
 
+// DELETE
+app.delete('/api/profile', (req, res) => {
+    const user = req.query.user;
+    Profile.deleteOne(
+        { username: user }
+    ).then((result) => {
+        res.send(result)
+    }).catch((error) => {
+        console.log("error: ", error)
+    })
+})
+
 app.get('/api/authenticated', verifyJWT, (req, res) => {
     res.send("You are authenticated!")
 })
@@ -1161,8 +1173,8 @@ app.get('/api/pdf', (req, res) => {
 // POST
 app.post('/api/pdf', (req, res) => {
     const storage = new Storage();
-    const customer = req.query.customer
-    const filename = req.query.filename
+    const customer = req.body.customer
+    const filename = req.body.filename
     const html = req.body.template;
     const options = { format: 'Letter' };
     const now = Date.now()
