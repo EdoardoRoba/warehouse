@@ -661,7 +661,6 @@ app.get('/api/authenticated', verifyJWT, (req, res) => {
 
 
 
-
 // FILE UPLOADER
 app.post('/api/newCustomerFile', (req, res) => {
     // console.log(req.body)

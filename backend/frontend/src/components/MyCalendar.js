@@ -312,7 +312,7 @@ function MyCalendar() {
             newField.isBuildAutomation = true
         }
         if ((type === "installazione" || type === "argo" || type === "buildAutomation") && (new Date(selectedStartTime).getDate()) !== (new Date(selectedEndTime).getDate())) {
-            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
+            newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString() + " - " + (new Date(selectedEndTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedEndTime).getFullYear()).toString()
         } else {
             newField["data_" + type] = (new Date(selectedStartTime).getDate()).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getMonth() + 1).toString().padStart(2, "0") + "/" + (new Date(selectedStartTime).getFullYear()).toString()
         }
