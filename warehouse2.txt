@@ -7,7 +7,7 @@ to build:
 backend: uncomment the lines containing "__dirname" and cors, change "const feUrl"
 frontend: axiosInstance is ok. change baseURL
 android: expo build:android -t apk (adb install <path to apk), expo build:android -t app-bundle
-ios: expo build:ios -t archive (se hai già un account da sviluppatore), expo build:ios -t simulator
+ios: expo build:ios -t archive (se hai già un account da sviluppatore, 30-Marzo-1996!), expo build:ios -t simulator
 android build keystore: expo fetch:android:keystore per ottenere tutti i dati sul keystore (es: idroaltech-0471103e97b54b86b4405f7194f75fa7-signed.apk)
 KEYSTORE: Keystore password: a61038c9072e4bd29268c2d42ffacb96
   	  Key alias:         QGVkb2FyZG9yb2JhMTMxNy9pZHJvYWx0ZWNo

@@ -81,27 +81,56 @@
     <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
         style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
         <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        CARATTERISTICHE ABITATIVE E TIPOLOGIA EDIFICIO
-                    </u>
+            <td style='padding:0;Margin:0;text-align: center;justify-content: center;width:40%;'>
+                <h5 style="border:2px black solid">
+                    <span style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;justify-content: center;">
+                        FOTOVOLTAICO
+                    </span>
                 </h5>
+            </td>
+        </tr>
+    </table>
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
+                Descrizione copertura, accesso (lucernaio, scala portatile, altro), pensilina:
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
             <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
-                Numero di componenti nel nucleo familiare: {nucleo_familiare} &nbsp;&nbsp;&nbsp;&nbsp; Anno di
-                costruzione
-                dell'edificio: <u>{anno_costruzione}</u>
+                <u>{copertura}</u>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
             <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                Numero di bagni: <u>{n_bagni}</u> &nbsp;&nbsp;&nbsp;&nbsp; Numero di piani: <u>{n_piani}</u>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                Metri
-                quadri: <u>{mq}</u>
+                Descrizione e distanza passaggio stringhe
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
+                <u>{stringhe}</u>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
+                Posizione quadro DC, inverter e quadro AC
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
+                <u>{inverter}</u>
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
+                Posizione e distanza quadro generale e abitaazione
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
+                <u>{quadro}</u>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
@@ -109,78 +138,321 @@
                 <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
                     style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
                     <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            Tipologia:
-                            &nbsp;&nbsp;
+                        <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                            <u>Tipologia strutturale:</u>
                         </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
                         <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
                                 <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
                                         <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {condominio};">
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {tegole};">
                                         </div>
                                     </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        condominio
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; tegole
                                     </td>
                                 </tr>
                             </table>
                         </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
                         <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
                                 <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
                                         <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {villa};">
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {travi};">
                                         </div>
                                     </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        villa
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; travi o travetti
                                     </td>
                                 </tr>
                             </table>
                         </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
                         <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
                                 <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
                                         <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {villetta};">
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {altro_tipologia_strutturale};">
                                         </div>
                                     </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        villetta a schiera
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; altro &nbsp;&nbsp; <u>{altro_tipologia_strutturale_text}</u>
                                     </td>
                                 </tr>
                             </table>
                         </td>
+                    </tr>
+                </table>
+            </td>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
+                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                            <u>Composizione strutturale:</u>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
                         <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
                             <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
                                 style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
                                 <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {altro_typology};">
-                                        </div>
+                                    <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
+                                        Il sottotetto è praticabile?
                                     </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        altro &nbsp;&nbsp; <u>{altro_typology_text}</u>
+                                    <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_sottotetto};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    &nbsp; Sì
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_sottotetto};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
+                                                    &nbsp; No
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                        <!-- </div> -->
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
+                                        La copertura ha soletta in:
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {calcestruzzo};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    &nbsp; calcestruzzo armato
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {travi_a_vista};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
+                                                    &nbsp; travi a vista
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <b style="font-size: 7;"><u>Foto</u>&nbsp;abitazione</b>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
+                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                            <u>Impianto fotovoltaico esistente?</u>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        <div
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {si_impianto_foto};">
+                                        </div>
+                                    </td>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; Sì
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        <div
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {no_impianto_foto};">
+                                        </div>
+                                    </td>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; No
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' cellspacing='0' cellpadding='0'
+                                style='margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        <div
+                                            style="border:1px black solid;width:10px;height:10px; background-color: {altro_impianto_foto};">
+                                        </div>
+                                    </td>
+                                    <td style='padding-bottom:.3rem;text-align: left;font-size: 9'>
+                                        &nbsp; altro &nbsp;&nbsp; <u>{altro_impianto_foto_text}</u>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
+                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
+                                        E' presente un isolante termice?
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_isolante_termico};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    &nbsp; Sì
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_isolante_termico};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
+                                                    &nbsp; No
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
+                                        Il tetto è ventilato?
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_ventilato};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                                                    &nbsp; Sì
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
+                                        <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                            style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                            <tr style='border-collapse:collapse;'>
+                                                <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
+                                                    <div
+                                                        style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_ventilato};">
+                                                    </div>
+                                                </td>
+                                                <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
+                                                    &nbsp; No
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style='border-collapse:collapse;'>
+                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
+                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
+                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
+                                <tr style='border-collapse:collapse;'>
+                                    <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
+                                        altro &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <u>{altro_text}</u>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
@@ -191,503 +463,29 @@
     <br />
     <br />
     <br />
-
-    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
-        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        DETTAGLI GENERATORE DI CALORE ESISTENTE
-                    </u>
-                </h5>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
-                Marca: <u>{marca}</u> &nbsp;&nbsp;&nbsp;&nbsp; Potenza termica: <u>{potenza_termica}</u> [kW]
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                Ubicazione caldaia esistente: <u>{ubicazione_caldaia}</u> [kW]
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            Combustibile:
-                            &nbsp;&nbsp;
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {metano};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        metano
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {gpl};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        gas a gpl
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <!-- </div>
-                                <div style="display: flex;flex-direction:row"> -->
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {gasolio};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        gasolio
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {altro_combustibile};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        altro &nbsp;&nbsp; <u>{altro_combustibile_text}</u>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;'>
-                            <b style="font-size: 7;"><u>Foto</u>&nbsp;generatore + etichetta + luogo di
-                                installazione</b>
-                        </td>
-                        <!-- </div> -->
-                        </div>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                Tipologia di scarico condensa (se presente): <u>{condensa}</u> &nbsp;&nbsp;&nbsp;&nbsp; Termostati
-                ambiente
-                esistenti: <u>{n_termostati}</u>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b style="font-size: 7;"><u>Foto</u>&nbsp;scarico condensa + termostati</b>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: center;width:40%;padding-top: 2rem;font-size: 9;'>
-                <b style="font-size: 7;"><u>Foto</u>&nbsp;generatore ACS e dell'etichetta se separato dal
-                    generatore principale</b>
-            </td>
-        </tr>
-    </table>
-
+    <br />
+    <br />
+    <br />
     <br />
     <br />
     <br />
 
     <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
-        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
+        style='border:1px black solid;width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
         <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
+            <td style='text-align: left;width:40%'>
                 <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        DETTAGLI IMPIANTO RADIANTE ESISTENTE
-                    </u>
-                </h5>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            Tipologia impianto radiante:
-                            &nbsp;&nbsp;
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {ghisa};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        termosifone in ghisa
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {alluminio};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        termosifone in alluminio
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {acciaio};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        termosifone acciaio
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {radiante};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        pavimento radiante
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {fancoil};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        fancoil
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {altro_impianto};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        altro &nbsp;&nbsp; <u>{altro_impianto_text}</u>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        </div>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                Numero di elementi radianti (termosifoni/termoarredi e/o fancoil): <u>{n_el_radianti}</u>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b style="font-size: 7;"><u>Foto</u>&nbsp;ogni elemento e valvola</b>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
-                            Sono già presenti valvole termostatiche per ogni elemento radiante?
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_valvole};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        Sì
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_valvole};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
-                                        No
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;padding-top: 2rem;font-size: 9;'>
-                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
-                            Le valvole presenti sono termostatizzabili?
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_valvole_termo};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        Sì
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_valvole_termo};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        No
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:50%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {non_tutte_valvole_termo};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;width:90%;font-size: 9'>
-                                        Non tutte
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                Indicare il numero di valvole da sostituire per renderle termostatizzabili: <u>{n_valvole}</u>
-            </td>
-        </tr>
-    </table>
-
-    <br />
-    <br />
-    <br />
-
-    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
-        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        DETTAGLI NUOVA INSTALLAZIONE (informazioni da condividere con cliente)
-                    </u>
-                </h5>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h7>
                     <span style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        Posizionamento unita interna ed esterna
+                        Schema di intervento. Indicare posizione di quanto rilevato e di quanto previsto. Inserire le
+                        dimensioni e le altezze dei locali utili.
                     </span>
-                </h7>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                Luogo di posizionamento unita interna: <u>{posizionamento_interno}</u>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b style="font-size: 7;"><u>Foto</u></b>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                    style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                    <tr style='border-collapse:collapse;'>
-                        <td style='padding:0;Margin:0;text-align: left;width:30%;font-size: 9'>
-                            E' necessario prevedere un box coibentato?
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:10%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {si_coibentate};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;font-size: 9'>
-                                        Sì
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style='padding:0;Margin:0;text-align: left;width:60%;font-size: 9'>
-                            <table class='es-wrapper' width='100%' cellspacing='0' cellpadding='0'
-                                style='width:100%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;background-repeat:repeat;background-position:center top;'>
-                                <tr style='border-collapse:collapse;'>
-                                    <td style='padding:0;Margin:0;text-align: left;width:11%;font-size: 9'>
-                                        <div
-                                            style="margin-left:2rem;border:1px black solid;width:10px;height:10px; background-color: {no_coibentate};">
-                                        </div>
-                                    </td>
-                                    <td style='padding:0;Margin:0;text-align: left;width:89%;font-size: 9'>
-                                        No
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                Luogo di posizionamento unita esterna: <u>{posizionamento_esterno}</u>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b style="font-size: 7;"><u>Foto</u></b>
-            </td>
-        </tr>
-    </table>
-
-    <br />
-    <br />
-    <br />
-
-    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
-        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        SOLARE TERMICO
-                    </u>
                 </h5>
             </td>
         </tr>
         <tr style='border-collapse:collapse;'>
             <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h7>
-                    <span style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        Verificare fattibilità, spazi accumulo, esposizione pannelli, passaggio tubazioni e spazio a
-                        tetto
-                    </span>
-                </h7>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                {solare_termico}__________________________________________________________________________________________________________________________________________________________________
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                __________________________________________________________________________________________________________________________________________________________________
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
-                __________________________________________________________________________________________________________________________________________________________________
-            </td>
-        </tr>
-    </table>
-
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-
-    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
-        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <h5>
-                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
-                        EVENTUALMENTE NOTE O BOZZA DI SCHEMA IDRAULICO
-                    </u>
-                </h5>
-            </td>
-        </tr>
-        <tr style='border-collapse:collapse;'>
-            <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <div style="border:1px black solid;width:80%;height:20rem; background-color: transparent;">
-                    {note_schema}
+                <div style="width:80%;height:20rem; background-color: transparent;">
+                    {schema}
                 </div>
             </td>
         </tr>
@@ -701,13 +499,41 @@
         style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
         <tr style='border-collapse:collapse;'>
             <td style='padding:0;Margin:0;text-align: left;width:40%'>
-                <span style="font-size: 9;">
-                    Con la seguente il cliente e l'installatore confermano di aver condiviso e approvato tutte le
-                    informazioni utili
-                    al fine dell'installazione del prodotto.
-                </span>
+                <h5>
+                    <u style="font-weight: bold;font-stretch: ultra-condensed;font-size: 9;">
+                        NOTE A MARGINE DEL SOPRALLUOGO TECNICO, EVENTUALI RICHIESTE DEL CLIENTE
+                    </u>
+                </h5>
             </td>
         </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
+                {note}__________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
+                __________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+        <tr style='border-collapse:collapse;'>
+            <td style='padding:0;Margin:0;text-align: left;width:40%;font-size: 9;padding-top: 2rem;'>
+                __________________________________________________________________________________________________________________________________________________________________
+            </td>
+        </tr>
+    </table>
+
+
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <table class='es-wrapper' width='90%' cellspacing='0' cellpadding='0'
+        style='width:90%;margin-top:4rem;mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;padding:0;Margin:0;width:100%;background-repeat:repeat;background-position:center top;'>
         <tr style='border-collapse:collapse;'>
             <td style='padding-top:2rem;Margin:0;text-align: left;width:40%'>
                 <span style="font-size: 9;">

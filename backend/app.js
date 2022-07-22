@@ -860,7 +860,7 @@ app.get('/api/calendar', (req, res) => {
         Calendar.find(filter).then((result) => {
             res.send(result);
         }).catch((error) => { console.log("error: ", error) })
-    } else if (req.query.user === "mirisola") {
+    } else if (req.query.user === "logistica") {
         Calendar.find({ $or: [{ "employees.lastName": usr }, { "type": { $ne: "appuntamento" } }] }).then((result) => {
             res.send(result);
         }).catch((error) => { console.log("error: ", error) })
