@@ -1122,7 +1122,7 @@ app.post('/api/sendEmailEvent', (req, res) => {
                 if (e.customer.cap) {
                     cap = e.customer.cap
                 }
-                listEventsEmail = listEventsEmail + singleEmailEvent.template.replace("{nome_cognome}", e.customer.nome_cognome.toUpperCase()).replace("{type}", e.type).replace("{indirizzo}", e.customer.indirizzo).replace("{comune}", e.customer.comune).replace("{provincia}", e.customer.provincia).replace("{cap}", cap).replace("{telefono}", e.customer.telefono).replace("{telefono}", e.customer.telefono).replace("{bonus}", e.customer.bonus).replace("{termico_elettrico}", e.customer.termico_elettrico).replace("{start}", start.getDate() + '/' + (start.getMonth() + 1) + '/' + start.getFullYear() + " - ore: " + start.getHours()).replace("{end}", end.getDate() + '/' + (end.getMonth() + 1) + '/' + end.getFullYear() + " - ore: " + end.getHours())
+                listEventsEmail = listEventsEmail + singleEmailEvent.template.replace("{nome_cognome}", e.customer.nome_cognome.toUpperCase()).replace("{type}", e.type).replace("{indirizzo}", e.customer.indirizzo).replace("{comune}", e.customer.comune).replace("{provincia}", e.customer.provincia).replace("{cap}", cap).replace("{telefono}", e.customer.telefono).replace("{telefono}", e.customer.telefono).replace("{bonus}", e.customer.bonus).replace("{termico_elettrico}", e.customer.termico_elettrico).replace("{start}", start.getDate() + '/' + (start.getMonth() + 1) + '/' + start.getFullYear()).replace("{end}", end.getDate() + '/' + (end.getMonth() + 1) + '/' + end.getFullYear() + " - ore: " + end.getHours())
             }
 
             var mailOptions = {
